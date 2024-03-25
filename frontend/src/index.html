@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>NilPi</title>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#cc2f5e">
+    <meta name="author" content="Štěpán Aubrecht">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@czQery">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico">
+    <style>
+        :root {
+            --pink: #cc2f5e;
+            --green: #52cd59;
+            --dark: #1a1c1d;
+            --white: #ffffff;
+
+            --rad: 3px;
+            --transition-duration: 0.1s;
+            --shadow: 8px 8px 8px rgba(0, 0, 0, 0.1);
+            --hover: brightness(40%);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark);
+        }
+
+        .container {
+            max-width: 1300px;
+            margin-inline: auto;
+            height: inherit;
+        }
+
+        button {
+            background-color: var(--dark);
+            border-radius: var(--rad);
+            border: none;
+            color: var(--white);
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<div id="root"></div>
+<script src="./index.tsx" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+header {
+    width: 100%;
+    background-color: var(--pink);
+    height: 50px;
+    box-shadow: var(--shadow);
+}
+
+header .container {
+    display: grid;
+    padding: 10px;
+    grid-template-columns: 40px auto;
+}
+
+#header-logo {
+    height: 100%;
+    width: auto;
+    stroke: var(--dark);
+}
+
+header [data-scope="tabs"][data-part="root"] {
+    margin-left: auto;
+}
+
+header [data-scope="tabs"][data-part="list"] {
+    height: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+header [data-scope="tabs"][data-part="trigger"], [data-scope="tabs"][data-part="indicator"] {
+    min-width: 60px;
+    max-width: 100px;
+    width: fit-content;
+}
+
+header [data-scope="tabs"][data-part="trigger"] {
+    height: inherit;
+}
+
+header [data-scope="tabs"][data-part="indicator"] {
+    height: 5px;
+    background-color: var(--green);
+    border-radius: var(--rad) var(--rad) 0 0;
+}
