@@ -9,12 +9,31 @@
     <meta name="twitter:creator" content="@czQery">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/ico" href="/favicon.ico">
+    <link rel="preload" href="/font/rubik-regular.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+    <link rel="preload" href="/font/rubik-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
     <style>
+        @font-face {
+            font-family: "Rubik";
+            src: local("Rubik Regular"), local("Rubik-Regular"),
+            url("/font/rubik-regular.woff2") format("woff2");
+            font-weight: normal;
+            font-style: normal;
+            font-display: block;
+        }
+        @font-face {
+            font-family: "Rubik";
+            src: local("Rubik Bold"), local("Rubik-Bold"),
+            url("/font/rubik-bold.woff2") format("woff2");
+            font-weight: bold;
+            font-style: normal;
+            font-display: block;
+        }
+
         :root {
             --pink: #cc2f5e;
             --green: #52cd59;
             --dark: #1a1c1d;
-            --white: #ffffff;
+            --white: #eaeaea;
 
             --rad: 3px;
             --transition-duration: 0.1s;
@@ -24,22 +43,23 @@
 
         * {
             box-sizing: border-box;
+            font-family: "Rubik", sans-serif;
         }
 
         body {
             margin: 0;
             padding: 0;
             background-color: var(--dark);
+            overflow: hidden;
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 1024px;
             margin-inline: auto;
             height: inherit;
         }
 
         button {
-            background-color: var(--dark);
             border-radius: var(--rad);
             border: none;
             color: var(--white);

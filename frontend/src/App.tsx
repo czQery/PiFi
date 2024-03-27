@@ -11,12 +11,11 @@ const App: Component = () => {
             <header>
                 <div class="container">
                     <img id="header-logo" src={logo} alt="logo"/>
-                    <Tabs.Root value="info">
+                    <Tabs.Root value="dash">
                         <Tabs.List>
-                            <Tabs.Trigger value="info">Info</Tabs.Trigger>
-                            <Tabs.Trigger value="portal">Portal</Tabs.Trigger>
-                            <Tabs.Trigger value="scan">Scan</Tabs.Trigger>
-                            <Tabs.Trigger value="other">Other</Tabs.Trigger>
+                            <Tabs.Trigger value="dash">dash</Tabs.Trigger>
+                            <Tabs.Trigger value="scan">scan</Tabs.Trigger>
+                            <Tabs.Trigger value="portal">portal</Tabs.Trigger>
                             <Tabs.Indicator/>
                         </Tabs.List>
                     </Tabs.Root>

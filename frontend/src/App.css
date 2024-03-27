@@ -14,7 +14,6 @@ header .container {
 #header-logo {
     height: 100%;
     width: auto;
-    stroke: var(--dark);
 }
 
 header [data-scope="tabs"][data-part="root"] {
@@ -28,17 +27,24 @@ header [data-scope="tabs"][data-part="list"] {
 }
 
 header [data-scope="tabs"][data-part="trigger"], [data-scope="tabs"][data-part="indicator"] {
-    min-width: 60px;
-    max-width: 100px;
-    width: fit-content;
+    width: 70px;
 }
 
 header [data-scope="tabs"][data-part="trigger"] {
+    background: none;
+    font-size: 20px;
+    font-weight: bold;
     height: inherit;
+    color: var(--white);
+    z-index: 2;
 }
 
 header [data-scope="tabs"][data-part="indicator"] {
-    height: 5px;
-    background-color: var(--green);
-    border-radius: var(--rad) var(--rad) 0 0;
+    height: 50px;
+    background-color: var(--dark);
+    border-radius: 0;
+    width: 50px;
+    transform: skew(-45deg) translateX(10px);
+    top: 0;
+    opacity: 0.5;
 }
