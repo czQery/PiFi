@@ -8,12 +8,21 @@ header {
 header .container {
     display: grid;
     padding: 10px;
-    grid-template-columns: 40px auto;
+    grid-template-columns: 100px auto;
 }
 
-#header-logo {
-    height: 100%;
-    width: auto;
+header h1 {
+    margin: 0;
+    height: 30px;
+
+    /*fine tuned to be pixel perfect*/
+    line-height: 33px;
+    font-size: 38px;
+
+    font-weight: 900;
+    font-style: italic;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 header [data-scope="tabs"][data-part="root"] {
@@ -47,4 +56,8 @@ header [data-scope="tabs"][data-part="indicator"] {
     transform: skew(-45deg) translateX(10px);
     top: 0;
     opacity: 0.5;
+}
+
+main {
+    color: var(--white);
 }

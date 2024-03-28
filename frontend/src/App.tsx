@@ -2,16 +2,23 @@ import type {Component} from "solid-js"
 
 import "./App.css"
 
-import logo from "./assets/logo.svg";
-import {Tabs} from "@ark-ui/solid";
+import {Tabs} from "@ark-ui/solid"
+import {useLocation, useNavigate} from "@solidjs/router"
 
-const App: Component = () => {
+const App: Component = (props) => {
+    const { pathname } = useLocation()
+    const navigate = useNavigate()
+
+    navigate("/dash")
+
     return (
         <>
             <header>
                 <div class="container">
-                    <img id="header-logo" src={logo} alt="logo"/>
-                    <Tabs.Root value="dash">
+                    <h1>PiFi</h1>
+                    <Tabs.Root value={pathname.substring(1)} onValueChange={({value}) => {
+                        navigate("/" + value, {replace: true})
+                    }}>
                         <Tabs.List>
                             <Tabs.Trigger value="dash">dash</Tabs.Trigger>
                             <Tabs.Trigger value="scan">scan</Tabs.Trigger>
@@ -21,7 +28,12 @@ const App: Component = () => {
                     </Tabs.Root>
                 </div>
             </header>
-            <main></main>
+            <main class="container">
+                {
+                    //@ts-ignore
+                    props.children
+                }
+            </main>
         </>
     )
 }

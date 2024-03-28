@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>NilPi</title>
+    <title>PiFI</title>
     <meta charset="utf-8">
     <meta name="theme-color" content="#cc2f5e">
     <meta name="author" content="Štěpán Aubrecht">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:creator" content="@czQery">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/ico" href="/favicon.ico">
+    <!--<link rel="shortcut icon" type="image/ico" href="/favicon.ico">-->
     <link rel="preload" href="/font/rubik-regular.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
     <link rel="preload" href="/font/rubik-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+    <link rel="preload" href="/font/rubik-black-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
     <style>
         @font-face {
             font-family: "Rubik";
@@ -20,12 +21,22 @@
             font-style: normal;
             font-display: block;
         }
+
         @font-face {
             font-family: "Rubik";
             src: local("Rubik Bold"), local("Rubik-Bold"),
             url("/font/rubik-bold.woff2") format("woff2");
             font-weight: bold;
             font-style: normal;
+            font-display: block;
+        }
+
+        @font-face {
+            font-family: "Rubik";
+            src: local("Rubik Black Italic"), local("Rubik-BlackItalic"),
+            url("/font/rubik-black-italic.woff2") format("woff2");
+            font-weight: 900;
+            font-style: italic;
             font-display: block;
         }
 
