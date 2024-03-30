@@ -1,12 +1,11 @@
 import {render} from "solid-js/web"
 import {Route, Router} from "@solidjs/router"
 import App from "./App"
+import Dash from "./tabs/Dash";
 
 render(() => (
     <Router root={App}>
-        <Route path="/dash" component={() => {
-            return <div>dash</div>
-        }}/>
+        <Route path="/dash" component={Dash}/>
         <Route path="/scan" component={() => {
             return <div>scan</div>
         }}/>

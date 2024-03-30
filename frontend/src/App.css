@@ -1,11 +1,30 @@
-header {
-    width: 100%;
-    background-color: var(--pink);
-    height: 50px;
+/*global*/
+.container {
+    max-width: 1024px;
+    margin-inline: auto;
+    height: inherit;
+}
+
+button {
+    border-radius: var(--rad);
+    border: none;
+    color: var(--white);
+    outline: none;
+}
+
+.card {
+    border-radius: 5px;
     box-shadow: var(--shadow);
 }
 
-header .container {
+/*app*/
+header {
+    width: 100%;
+    background-color: var(--pink);
+    /* background: linear-gradient(45deg, var(--pink) 0%, rgba(232, 72, 119, 1) 25%, var(--pink) 50%, rgba(232, 72, 119, 1) 75%, var(--pink) 100%);*/
+    height: 50px;
+    box-shadow: var(--shadow);
+
     display: grid;
     padding: 10px;
     grid-template-columns: 100px auto;
@@ -14,6 +33,7 @@ header .container {
 header h1 {
     margin: 0;
     height: 30px;
+    color: var(--dark);
 
     /*fine tuned to be pixel perfect*/
     line-height: 33px;
@@ -25,32 +45,65 @@ header h1 {
     -webkit-user-select: none;
 }
 
-header [data-scope="tabs"][data-part="root"] {
+header [data-scope="menu"][data-part="trigger"] {
     margin-left: auto;
+    background: none;
+    height: 30px;
+    width: 30px;
+    padding: 0;
 }
 
-header [data-scope="tabs"][data-part="list"] {
+header [data-scope="menu"][data-part="trigger"] svg {
+    stroke: var(--dark);
+    stroke-width: 4px;
+    width: inherit;
+    height: inherit;
+}
+
+header [data-scope="menu"][data-part="content"] {
+    background-color: var(--pink);
+    padding: 10px;
+    border-radius: 0 0 var(--rad) var(--rad);
+    outline: none;
+    width: 50px;
+    height: 100dvh;
+    margin-right: -10px;
+}
+
+header [data-scope="tabs"][data-part="root"] {
+    height: calc(100% - 50px);
+}
+
+header [data-scope="tabs"][data-part="list"], #header-menu-list {
     height: 100%;
     display: flex;
+    flex-direction: column;
     gap: 10px;
 }
 
-header [data-scope="tabs"][data-part="trigger"], [data-scope="tabs"][data-part="indicator"] {
-    width: 70px;
-}
-
-header [data-scope="tabs"][data-part="trigger"] {
+header [data-scope="tabs"][data-part="trigger"], #header-menu-logout {
     background: none;
     font-size: 20px;
     font-weight: bold;
-    height: inherit;
-    color: var(--white);
     z-index: 2;
+    padding: 0;
+    height: 30px;
+    width: 30px;
+}
+
+header [data-scope="tabs"][data-part="trigger"] svg, #header-menu-logout svg {
+    height: 100%;
+    width: auto;
+    stroke: var(--dark);
+}
+
+#header-menu-logout {
+    margin-top: auto;
 }
 
 header [data-scope="tabs"][data-part="indicator"] {
     height: 50px;
-    background-color: var(--dark);
+    /*background-color: var(--dark);*/
     border-radius: 0;
     width: 50px;
     transform: skew(-45deg) translateX(10px);
@@ -60,4 +113,12 @@ header [data-scope="tabs"][data-part="indicator"] {
 
 main {
     color: var(--white);
+    padding: 10px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    header [data-scope="menu"][data-part="trigger"]:hover, header [data-scope="tabs"][data-part="trigger"]:hover, #header-menu-logout:hover {
+        cursor: pointer;
+        filter: var(--hover);
+    }
 }
