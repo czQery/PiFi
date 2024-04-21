@@ -1,29 +1,30 @@
-import type {Component} from "solid-js"
+import {Component, createResource, Show} from "solid-js";
 
 import "./App.css"
 
 import {Menu, Tabs} from "@ark-ui/solid"
 import {useLocation, useNavigate} from "@solidjs/router"
 import {LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideWifi} from "lucide-solid";
+import {auth} from "./hp/auth";
+import Auth from "./components/Auth";
 
-const App: Component = (props) => {
+const App: Component = (props: { children }) => {
     const {pathname} = useLocation()
     const navigate = useNavigate()
 
     navigate("/dash")
 
+    //let [logged] = createResource(auth)
+
     return (
-        <>
+        <Show when={false<undefined | boolean>} fallback={<Auth/>} keyed>
             <header>
                 <h1>PiFi</h1>
                 <Menu.Root id="header-menu" positioning={{"gutter": 10, "placement": "bottom-end"}}>
                     <Menu.Trigger><LucideMenu/></Menu.Trigger>
                     <Menu.Positioner>
                         <Menu.Content>
-                            <Tabs.Root orientation="vertical" value={pathname.substring(1)}
-                                       onValueChange={({value}) => {
-                                           navigate("/" + value, {replace: true})
-                                       }}>
+                            <Tabs.Root orientation="vertical" value={pathname.substring(1)} onValueChange={({value}) => navigate("/" + value, {replace: true})}>
                                 <Tabs.List>
                                     <div id="header-menu-list">
                                         <Tabs.Trigger value="dash"><LucideLayoutDashboard/></Tabs.Trigger>
@@ -39,12 +40,9 @@ const App: Component = (props) => {
                 </Menu.Root>
             </header>
             <main class="container">
-                {
-                    //@ts-ignore
-                    props.children
-                }
+                {props.children}
             </main>
-        </>
+        </Show>
     )
 }
 

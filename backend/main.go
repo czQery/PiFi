@@ -35,6 +35,9 @@ func main() {
 		ServerHeader:          "PiFi",
 	})
 
+	// API
+	r.All("/api/auth", api.Auth)
+
 	// Static files
 	r.Static("/", "./dist")
 

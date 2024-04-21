@@ -5,10 +5,23 @@
     height: inherit;
 }
 
-button {
+button, input {
     border-radius: var(--rad);
     border: none;
+    outline: none;
+}
+
+button {
     color: var(--white);
+    background-color: var(--pink);
+}
+
+input {
+    padding: 0 10px;
+    color: var(--dark);
+}
+
+button:focus, button:focus-visible {
     outline: none;
 }
 
@@ -39,7 +52,7 @@ header h1 {
     line-height: 33px;
     font-size: 38px;
 
-    font-weight: 900;
+    font-weight: bold;
     font-style: italic;
     user-select: none;
     -webkit-user-select: none;
@@ -117,7 +130,10 @@ main {
 }
 
 @media (hover: hover) and (pointer: fine) {
-    header [data-scope="menu"][data-part="trigger"]:hover, header [data-scope="tabs"][data-part="trigger"]:hover, #header-menu-logout:hover {
+    header [data-scope="menu"][data-part="trigger"]:hover,
+    header [data-scope="tabs"][data-part="trigger"]:hover,
+    #header-menu-logout:hover,
+    button:hover {
         cursor: pointer;
         filter: var(--hover);
     }

@@ -1,0 +1,17 @@
+#c-auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    width: 100dvw;
+    height: 100dvh;
+    gap: 10px;
+}
+
+#c-auth * {
+    width: 250px;
+    height: 35px;
+    font-size: 15px;
+    font-weight: bold;
+}
