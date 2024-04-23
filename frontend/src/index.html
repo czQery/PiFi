@@ -44,6 +44,7 @@
             --pink: #cc2f5e;
             --green: #52cd59;
             --dark: #1a1c1d;
+            --base: #262a2b;
             --white: #eaeaea;
 
             --rad: 3px;
@@ -63,11 +64,43 @@
             background-color: var(--dark);
             overflow: hidden;
         }
+
+        #loading {
+            position: absolute;
+            margin: 0;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #loading span {
+            background: linear-gradient(90deg, var(--base), var(--white), var(--base), var(--base));
+            background-size: 200%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            font-size: 40px;
+            font-weight: bold;
+            color: transparent;
+
+            animation: background-slide 1s linear infinite;
+        }
+
+        @keyframes background-slide {
+            from {
+                background-position: 200% 0;
+            }
+            to {
+                background-position: 0 0;
+            }
+        }
     </style>
 </head>
 <body>
 <noscript>You need to enable JavaScript to run this app.</noscript>
-<div id="root"></div>
+<div id="loading">
+    <span>loading</span>
+</div>
+<div id="root" style="display: none;"></div>
 <script src="./index.tsx" type="module"></script>
 </body>
 </html>

@@ -8,10 +8,10 @@ export const auth = async (): Promise<boolean> => {
     return response.status === 200
 }
 
-export const authSave = async (password: string): Promise<undefined> => {
-    const hash: string = await sha256(password);
-    console.log(password, hash)
+export const authSave = async (password: string): Promise<boolean> => {
+    const hash: string = await sha256(password)
     document.cookie = "token="+hash
+    return await auth()
 }
 
 export const sha256 = async (input: string): Promise<string> => {

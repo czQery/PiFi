@@ -1,12 +1,14 @@
-import {Component, createResource, Show} from "solid-js";
+import {Component, createEffect, createSignal, onMount, Show} from "solid-js";
 
 import "./App.css"
 
 import {Menu, Tabs} from "@ark-ui/solid"
 import {useLocation, useNavigate} from "@solidjs/router"
 import {LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideWifi} from "lucide-solid";
-import {auth} from "./hp/auth";
 import Auth from "./components/Auth";
+import {auth, authSave} from "./hp/auth";
+
+export const [logged, setLogged] = createSignal<undefined | boolean>();
 
 const App: Component = (props: { children }) => {
     const {pathname} = useLocation()
@@ -14,12 +16,21 @@ const App: Component = (props: { children }) => {
 
     navigate("/dash")
 
-    //let [logged] = createResource(auth)
+    onMount(async () => {
+        setLogged(await auth())
+    })
+
+    createEffect(() => {
+        if (logged() !== undefined) {
+            document.getElementById("root")!.style.display = ""
+            document.getElementById("loading")!.style.display = "none"
+        }
+    })
 
     return (
-        <Show when={false<undefined | boolean>} fallback={<Auth/>} keyed>
+        <Show when={logged()<undefined | boolean>} fallback={<Auth/>} keyed>
             <header>
-                <h1>PiFi</h1>
+                <h1 id="pifi">PiFi</h1>
                 <Menu.Root id="header-menu" positioning={{"gutter": 10, "placement": "bottom-end"}}>
                     <Menu.Trigger><LucideMenu/></Menu.Trigger>
                     <Menu.Positioner>
@@ -32,7 +43,10 @@ const App: Component = (props: { children }) => {
                                         <Tabs.Trigger value="portal"><LucideFileCog/></Tabs.Trigger>
                                         <Tabs.Indicator/>
                                     </div>
-                                    <button id="header-menu-logout"><LucideLogOut/></button>
+                                    <button id="header-menu-logout" onClick={async () => {
+                                        setLogged(false)
+                                        authSave("").then()
+                                    }}><LucideLogOut/></button>
                                 </Tabs.List>
                             </Tabs.Root>
                         </Menu.Content>

@@ -30,6 +30,20 @@ button:focus, button:focus-visible {
     box-shadow: var(--shadow);
 }
 
+#pifi {
+    margin: 0;
+    height: 30px;
+
+    /*fine tuned to be pixel perfect*/
+    line-height: 33px;
+    font-size: 38px;
+
+    font-weight: bold;
+    font-style: italic;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 /*app*/
 header {
     width: 100%;
@@ -43,19 +57,8 @@ header {
     grid-template-columns: 100px auto;
 }
 
-header h1 {
-    margin: 0;
-    height: 30px;
-    color: var(--dark);
-
-    /*fine tuned to be pixel perfect*/
-    line-height: 33px;
-    font-size: 38px;
-
-    font-weight: bold;
-    font-style: italic;
-    user-select: none;
-    -webkit-user-select: none;
+header #pifi {
+    color: var(--white);
 }
 
 header [data-scope="menu"][data-part="trigger"] {
@@ -67,7 +70,7 @@ header [data-scope="menu"][data-part="trigger"] {
 }
 
 header [data-scope="menu"][data-part="trigger"] svg {
-    stroke: var(--dark);
+    stroke: var(--white);
     stroke-width: 4px;
     width: inherit;
     height: inherit;
@@ -107,7 +110,7 @@ header [data-scope="tabs"][data-part="trigger"], #header-menu-logout {
 header [data-scope="tabs"][data-part="trigger"] svg, #header-menu-logout svg {
     height: 100%;
     width: auto;
-    stroke: var(--dark);
+    stroke: var(--white);
 }
 
 #header-menu-logout {
@@ -115,13 +118,14 @@ header [data-scope="tabs"][data-part="trigger"] svg, #header-menu-logout svg {
 }
 
 header [data-scope="tabs"][data-part="indicator"] {
-    height: 50px;
-    /*background-color: var(--dark);*/
+    background-color: var(--dark);
     border-radius: 0;
     width: 50px;
-    transform: skew(-45deg) translateX(10px);
+    height: 30px;
+    transform: skewY(-25deg) translate(-10px, -3px);
     top: 0;
     opacity: 0.5;
+    transition-duration: var(--transition-duration) !important;
 }
 
 main {
