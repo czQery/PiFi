@@ -22,9 +22,9 @@ func init() {
 
 func main() {
 
-	hp.PrintArt()
-
-	hp.LoadDist()
+	hp.ArtPrint()
+	hp.ConfigLoad()
+	hp.DistLoad()
 
 	r := fiber.New(fiber.Config{
 		CaseSensitive:         false,
@@ -55,7 +55,7 @@ func main() {
 	logrus.Info("fiber - started")
 
 	// Run
-	err := r.Listen(":80")
+	err := r.Listen(hp.Config.String("main.address"))
 	logrus.WithFields(logrus.Fields{
 		"error": err.Error(),
 	}).Panic("fiber - server failed")

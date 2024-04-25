@@ -8,7 +8,7 @@ import (
 
 var Dist bool
 
-func LoadDist() {
+func DistLoad() {
 	_, err := os.ReadDir("./dist")
 	if err != nil {
 		Dist = false

@@ -2,7 +2,7 @@ package hp
 
 import "fmt"
 
-func PrintArt() {
+func ArtPrint() {
 	fmt.Println("   ___    _    ____   _ ")
 	fmt.Println("  / _ \\  (_)  / __/  (_)")
 	fmt.Println(" / ___/ / /  / _/   / / ")
