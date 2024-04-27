@@ -14,9 +14,11 @@ const App: Component = (props: { children }) => {
     const {pathname} = useLocation()
     const navigate = useNavigate()
 
-    navigate("/dash")
-
     onMount(async () => {
+        if (pathname === "/" || pathname === "") {
+            navigate("/dash")
+        }
+
         setLogged(await auth())
     })
 
@@ -35,7 +37,7 @@ const App: Component = (props: { children }) => {
                     <Menu.Trigger><LucideMenu/></Menu.Trigger>
                     <Menu.Positioner>
                         <Menu.Content>
-                            <Tabs.Root orientation="vertical" value={pathname.substring(1)} onValueChange={({value}) => navigate("/" + value, {replace: true})}>
+                            <Tabs.Root orientation="vertical" value={(pathname.substring(1) !== "" ? pathname.substring(1) : "dash")} onValueChange={({value}) => navigate("/" + value, {replace: true})}>
                                 <Tabs.List>
                                     <div id="header-menu-list">
                                         <Tabs.Trigger value="dash"><LucideLayoutDashboard/></Tabs.Trigger>
