@@ -37,6 +37,7 @@ func main() {
 
 	// API
 	r.All("/api/auth", api.Auth)
+	r.All("/api/stats", api.Stats)
 
 	// Static files
 	r.Static("/", "./dist")

@@ -9,12 +9,19 @@ import (
 
 func Auth(c *fiber.Ctx) error {
 
-	token := string(c.Request().Header.Cookie("token"))
-	hash := sha256.Sum256([]byte(hp.Config.String("main.password")))
-
-	if token == hex.EncodeToString(hash[:]) {
-		return c.Status(200).JSON(Response{Message: "success"})
+	if !VerifyToken(c) {
+		return c.Status(401).JSON(Response{Message: "unauthorized"})
 	}
 
-	return c.Status(401).JSON(Response{Message: "unauthorized"})
+	return c.Status(200).JSON(Response{Message: "success"})
+}
+
+func VerifyToken(c *fiber.Ctx) bool {
+	hash := sha256.Sum256([]byte(hp.Config.String("main.password")))
+
+	if string(c.Request().Header.Cookie("token")) == hex.EncodeToString(hash[:]) {
+		return true
+	}
+
+	return false
 }
