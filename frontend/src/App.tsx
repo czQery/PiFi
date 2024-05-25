@@ -6,7 +6,7 @@ import {Menu, Tabs} from "@ark-ui/solid"
 import {useLocation, useNavigate} from "@solidjs/router"
 import {LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideWifi} from "lucide-solid";
 import Auth from "./components/Auth";
-import {auth, authSave} from "./hp/auth";
+import {auth, authSave} from "./lib/auth";
 
 export const [logged, setLogged] = createSignal<undefined | boolean>();
 

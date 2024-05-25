@@ -1,11 +1,11 @@
 import {api} from "./var";
 
 export const auth = async (): Promise<boolean> => {
-    const response: Response = await fetch(api + "/api/auth", {
+    const rsp: Response = await fetch(api + "/api/auth", {
         credentials: "include"
     })
 
-    return response.status === 200
+    return rsp.status === 200
 }
 
 export const authSave = async (password: string): Promise<boolean> => {

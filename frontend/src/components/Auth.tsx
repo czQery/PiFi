@@ -1,7 +1,7 @@
 import {Component} from "solid-js";
 
 import "./Auth.css"
-import {authSave} from "../hp/auth";
+import {authSave} from "../lib/auth";
 import {setLogged} from "../App";
 
 const Auth: Component = () => {

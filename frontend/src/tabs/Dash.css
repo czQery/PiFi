@@ -1,5 +1,26 @@
 #dash {
     width: 100%;
-    height: 400px;
+}
+
+
+
+
+#dash-stats {
+    display: flex;
     background-color: var(--base);
+    padding: 10px;
+}
+
+#dash-stats div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    gap: 10px;
+}
+
+#dash-stats svg {
+    margin: 0 auto;
+    height: 30px;
+    width: auto;
 }
