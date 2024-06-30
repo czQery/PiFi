@@ -16,14 +16,18 @@ const Dash: Component = () => {
     return (
         <div id="dash" class="card">
             <div id="dash-stats">
+                <h2>> Stats</h2>
                 <div>
                     <LucideCpu/>
-                    <span>{stats()?.cpu*100+"%"}</span>
+                    <span>{stats()?.cpu * 100 + "%"}</span>
                 </div>
                 <div>
                     <LucideMemoryStick/>
-                    <span>{stats()?.mem_used+"/"+stats()?.mem_total}</span>
+                    <span>{stats()?.mem_used + "/" + stats()?.mem_total}</span>
                 </div>
+            </div>
+            <div id="dash-log">
+                <h2>> Log</h2>
             </div>
         </div>
     )

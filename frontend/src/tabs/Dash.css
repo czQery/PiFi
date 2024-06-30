@@ -1,14 +1,20 @@
 #dash {
     width: 100%;
-}
-
-
-
-
-#dash-stats {
-    display: flex;
     background-color: var(--base);
     padding: 10px;
+}
+
+#dash-stats {
+    display: grid;
+    grid-template-areas:
+        "title title"
+        "s1 s2";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+}
+
+#dash-stats h2 {
+    grid-area: title;
 }
 
 #dash-stats div {
@@ -17,6 +23,7 @@
     width: 100%;
     text-align: center;
     gap: 10px;
+    margin: 10px 0;
 }
 
 #dash-stats svg {

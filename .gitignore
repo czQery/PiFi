@@ -1,5 +1,5 @@
 .idea
 frontend/node_modules
 frontend/dist
-backend/PiFi.exe
-backend/backend.exe
+backend/pifi
+backend/PiFi

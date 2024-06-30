@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/czQery/PiFi/backend/api"
+	"github.com/czQery/PiFi/backend/cmd"
 	"github.com/czQery/PiFi/backend/hp"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
@@ -25,6 +27,30 @@ func main() {
 	hp.ArtPrint()
 	hp.ConfigLoad()
 	hp.DistLoad()
+
+	// Get interfaces
+	iface, ifaceErr := cmd.GetInterfaceList()
+	if ifaceErr != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": ifaceErr.Error(),
+		}).Panic("main - " + cmd.NM + " failed")
+	}
+
+	// Create hotspot con for the first time
+	initErr := errors.New("no wifi interface")
+	for _, i := range iface {
+		if i.Type == "wifi" {
+			initErr = cmd.InitHotspot(i.Name)
+			break
+		}
+	}
+	if initErr != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": initErr.Error(),
+		}).Panic("main - hotspot init failed")
+	}
+
+	logrus.Info("main - " + cmd.NM + " loaded")
 
 	r := fiber.New(fiber.Config{
 		CaseSensitive:         false,
@@ -58,6 +84,6 @@ func main() {
 	// Run
 	err := r.Listen(hp.Config.String("main.address"))
 	logrus.WithFields(logrus.Fields{
-		"error": err.Error(),
+		"err": err.Error(),
 	}).Panic("fiber - server failed")
 }
