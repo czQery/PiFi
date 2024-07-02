@@ -6,6 +6,9 @@ import App from "./App";
 render(() => (
     <Router root={App}>
         <Route path="/dash" component={Dash}/>
+        <Route path="/settings" component={() => {
+            return <div>settings</div>
+        }}/>
         <Route path="/scan" component={() => {
             return <div>scan</div>
         }}/>

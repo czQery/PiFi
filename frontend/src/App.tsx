@@ -4,7 +4,7 @@ import "./App.css"
 
 import {Menu, Tabs} from "@ark-ui/solid"
 import {useLocation, useNavigate} from "@solidjs/router"
-import {LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideWifi} from "lucide-solid";
+import {LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings, LucideWifi} from "lucide-solid";
 import Auth from "./components/Auth";
 import {auth, authSave} from "./lib/auth";
 
@@ -37,11 +37,12 @@ const App: Component = (props: { children }) => {
                     <Menu.Trigger><LucideMenu/></Menu.Trigger>
                     <Menu.Positioner>
                         <Menu.Content>
-                            <Tabs.Root orientation="vertical" value={(pathname.substring(1) !== "" ? pathname.substring(1) : "dash")} onValueChange={({value}) => navigate("/" + value, {replace: true})}>
+                            <Tabs.Root orientation="vertical" value={(pathname.substring(1) !== "" ? pathname.substring(1) : "dash")} onValueChange={({value}) => navigate("/" + value)}>
                                 <Tabs.List>
                                     <div id="header-menu-list">
                                         <Tabs.Trigger value="dash"><LucideLayoutDashboard/></Tabs.Trigger>
-                                        <Tabs.Trigger value="scan"><LucideWifi/></Tabs.Trigger>
+                                        <Tabs.Trigger value="settings"><LucideSettings/></Tabs.Trigger>
+                                        <Tabs.Trigger value="scan"><LucideRadar/></Tabs.Trigger>
                                         <Tabs.Trigger value="portal"><LucideFileCog/></Tabs.Trigger>
                                         <Tabs.Indicator/>
                                     </div>

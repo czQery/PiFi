@@ -38,9 +38,9 @@ func Stats(c *fiber.Ctx) error {
 	}
 
 	data := StatsResponse{
-		Cpu:      float64(cpuAfter.Total - cpuBefore.Total),
-		MemTotal: mem.Total,
-		MemUsed:  mem.Used,
+		Cpu:      float64(cpuAfter.Total-cpuBefore.Total) / 10,
+		MemTotal: mem.Total / 1000000000,
+		MemUsed:  mem.Used / 1000000000,
 	}
 
 	return c.Status(200).JSON(Response{Message: "success", Data: data})

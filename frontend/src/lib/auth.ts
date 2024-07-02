@@ -1,6 +1,7 @@
 import {api} from "./var";
 
 export const auth = async (): Promise<boolean> => {
+
     const rsp: Response = await fetch(api + "/api/auth", {
         credentials: "include"
     })
