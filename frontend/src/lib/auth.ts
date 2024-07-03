@@ -11,7 +11,7 @@ export const auth = async (): Promise<boolean> => {
 
 export const authSave = async (password: string): Promise<boolean> => {
     const hash: string = await sha256(password)
-    document.cookie = "token="+hash
+    document.cookie = "token="+hash+";path=/"
     return await auth()
 }
 

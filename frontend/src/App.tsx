@@ -1,22 +1,29 @@
-import {Component, createEffect, createSignal, onMount, Show} from "solid-js";
+import {Component, createEffect, createMemo, createSignal, onMount, Show} from "solid-js";
 
 import "./App.css"
 
 import {Menu, Tabs} from "@ark-ui/solid"
 import {useLocation, useNavigate} from "@solidjs/router"
-import {LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings, LucideWifi} from "lucide-solid";
+import {LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings} from "lucide-solid";
 import Auth from "./components/Auth";
 import {auth, authSave} from "./lib/auth";
 
 export const [logged, setLogged] = createSignal<undefined | boolean>();
 
+const parsePath = (value: string): string => {
+    return (value.slice(-1) === "/") ? value.slice(1, -1) : value.slice(1)
+}
+
 const App: Component = (props: { children }) => {
-    const {pathname} = useLocation()
     const navigate = useNavigate()
+    const location = useLocation();
+    const pathname = createMemo(() => parsePath(location.pathname));
 
     onMount(async () => {
-        if (pathname === "/" || pathname === "") {
+        if (pathname() === "") {
             navigate("/dash")
+        } else if (location.pathname.slice(-1) === "/") {
+            navigate(location.pathname.slice(1, -1))
         }
 
         setLogged(await auth())
@@ -32,12 +39,12 @@ const App: Component = (props: { children }) => {
     return (
         <Show when={logged()<undefined | boolean>} fallback={<Auth/>} keyed>
             <header>
-                <h1 id="pifi">PiFi</h1>
+                <h1 id="pifi" onClick={() => navigate("/dash")}>PiFi</h1>
                 <Menu.Root id="header-menu" positioning={{"gutter": 10, "placement": "bottom-end"}}>
                     <Menu.Trigger><LucideMenu/></Menu.Trigger>
                     <Menu.Positioner>
                         <Menu.Content>
-                            <Tabs.Root orientation="vertical" value={(pathname.substring(1) !== "" ? pathname.substring(1) : "dash")} onValueChange={({value}) => navigate("/" + value)}>
+                            <Tabs.Root orientation="vertical" lazyMount unmountOnExit value={pathname()} onValueChange={({value}) => navigate("/" + value)}>
                                 <Tabs.List>
                                     <div id="header-menu-list">
                                         <Tabs.Trigger value="dash"><LucideLayoutDashboard/></Tabs.Trigger>
