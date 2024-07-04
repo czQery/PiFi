@@ -22,7 +22,7 @@ func Stats(c *fiber.Ctx) error {
 	mem, err := memory.Get()
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
-			"error": err.Error(),
+			"err": err.Error(),
 		}).Error("api - stats mem failed")
 		return c.Status(500).JSON(Response{Message: "unexpected error"})
 	}
@@ -32,7 +32,7 @@ func Stats(c *fiber.Ctx) error {
 	cpuAfter, errC2 := cpu.Get()
 	if errC1 != nil || errC2 != nil {
 		logrus.WithFields(logrus.Fields{
-			"error": errC1.Error() + "," + errC2.Error(),
+			"err": errC1.Error() + "," + errC2.Error(),
 		}).Error("api - stats cpu failed")
 		return c.Status(500).JSON(Response{Message: "unexpected error"})
 	}

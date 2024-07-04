@@ -13,7 +13,7 @@ func ConfigLoad() {
 	err := Config.Load(file.Provider("config.toml"), toml.Parser())
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
-			"error": err.Error(),
+			"err": err.Error(),
 		}).Panic("config - load failed")
 	}
 

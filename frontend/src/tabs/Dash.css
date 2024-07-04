@@ -99,7 +99,11 @@
     flex-direction: column;
 }
 
-#dash-log span {
-    display: block;
+#dash-log li {
+    display: flex;
+}
+
+#dash-log li span {
+    display: inline-block;
     font-family: monospace;
 }

@@ -8,18 +8,57 @@ import (
 	"github.com/czQery/PiFi/backend/hp"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
+	"io"
 	"os"
 	"strings"
+	"time"
 )
 
 func init() {
-	logrus.SetFormatter(&logrus.TextFormatter{
-		ForceColors:     true,
-		DisableColors:   false,
-		FullTimestamp:   true,
-		TimestampFormat: "02/01/2006 - 15:04:05",
+
+	var format = "02/01/2006 - 15:04:05"
+
+	logrus.SetOutput(io.Discard)
+
+	// Log terminal
+	logrus.AddHook(&hp.LogFormatterHook{
+		Writer: os.Stdout,
+		Formatter: &logrus.TextFormatter{
+			ForceColors:     true,
+			DisableColors:   false,
+			FullTimestamp:   true,
+			TimestampFormat: format,
+		},
 	})
-	logrus.SetOutput(os.Stdout)
+
+	// Log file
+	var err error
+	hp.LogFile, err = os.OpenFile(hp.LogFileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": err.Error(),
+		}).Panic("init - log file load failed")
+	}
+	err = hp.LogFile.Truncate(0)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": err.Error(),
+		}).Error("init - log file truncate failed")
+	}
+	logrus.AddHook(&hp.LogFormatterHook{
+		Writer: hp.LogFile,
+		Formatter: &logrus.TextFormatter{
+			ForceColors:   false,
+			DisableColors: true,
+
+			QuoteEmptyFields: true,
+			ForceQuote:       true,
+			DisableQuote:     false,
+
+			FullTimestamp:   true,
+			TimestampFormat: time.RFC3339,
+		},
+	})
 }
 
 func main() {
@@ -62,8 +101,9 @@ func main() {
 	})
 
 	// API
-	r.All("/api/auth", api.Auth)
-	r.All("/api/stats", api.Stats)
+	r.Get("/api/auth", api.Auth)
+	r.Get("/api/stats", api.Stats)
+	r.Get("/api/log", api.Log)
 
 	// Static files
 	r.Static("/", "./dist")
@@ -86,4 +126,6 @@ func main() {
 	logrus.WithFields(logrus.Fields{
 		"err": err.Error(),
 	}).Panic("fiber - server failed")
+
+	_ = hp.LogFile.Close()
 }

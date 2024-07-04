@@ -13,7 +13,7 @@ func DistLoad() {
 	if err != nil {
 		Dist = false
 		logrus.WithFields(logrus.Fields{
-			"error": err.Error(),
+			"err": err.Error(),
 		}).Warn("dist - load failed")
 		return
 	}

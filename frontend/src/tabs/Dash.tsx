@@ -1,12 +1,13 @@
 import type {Component} from "solid-js";
-import {createSignal, onMount} from "solid-js";
+import {createSignal, Index, onMount, Show} from "solid-js";
 
 import "./Dash.css"
-import {getStats, statsData} from "../lib/api";
+import {getLog, getStats, logData, statsData} from "../lib/api";
 import {LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi} from "lucide-solid";
 import {useNavigate} from "@solidjs/router";
 
 export const [stats, setStats] = createSignal<statsData>();
+export const [log, setLog] = createSignal<logData[]>([]);
 
 const Dash: Component = () => {
 
@@ -14,6 +15,7 @@ const Dash: Component = () => {
 
     onMount(async () => {
         setStats(await getStats())
+        setLog(await getLog())
     })
 
     return (
@@ -39,10 +41,26 @@ const Dash: Component = () => {
                 </div>
             </div>
             <div id="dash-log" class="card">
-                <span>INFO[02/07/2024 - 11:03:06] config - successfully loaded</span>
-                <span>WARN[02/07/2024 - 11:03:06] dist - load failed error="open ./dist: no such file or directory"</span>
-                <span>INFO[02/07/2024 - 11:03:06] main - nmcli loaded</span>
-                <span>INFO[02/07/2024 - 11:03:06] fiber - started</span>
+                <Index each={log()<logData[]>}>{(log, i) =>
+                    <li>
+                        <span style={{
+                            color: ((): string => {
+                                switch (log().level.slice(0, 4)) {
+                                    case "erro":
+                                        return "var(--pink)"
+                                    case "warn":
+                                        return "var(--orange)"
+                                    default:
+                                        return "var(--blue)"
+                                }
+                            })()
+                        }}>{log().level.slice(0, 4).toUpperCase()}</span>
+                        <span>{"[" + log().time.getHours() + ":" + log().time.getMinutes() + ":" + log().time.getSeconds() + "] " + log().msg}</span>
+                        <Show when={log().err<string>}>
+                            <span style={{color: "var(--pink)", "margin-left": "auto"}}>{"err="+log().err}</span>
+                        </Show>
+                    </li>
+                }</Index>
             </div>
         </div>
     )
