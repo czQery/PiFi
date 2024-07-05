@@ -6,7 +6,7 @@ import {getLog, getStats, logData, statsData} from "../lib/api";
 import {LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi} from "lucide-solid";
 import {useNavigate} from "@solidjs/router";
 
-export const [stats, setStats] = createSignal<statsData>();
+export const [stats, setStats] = createSignal<statsData>({cpu: 0, mem_total: 0, mem_used: 0});
 export const [log, setLog] = createSignal<logData[]>([]);
 
 const Dash: Component = () => {
@@ -33,11 +33,11 @@ const Dash: Component = () => {
             <div id="dash-stats">
                 <div class="card">
                     <LucideCpu/>
-                    <span>{stats()?.cpu + "%"}</span>
+                    <span>{stats().cpu + "%"}</span>
                 </div>
                 <div class="card">
                     <LucideMemoryStick/>
-                    <span>{stats()?.mem_used + "/" + stats()?.mem_total + "GB"}</span>
+                    <span>{stats().mem_used + "/" + stats().mem_total + "GB"}</span>
                 </div>
             </div>
             <div id="dash-log" class="card">
@@ -55,9 +55,10 @@ const Dash: Component = () => {
                                 }
                             })()
                         }}>{log().level.slice(0, 4).toUpperCase()}</span>
-                        <span>{"[" + log().time.getHours() + ":" + log().time.getMinutes() + ":" + log().time.getSeconds() + "] " + log().msg}</span>
+                        <span style={{opacity: 0.6}}>{"[" + log().time.getHours() + ":" + log().time.getMinutes() + ":" + log().time.getSeconds() + "]"}</span>
+                        <span>{log().msg}</span>
                         <Show when={log().err<string>}>
-                            <span style={{color: "var(--pink)", "margin-left": "auto"}}>{"err="+log().err}</span>
+                            <span style={{color: "var(--pink)", "margin-left": "auto"}}>{"err=" + log().err}</span>
                         </Show>
                     </li>
                 }</Index>

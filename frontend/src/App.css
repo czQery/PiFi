@@ -33,13 +33,6 @@ button:focus, button:focus-visible {
 #pifi {
     margin: 0;
     height: 30px;
-
-    /*fine tuned to be pixel perfect*/
-    line-height: 33px;
-    font-size: 38px;
-
-    font-weight: bold;
-    font-style: italic;
     user-select: none;
     -webkit-user-select: none;
 }
