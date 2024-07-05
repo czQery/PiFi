@@ -67,29 +67,7 @@ func main() {
 	hp.ConfigLoad()
 	hp.DistLoad()
 
-	// Get interfaces
-	iface, ifaceErr := cmd.GetInterfaceList()
-	if ifaceErr != nil {
-		logrus.WithFields(logrus.Fields{
-			"err": ifaceErr.Error(),
-		}).Panic("main - " + cmd.NM + " failed")
-	}
-
-	// Create hotspot con for the first time
-	initErr := errors.New("no wifi interface")
-	for _, i := range iface {
-		if i.Type == "wifi" {
-			initErr = cmd.InitHotspot(i.Name)
-			break
-		}
-	}
-	if initErr != nil {
-		logrus.WithFields(logrus.Fields{
-			"err": initErr.Error(),
-		}).Panic("main - hotspot init failed")
-	}
-
-	logrus.Info("main - " + cmd.NM + " loaded")
+	nmInit()
 
 	r := fiber.New(fiber.Config{
 		CaseSensitive:         false,
@@ -124,6 +102,7 @@ func main() {
 	r.Get("/api/auth", api.Auth)
 	r.Get("/api/stats", api.Stats)
 	r.Get("/api/log", api.Log)
+	r.Get("/api/settings", api.SettingsGet)
 
 	// Static files
 	r.Static("/", "./dist")
@@ -150,4 +129,60 @@ func main() {
 	}
 
 	_ = hp.LogFile.Close()
+}
+
+func nmInit() {
+	// Get interfaces
+	iface, ifaceErr := cmd.GetInterfaceList()
+	if ifaceErr != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": ifaceErr.Error(),
+		}).Panic("main - " + cmd.NM + " failed")
+	}
+
+	// Get interfaces from config
+	ifaceConfig := make(map[string]map[string]interface{})
+	ifaceConfigErr := hp.Config.Unmarshal("settings.iface", &ifaceConfig)
+	if ifaceConfigErr != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": ifaceConfigErr.Error(),
+		}).Panic("main - iface config load failed")
+	}
+	for _, item := range ifaceConfig {
+		item["ready"] = false
+	}
+
+	// Create hotspot con for the first time
+	initErr := errors.New("no wifi interface")
+	for _, i := range iface {
+		if i.Type == "wifi" {
+			initErr = cmd.InitHotspot(i.Name)
+
+			if item, e := ifaceConfig[i.Name]; e {
+				item["ready"] = true
+			} else {
+				newIfaceConfig := make(map[string]interface{})
+				newIfaceConfig["ready"] = true
+				newIfaceConfig["mode"] = ""
+
+				ifaceConfig[i.Name] = newIfaceConfig
+			}
+		}
+	}
+	if initErr != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": initErr.Error(),
+		}).Panic("main - hotspot init failed")
+	}
+
+	// Save edited interfaces config
+	ifaceConfigErr = hp.Config.Set("settings.iface", ifaceConfig)
+	if ifaceConfigErr != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": ifaceConfigErr.Error(),
+		}).Panic("main - iface config save failed")
+	}
+	hp.ConfigSave()
+
+	logrus.Info("main - " + cmd.NM + " loaded")
 }

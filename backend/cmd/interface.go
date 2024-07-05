@@ -14,7 +14,7 @@ type Interface struct {
 
 func GetInterfaceList() ([]Interface, error) {
 	var list []Interface
-	out, err := exec.Command(NM, "-t", "device", "status").Output()
+	out, err := exec.Command(NM, "-t", "device").Output()
 	if err != nil {
 		return list, err
 	}

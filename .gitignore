@@ -4,3 +4,4 @@ frontend/dist
 backend/pifi
 backend/PiFi
 backend/log.txt
+backend/config.toml

@@ -18,7 +18,7 @@ func InitHotspot(ifname string) error {
 		}
 
 		if c[0] == "PiFi" {
-			return nil
+			return nil // hotspot already initialized
 		}
 	}
 
