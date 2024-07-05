@@ -10,7 +10,7 @@ import (
 func Auth(c *fiber.Ctx) error {
 
 	if !VerifyToken(c) {
-		return c.Status(401).JSON(Response{Message: "unauthorized"})
+		return &Error{Code: 401, Func: "api/auth", Message: "unauthorized"}
 	}
 
 	return c.Status(200).JSON(Response{Message: "success"})

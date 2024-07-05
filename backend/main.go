@@ -98,6 +98,26 @@ func main() {
 		JSONEncoder:           json.Marshal,
 		JSONDecoder:           json.Unmarshal,
 		ServerHeader:          "PiFi",
+		ErrorHandler: func(c *fiber.Ctx, err error) error {
+			var e *api.Error
+			if errors.As(err, &e) {
+				log := logrus.WithFields(e.Fields())
+				switch e.Code {
+				case 401, 404, 503:
+					break
+				case 500:
+					log.Error("fiber - " + e.Func)
+				default:
+					log.Warn("fiber - " + e.Func)
+				}
+
+				if e.Message != "" {
+					return c.Status(e.Code).JSON(api.Response{Message: e.Message})
+				}
+			}
+
+			return c.Status(500).JSON(api.Response{Message: "internal server error"})
+		},
 	})
 
 	// API
@@ -111,9 +131,9 @@ func main() {
 	// Default
 	r.Use(func(c *fiber.Ctx) error {
 		if strings.HasPrefix(string(c.Request().URI().Path()), "/api") {
-			return c.Status(404).JSON(api.Response{Message: "unknown endpoint"})
+			return &api.Error{Code: 404, Func: "api", Message: "unknown endpoint"}
 		} else if !hp.Dist {
-			return c.Status(503).JSON(api.Response{Message: "front-end unavailable"})
+			return &api.Error{Code: 503, Func: "static", Message: "front-end unavailable"}
 		} else {
 			return c.Redirect("/", 307)
 		}
@@ -123,9 +143,11 @@ func main() {
 
 	// Run
 	err := r.Listen(hp.Config.String("main.address"))
-	logrus.WithFields(logrus.Fields{
-		"err": err.Error(),
-	}).Panic("fiber - server failed")
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": err.Error(),
+		}).Panic("fiber - server failed")
+	}
 
 	_ = hp.LogFile.Close()
 }

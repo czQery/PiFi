@@ -4,7 +4,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/mackerelio/go-osstat/cpu"
 	"github.com/mackerelio/go-osstat/memory"
-	"github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -16,25 +15,19 @@ type StatsResponse struct {
 
 func Stats(c *fiber.Ctx) error {
 	if !VerifyToken(c) {
-		return c.Status(401).JSON(Response{Message: "unauthorized"})
+		return &Error{Code: 401, Func: "api/stats", Message: "unauthorized"}
 	}
 
 	mem, err := memory.Get()
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"err": err.Error(),
-		}).Error("api - stats mem failed")
-		return c.Status(500).JSON(Response{Message: "unexpected error"})
+		return &Error{Code: 500, Func: "api/stats", Err: err}
 	}
 
-	cpuBefore, errC1 := cpu.Get()
+	cpuBefore, _ := cpu.Get()
 	time.Sleep(time.Duration(50) * time.Millisecond)
-	cpuAfter, errC2 := cpu.Get()
-	if errC1 != nil || errC2 != nil {
-		logrus.WithFields(logrus.Fields{
-			"err": errC1.Error() + "," + errC2.Error(),
-		}).Error("api - stats cpu failed")
-		return c.Status(500).JSON(Response{Message: "unexpected error"})
+	cpuAfter, err := cpu.Get()
+	if err != nil {
+		return &Error{Code: 500, Func: "api/stats", Err: err}
 	}
 
 	data := StatsResponse{
