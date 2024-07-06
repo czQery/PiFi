@@ -5,29 +5,10 @@
     height: inherit;
 }
 
-button, input {
-    border-radius: var(--rad);
-    border: none;
-    outline: none;
-}
-
-button {
-    color: var(--white);
-    background-color: var(--pink);
-}
-
-input {
-    padding: 0 10px;
-    color: var(--dark);
-}
-
-button:focus, button:focus-visible {
-    outline: none;
-}
-
 .card {
-    border-radius: 5px;
+    border-radius: var(--rad);
     box-shadow: var(--shadow);
+    outline: var(--outline);
 }
 
 #pifi {
@@ -45,7 +26,6 @@ button:focus, button:focus-visible {
 header {
     width: 100%;
     background-color: var(--pink);
-    /* background: linear-gradient(45deg, var(--pink) 0%, rgba(232, 72, 119, 1) 25%, var(--pink) 50%, rgba(232, 72, 119, 1) 75%, var(--pink) 100%);*/
     height: 50px;
     box-shadow: var(--shadow);
 
@@ -64,6 +44,7 @@ header [data-scope="menu"][data-part="trigger"] {
     height: 30px;
     width: 30px;
     padding: 0;
+    outline: none;
 }
 
 header [data-scope="menu"][data-part="trigger"] svg {
@@ -94,6 +75,10 @@ header [data-scope="tabs"][data-part="list"], #header-menu-list {
     gap: 10px;
 }
 
+header [data-scope="tabs"][data-part="trigger"] {
+    outline: none;
+}
+
 header [data-scope="tabs"][data-part="trigger"], #header-menu-logout {
     background: none;
     font-size: 20px;
@@ -102,6 +87,7 @@ header [data-scope="tabs"][data-part="trigger"], #header-menu-logout {
     padding: 0;
     height: 30px;
     width: 30px;
+    outline: none;
 }
 
 header [data-scope="tabs"][data-part="trigger"] svg, #header-menu-logout svg {
@@ -130,11 +116,49 @@ main {
     padding: 10px;
 }
 
+div [data-scope="select"][data-part="root"] {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    width: 200px;
+}
+
+div [data-scope="select"][data-part="trigger"] {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    height: 30px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+div [data-scope="select"][data-part="positioner"]:has([data-state="open"]) {
+    background-color: var(--dark);
+    box-shadow: var(--shadow);
+    width: var(--reference-width);
+    border-radius: var(--rad);
+    outline: var(--outline);
+}
+
+div [data-scope="select"][data-part="item"] {
+    display: flex;
+    color: var(--white);
+    margin: 5px;
+}
+
+div [data-scope="select"][data-part="item"][data-state="checked"] {
+    color: var(--green);
+}
+
+div [data-scope="select"][data-part="item"]:hover {
+    cursor: pointer;
+    filter: var(--hover);
+}
+
 @media (hover: hover) and (pointer: fine) {
     header [data-scope="menu"][data-part="trigger"]:hover,
     header [data-scope="tabs"][data-part="trigger"]:hover,
-    #header-menu-logout:hover,
-    button:hover {
+    #header-menu-logout:hover {
         cursor: pointer;
         filter: var(--hover);
     }

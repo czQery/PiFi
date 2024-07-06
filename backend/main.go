@@ -161,11 +161,11 @@ func nmInit() {
 			if item, e := ifaceConfig[i.Name]; e {
 				item["ready"] = true
 			} else {
-				newIfaceConfig := make(map[string]interface{})
-				newIfaceConfig["ready"] = true
-				newIfaceConfig["mode"] = ""
+				newItem := make(map[string]interface{})
+				newItem["ready"] = true
+				newItem["mode"] = "none"
 
-				ifaceConfig[i.Name] = newIfaceConfig
+				ifaceConfig[i.Name] = newItem
 			}
 		}
 	}

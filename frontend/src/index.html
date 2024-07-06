@@ -52,7 +52,9 @@
             --rad: 3px;
             --transition-duration: 0.1s;
             --shadow: 8px 8px 8px rgba(0, 0, 0, 0.1);
-            --hover: opacity(0.3);
+            --outline: 1px #8b868647 solid;
+            --outline-active: 1px var(--pink) solid;
+            --hover: brightness(0.6);
         }
 
         * {
@@ -90,6 +92,26 @@
             margin: 0;
         }
 
+        button, input {
+            border-radius: var(--rad);
+            border: none;
+            outline: var(--outline);
+        }
+
+        button {
+            color: var(--white);
+            background-color: var(--dark);
+        }
+
+        input {
+            padding: 0 10px;
+            color: var(--dark);
+        }
+
+        button:focus, button:focus-visible {
+            outline: var(--outline-active);
+        }
+
         #loading {
             position: absolute;
             margin: 0;
@@ -116,6 +138,13 @@
             }
             to {
                 background-position: 0 0;
+            }
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            button:hover {
+                cursor: pointer;
+                filter: var(--hover);
             }
         }
     </style>
