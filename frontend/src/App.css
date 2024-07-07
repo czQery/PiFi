@@ -1,11 +1,73 @@
 /*global*/
+h1 {
+    /*fine tuned to be pixel perfect*/
+    line-height: 33px;
+    font-size: 38px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+h2 {
+    font-size: 28px;
+    margin: 0 0 10px 0;
+}
+
+h3 {
+    font-size: 18px;
+    margin: 0 0 5px 0;
+}
+
+h4, span, label {
+    font-size: 16px;
+    margin: 0;
+}
+
+button, input {
+    border-radius: var(--rad);
+    border: none;
+    outline: var(--outline);
+}
+
+button {
+    color: var(--white);
+    background-color: var(--dark);
+}
+
+input {
+    padding: 0 10px;
+    color: var(--dark);
+}
+
+input::placeholder {
+    color: var(--dark-hover);
+}
+
+input:focus, input:focus-visible, button:focus, button:focus-visible {
+    outline: var(--outline-active);
+}
+
+.pink {
+    background-color: var(--pink);
+    color: var(--white);
+    outline: none !important;
+}
+
+.green {
+    background-color: var(--green);
+    color: var(--dark);
+    outline: none !important;
+}
+
 .container {
     max-width: 1024px;
     margin-inline: auto;
     height: inherit;
 }
 
-.card {
+.card,
+div [data-scope="dialog"][data-part="positioner"]:has([data-state="open"]),
+div [data-scope="select"][data-part="positioner"]:has([data-state="open"]),
+div [data-scope="progress"][data-part="track"] {
     border-radius: var(--rad);
     box-shadow: var(--shadow);
     outline: var(--outline);
@@ -22,7 +84,14 @@
     cursor: pointer;
 }
 
-/*app*/
+@media (hover: hover) and (pointer: fine) {
+    button:hover {
+        cursor: pointer;
+        filter: var(--hover);
+    }
+}
+
+/*ui*/
 header {
     width: 100%;
     background-color: var(--pink);
@@ -121,6 +190,7 @@ div [data-scope="select"][data-part="root"] {
     gap: 5px;
     flex-direction: column;
     width: 200px;
+    color: var(--white);
 }
 
 div [data-scope="select"][data-part="trigger"] {
@@ -132,12 +202,9 @@ div [data-scope="select"][data-part="trigger"] {
     justify-content: space-between;
 }
 
-div [data-scope="select"][data-part="positioner"]:has([data-state="open"]) {
+div [data-scope="select"][data-part="positioner"]:has([data-state="open"]) { /*+card*/
     background-color: var(--dark);
-    box-shadow: var(--shadow);
     width: var(--reference-width);
-    border-radius: var(--rad);
-    outline: var(--outline);
 }
 
 div [data-scope="select"][data-part="item"] {
@@ -153,6 +220,43 @@ div [data-scope="select"][data-part="item"][data-state="checked"] {
 div [data-scope="select"][data-part="item"]:hover {
     cursor: pointer;
     filter: var(--hover);
+}
+
+div [data-scope="dialog"][data-part="backdrop"][data-state="open"] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    height: 100dvh;
+    background-color: var(--dark-hover);
+}
+
+div [data-scope="dialog"][data-part="positioner"]:has([data-state="open"]) { /*+card*/
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--base);
+    padding: 10px;
+}
+
+div [data-scope="progress"][data-part="root"] {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: var(--white);
+}
+
+div [data-scope="progress"][data-part="track"] {
+    height: 10px;
+    background-color: var(--dark);
+    min-width: 200px;
+}
+
+div [data-scope="progress"][data-part="range"] {
+    background-color: var(--pink);
+    height: 100%;
+    border-radius: var(--rad);
 }
 
 @media (hover: hover) and (pointer: fine) {

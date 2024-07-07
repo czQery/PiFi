@@ -26,3 +26,7 @@ export const getSettings = async (): Promise<settingsData> => {
 
     return {iface: {}}
 }
+
+export const saveSettings = async ():Promise<string> => {
+    return ""
+}

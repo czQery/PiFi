@@ -15,3 +15,14 @@
 .settings-iface h2 {
     margin: 0;
 }
+
+#settings-btn {
+    display: flex;
+    justify-content: right;
+    height: 30px;
+    gap: 10px;
+}
+
+#settings-btn button {
+    width: 100px;
+}

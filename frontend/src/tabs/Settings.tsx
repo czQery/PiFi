@@ -2,8 +2,8 @@ import type {Component} from "solid-js";
 import {createSignal, For, Index, onMount} from "solid-js";
 
 import "./Settings.css"
-import {getSettings, settingsData, settingsInterfaceFieldsData} from "../lib/settings";
-import {Select} from "@ark-ui/solid"
+import {getSettings, saveSettings, settingsData, settingsInterfaceFieldsData} from "../lib/settings";
+import {Dialog, Select, Progress} from "@ark-ui/solid"
 import {Portal} from "solid-js/web";
 
 export const [settings, setSettings] = createSignal<settingsData>({iface: {}});
@@ -15,6 +15,7 @@ const Settings: Component = () => {
     })
 
     const items = ["none", "hotspot", "monitor"]
+    const [isOpen, setIsOpen] = createSignal(false)
 
     return (
         <div id="settings">
@@ -33,7 +34,7 @@ const Settings: Component = () => {
                             <Select.Positioner>
                                 <Select.Content>
                                     <Select.ItemGroup id="test">
-                                        <Index each={items<string[]>}>{(item,i) => (
+                                        <Index each={items<string[]>}>{(item, i) => (
                                             <Select.Item item={item()}>
                                                 <Select.ItemText>{item()}</Select.ItemText>
                                             </Select.Item>
@@ -47,6 +48,32 @@ const Settings: Component = () => {
                 </div>
             }
             </For>
+            <div id="settings-btn">
+                <button id="settings-revert" class="card" onClick={async () => {
+                    setSettings(await getSettings())
+                }}>revert
+                </button>
+                <button id="settings-save" class="card green" onClick={async () => {
+                    setIsOpen(true)
+                    await saveSettings()
+                }}>save
+                </button>
+                <Dialog.Root className={"card"} open={isOpen()} onOpenChange={(e) => setIsOpen(e.open)}>
+                    <Portal>
+                        <Dialog.Backdrop/>
+                        <Dialog.Positioner>
+                            <Dialog.Content>
+                                <Progress.Root>
+                                    <Progress.Label>saving</Progress.Label>
+                                    <Progress.Track>
+                                        <Progress.Range/>
+                                    </Progress.Track>
+                                </Progress.Root>
+                            </Dialog.Content>
+                        </Dialog.Positioner>
+                    </Portal>
+                </Dialog.Root>
+            </div>
         </div>
     )
 }

@@ -11,7 +11,7 @@ const Auth: Component = () => {
     return (
         <div id="c-auth">
             <h1 id="pifi">PiFi</h1>
-            <input ref={inputRef} onKeyPress={async (e) => {
+            <input class="card" ref={inputRef} onKeyPress={async (e) => {
                 if (e.key == "Enter") {
                     inputRef.disabled = true
                     setLogged(await authSave(inputRef.value))
@@ -19,7 +19,7 @@ const Auth: Component = () => {
                     inputRef.disabled = false
                 }
             }} type="password" placeholder="password" required="required" value=""/>
-            <button onClick={() => authSave(inputRef.value)}>login</button>
+            <button class="card pink" onClick={() => authSave(inputRef.value)}>login</button>
         </div>
     )
 }
