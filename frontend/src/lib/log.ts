@@ -1,4 +1,4 @@
-import {api, response} from "./var";
+import {api, response} from "./var"
 
 export interface logData {
     time: Date

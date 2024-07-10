@@ -1,0 +1,16 @@
+.settings-iface {
+    display: grid;
+    padding: 10px;
+    gap: 10px;
+    background-color: var(--base);
+}
+
+.settings-iface h2 {
+    margin: 0;
+}
+
+.settings-iface-hotspot {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}

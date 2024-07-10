@@ -1,6 +1,6 @@
-import {Component, createEffect, createSignal, Setter} from "solid-js";
-import {Portal} from "solid-js/web";
-import {Dialog, Progress} from "@ark-ui/solid";
+import {Component, createEffect, createSignal, Setter} from "solid-js"
+import {Portal} from "solid-js/web"
+import {Dialog, Progress} from "@ark-ui/solid"
 
 export interface loadingData {
     title: string

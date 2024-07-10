@@ -1,4 +1,4 @@
-import {api} from "./var";
+import {api} from "./var"
 
 export const auth = async (): Promise<boolean> => {
 

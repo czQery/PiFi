@@ -1,8 +1,8 @@
 import {render} from "solid-js/web"
 import {Route, Router} from "@solidjs/router"
-import Dash from "./tabs/Dash";
-import App from "./App";
-import Settings from "./tabs/Settings";
+import Dash from "./tabs/Dash"
+import App from "./App"
+import Settings from "./tabs/Settings"
 
 render(() => (
     <Router root={App}>

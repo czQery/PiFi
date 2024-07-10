@@ -1,14 +1,14 @@
-import type {Component} from "solid-js";
-import {createSignal, Index, onMount, Show} from "solid-js";
+import type {Component} from "solid-js"
+import {createSignal, Index, onMount, Show} from "solid-js"
 
 import "./Dash.css"
-import {LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi} from "lucide-solid";
-import {useNavigate} from "@solidjs/router";
-import {getStats, statsData} from "../lib/stats";
-import {getLog, logData} from "../lib/log";
+import {LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi} from "lucide-solid"
+import {useNavigate} from "@solidjs/router"
+import {getStats, statsData} from "../lib/stats"
+import {getLog, logData} from "../lib/log"
 
-export const [stats, setStats] = createSignal<statsData>({cpu: 0, mem_total: 0, mem_used: 0});
-export const [log, setLog] = createSignal<logData[]>([]);
+export const [stats, setStats] = createSignal<statsData>({cpu: 0, mem_total: 0, mem_used: 0})
+export const [log, setLog] = createSignal<logData[]>([])
 
 const Dash: Component = () => {
 

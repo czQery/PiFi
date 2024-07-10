@@ -10,15 +10,15 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^5.5.2",
-    "vite": "^5.3.2",
+    "typescript": "^5.5.3",
+    "vite": "^5.3.3",
     "vite-plugin-solid": "^2.10.2"
   },
   "dependencies": {
-    "@ark-ui/solid": "^2.2.0",
-    "@solidjs/router": "^0.13.6",
-    "@types/node": "^20.14.9",
-    "lucide-solid": "^0.363.0",
+    "@ark-ui/solid": "^3.5.0",
+    "@solidjs/router": "^0.14.1",
+    "@types/node": "^20.14.10",
+    "lucide-solid": "^0.407.0",
     "solid-js": "^1.8.18"
   }
 }

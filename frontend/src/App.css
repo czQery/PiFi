@@ -17,7 +17,7 @@ h3 {
     margin: 0 0 5px 0;
 }
 
-h4, span, label {
+h4, span, label, button, input {
     font-size: 16px;
     margin: 0;
 }
@@ -26,20 +26,13 @@ button, input {
     border-radius: var(--rad);
     border: none;
     outline: var(--outline);
-}
-
-button {
+    padding: 0 10px;
     color: var(--white);
     background-color: var(--dark);
 }
 
-input {
-    padding: 0 10px;
-    color: var(--dark);
-}
-
 input::placeholder {
-    color: var(--dark-hover);
+    color: var(--white-hover);
 }
 
 input:focus, input:focus-visible, button:focus, button:focus-visible {
@@ -169,6 +162,7 @@ header [data-scope="tabs"][data-part="trigger"] svg, #header-menu-logout svg {
     margin-top: auto;
 }
 
+/*ark ui*/
 header [data-scope="tabs"][data-part="indicator"] {
     background-color: var(--dark);
     border-radius: 0;
@@ -185,7 +179,45 @@ main {
     padding: 10px;
 }
 
-div [data-scope="select"][data-part="root"] {
+div [data-scope="field"][data-part="input"] {
+    height: 30px;
+}
+
+div [data-scope="number-input"][data-part="root"] {
+    display: grid;
+    grid-template-areas:
+        "label label"
+        "input btn";
+    grid-template-columns: 130px 65px; /*2*30 + 5gap*/
+    grid-template-rows: auto 30px;
+    gap: 5px;
+    color: var(--white);
+}
+
+div [data-scope="number-input"][data-part="label"] {
+    grid-area: label;
+}
+
+div [data-scope="number-input"][data-part="input"] {
+    grid-area: input;
+}
+
+div [data-scope="number-input"][data-part="control"] {
+    grid-area: btn;
+    display: flex;
+    gap: 5px;
+}
+
+div [data-scope="number-input"][data-part="control"] button {
+    width: 30px;
+}
+
+div [data-scope="number-input"][data-part="control"] button:disabled {
+    cursor: default;
+    filter: var(--hover);
+}
+
+div [data-scope="select"][data-part="root"], div [data-scope="field"][data-part="root"] {
     display: flex;
     gap: 5px;
     flex-direction: column;
@@ -204,7 +236,7 @@ div [data-scope="select"][data-part="trigger"] {
 
 div [data-scope="select"][data-part="positioner"]:has([data-state="open"]) { /*+card*/
     background-color: var(--dark);
-    width: var(--reference-width);
+    width: var(--reference-width); /*dynamic variable created by ark ui*/
 }
 
 div [data-scope="select"][data-part="item"] {

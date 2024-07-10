@@ -1,12 +1,12 @@
-import {Component} from "solid-js";
+import {Component} from "solid-js"
 
 import "./Auth.css"
-import {authSave} from "../lib/auth";
-import {setLogged} from "../App";
+import {authSave} from "../lib/auth"
+import {setLogged} from "../App"
 
 const Auth: Component = () => {
 
-    let inputRef;
+    let inputRef
 
     return (
         <div id="c-auth">

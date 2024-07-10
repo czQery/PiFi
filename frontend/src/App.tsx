@@ -1,14 +1,14 @@
-import {Component, createEffect, createMemo, createSignal, onMount, Show} from "solid-js";
+import {Component, createEffect, createMemo, createSignal, onMount, Show} from "solid-js"
 
 import "./App.css"
 
 import {Menu, Tabs} from "@ark-ui/solid"
 import {useLocation, useNavigate} from "@solidjs/router"
-import {LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings} from "lucide-solid";
-import Auth from "./components/Auth";
-import {auth, authSave} from "./lib/auth";
+import {LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings} from "lucide-solid"
+import Auth from "./components/Auth"
+import {auth, authSave} from "./lib/auth"
 
-export const [logged, setLogged] = createSignal<undefined | boolean>();
+export const [logged, setLogged] = createSignal<undefined | boolean>()
 
 const parsePath = (value: string): string => {
     return (value.slice(-1) === "/") ? value.slice(1, -1) : value.slice(1)
@@ -16,8 +16,8 @@ const parsePath = (value: string): string => {
 
 const App: Component = (props: { children }) => {
     const navigate = useNavigate()
-    const location = useLocation();
-    const pathname = createMemo(() => parsePath(location.pathname));
+    const location = useLocation()
+    const pathname = createMemo(() => parsePath(location.pathname))
 
     onMount(async () => {
         if (pathname() === "") {
