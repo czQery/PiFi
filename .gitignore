@@ -1,7 +1,9 @@
 .idea
 frontend/node_modules
 frontend/dist
+frontend/.env
 backend/pifi
 backend/PiFi
 backend/log.txt
 backend/config.toml
+backend/config-backup.toml

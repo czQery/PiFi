@@ -9,6 +9,19 @@
     margin: 0;
 }
 
+.settings-iface-title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.settings-iface-title svg {
+    stroke: var(--pink);
+    background-color: var(--dark);
+    padding: 5px;
+    height: 30px;
+    width: 30px;
+}
+
 .settings-iface-hotspot {
     display: flex;
     gap: 10px;

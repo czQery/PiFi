@@ -7,10 +7,6 @@ import (
 )
 
 func Log(c *fiber.Ctx) error {
-	if !VerifyToken(c) {
-		return &Error{Code: 401, Func: "api/log", Message: "unauthorized"}
-	}
-
 	data, err := os.ReadFile(hp.LogFileName)
 	if err != nil {
 		return &Error{Code: 500, Func: "api/log", Err: err}

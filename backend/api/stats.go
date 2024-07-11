@@ -14,10 +14,6 @@ type StatsResponse struct {
 }
 
 func Stats(c *fiber.Ctx) error {
-	if !VerifyToken(c) {
-		return &Error{Code: 401, Func: "api/stats", Message: "unauthorized"}
-	}
-
 	mem, err := memory.Get()
 	if err != nil {
 		return &Error{Code: 500, Func: "api/stats", Err: err}

@@ -5,6 +5,7 @@ import {Field, NumberInput, Select} from "@ark-ui/solid"
 import {Portal} from "solid-js/web"
 
 import "./SettingsInterface.css"
+import {LucideUnplug} from "lucide-solid";
 
 interface settingsInterfaceProps {
     name: string
@@ -23,7 +24,12 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
 
     return (
         <div class="settings-iface card">
-            <h2>{props.name}</h2>
+            <div class="settings-iface-title">
+                <h2>{props.name}</h2>
+                <Show when={!props.iface.ready<boolean>}>
+                    <LucideUnplug class="card"/>
+                </Show>
+            </div>
             <Select.Root items={modes} required={true} value={[props.iface.mode ? props.iface.mode : "none"]} onValueChange={(e) => setMode(e.value[0])}>
                 <Select.Label>Mode</Select.Label>
                 <Select.Control>
@@ -51,15 +57,15 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
                 <div class="settings-iface-hotspot">
                     <Field.Root>
                         <Field.Label>SSID</Field.Label>
-                        <Field.Input placeholder={"PiFi"} onInput={(e) => props.iface.ssid = e.currentTarget.value}/>
+                        <Field.Input placeholder={"PiFi"} value={props.iface.ssid} onInput={(e) => props.iface.ssid = e.currentTarget.value}/>
                         <Field.ErrorText>Error Info</Field.ErrorText>
                     </Field.Root>
                     <Field.Root>
                         <Field.Label>Password</Field.Label>
-                        <Field.Input placeholder={"none"} onInput={(e) => props.iface.password = e.currentTarget.value}/>
+                        <Field.Input placeholder={"none"} value={props.iface.password} onInput={(e) => props.iface.password = e.currentTarget.value}/>
                         <Field.ErrorText>Error Info</Field.ErrorText>
                     </Field.Root>
-                    <NumberInput.Root value={"1"} min={1} max={14} onValueChange={(e) => props.iface.channel = e.valueAsNumber}>
+                    <NumberInput.Root value={props.iface.channel ? props.iface.channel.toString() : "1"} min={1} max={14} onValueChange={(e) => props.iface.channel = e.valueAsNumber}>
                         <NumberInput.Label>Channel</NumberInput.Label>
                         <NumberInput.Input/>
                         <NumberInput.Control>

@@ -1,7 +1,6 @@
 package hp
 
 import (
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/sirupsen/logrus"
 	"os"
 )
@@ -19,5 +18,5 @@ func DistLoad() {
 	}
 
 	Dist = true
-	log.Info("dist - successfully loaded")
+	logrus.Info("dist - successfully loaded")
 }

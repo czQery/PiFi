@@ -78,6 +78,10 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            gap: 10px;
         }
 
         #loading span {
@@ -92,6 +96,10 @@
             animation: background-slide 1s linear infinite;
         }
 
+        #loading noscript {
+            color: var(--white-hover);
+        }
+
         @keyframes background-slide {
             from {
                 background-position: 200% 0;
@@ -103,9 +111,9 @@
     </style>
 </head>
 <body>
-<noscript>You need to enable JavaScript to run this app.</noscript>
 <div id="loading">
     <span>loading</span>
+    <noscript>you need to enable JavaScript to run this app</noscript>
 </div>
 <div id="root" style="display: none;"></div>
 <script src="./index.tsx" type="module"></script>

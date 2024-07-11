@@ -64,7 +64,10 @@ func init() {
 func main() {
 
 	hp.ArtPrint()
+
 	hp.ConfigLoad()
+	logrus.Info("config - successfully loaded")
+
 	hp.DistLoad()
 
 	nmInit()
@@ -99,10 +102,19 @@ func main() {
 	})
 
 	// API
-	r.Get("/api/auth", api.Auth)
-	r.Get("/api/stats", api.Stats)
-	r.Get("/api/log", api.Log)
-	r.Get("/api/settings", api.SettingsGet)
+
+	rApi := r.Group("/api", func(c *fiber.Ctx) error {
+		if !api.VerifyToken(c) {
+			return &api.Error{Code: 401, Func: "api/settings", Message: "unauthorized"}
+		}
+		return c.Next()
+	})
+
+	rApi.Get("/auth", api.Auth)
+	rApi.Get("/stats", api.Stats)
+	rApi.Get("/log", api.Log)
+	rApi.Get("/settings", api.SettingsGet)
+	rApi.Post("/settings", api.SettingsPost)
 
 	// Static files
 	r.Static("/", "./dist")
@@ -137,7 +149,7 @@ func nmInit() {
 	if ifaceErr != nil {
 		logrus.WithFields(logrus.Fields{
 			"err": ifaceErr.Error(),
-		}).Panic("main - " + cmd.NM + " failed")
+		}).Panic("main - nmcli failed")
 	}
 
 	// Get interfaces from config
@@ -184,5 +196,5 @@ func nmInit() {
 	}
 	hp.ConfigSave()
 
-	logrus.Info("main - " + cmd.NM + " loaded")
+	logrus.Info("main - nmcli loaded")
 }

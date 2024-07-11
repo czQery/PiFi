@@ -6,6 +6,7 @@ import {LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi} from "lucide-s
 import {useNavigate} from "@solidjs/router"
 import {getStats, statsData} from "../lib/stats"
 import {getLog, logData} from "../lib/log"
+import {addZero} from "../lib/other";
 
 export const [stats, setStats] = createSignal<statsData>({cpu: 0, mem_total: 0, mem_used: 0})
 export const [log, setLog] = createSignal<logData[]>([])
@@ -56,7 +57,7 @@ const Dash: Component = () => {
                                 }
                             })()
                         }}>{log().level.slice(0, 4).toUpperCase()}</span>
-                        <span style={{opacity: 0.6}}>{"[" + log().time.getHours() + ":" + log().time.getMinutes() + ":" + log().time.getSeconds() + "]"}</span>
+                        <span style={{opacity: 0.6}}>{"[" + addZero(log().time.getHours()) + ":" + addZero(log().time.getMinutes()) + ":" + addZero(log().time.getSeconds()) + "]"}</span>
                         <span>{log().msg}</span>
                         <Show when={log().err<string>}>
                             <span style={{color: "var(--pink)", "margin-left": "auto"}}>{"err=" + log().err}</span>

@@ -19,8 +19,6 @@ func ConfigLoad() {
 			"err": err.Error(),
 		}).Panic("config - load failed")
 	}
-
-	logrus.Info("config - successfully loaded")
 }
 
 func ConfigSave() {

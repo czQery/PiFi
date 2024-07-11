@@ -167,8 +167,8 @@ header [data-scope="tabs"][data-part="indicator"] {
     background-color: var(--dark);
     border-radius: 0;
     width: 50px;
-    height: 30px;
-    transform: skewY(-25deg) translate(-10px, -3px);
+    height: 40px;
+    transform: skewY(-25deg) translate(-10px, -9px);
     top: 0;
     opacity: 0.5;
     transition-duration: var(--transition-duration) !important;
@@ -270,6 +270,13 @@ div [data-scope="dialog"][data-part="positioner"]:has([data-state="open"]) { /*+
     transform: translate(-50%, -50%);
     background-color: var(--base);
     padding: 10px;
+}
+
+div [data-scope="dialog"][data-part="close-trigger"] {
+    height: 30px;
+    width: 100px;
+    margin: 10px 0 0 auto;
+    display: block;
 }
 
 div [data-scope="progress"][data-part="root"] {

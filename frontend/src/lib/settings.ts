@@ -30,7 +30,7 @@ export const getSettings = async (): Promise<settingsData> => {
     return {iface: {}}
 }
 
-export const saveSettings = async (data: settingsData):Promise<settingsData> => {
+export const saveSettings = async (data: settingsData):Promise<response> => {
     const rsp: Response = await fetch(api + "/api/settings", {
         method: "POST",
         credentials: "include",
@@ -40,8 +40,8 @@ export const saveSettings = async (data: settingsData):Promise<settingsData> => 
     const rspJson: response = await rsp.json()
 
     if (rsp.status === 200 && rspJson.data) {
-        return rspJson.data as settingsData
+        return {message: "", data: rspJson.data as settingsData}
     }
 
-    return {iface: {}}
+    return {message: rspJson.message, data: {iface: {}}}
 }
