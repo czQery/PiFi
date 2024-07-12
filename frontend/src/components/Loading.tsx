@@ -44,7 +44,7 @@ const Loading: Component<loadingProps> = (props) => {
             setPending(true)
             fakePending(pending, setProgress).then()
         } else {
-            await sleep(200)
+            await sleep(100)
             setPending(false)
         }
     })

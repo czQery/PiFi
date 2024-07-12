@@ -5,14 +5,17 @@ import "./Settings.css"
 import {getSettings, saveSettings, settingsData, settingsInterfaceFieldsData} from "../lib/settings"
 import Loading, {loadingData} from "../components/Loading"
 import SettingsInterface from "../components/SettingsInterface"
+import {response} from "../lib/var";
 
 export const [settings, setSettings] = createSignal<settingsData>({iface: {}})
+export const [settingsInterfaceHotspot, setSettingsInterfaceHotspot] = createSignal<string>("")
 
 const Settings: Component = () => {
 
     onMount(async () => {
         setSettings(await getSettings())
     })
+
     const [loading, setLoading] = createSignal<loadingData>({title: "loading", pending: false, msg: ""})
 
     return (
@@ -31,7 +34,7 @@ const Settings: Component = () => {
                 </button>
                 <button id="settings-save" class="card green" onClick={async () => {
                     setLoading({title: "saving", pending: true, msg: ""})
-                    let req  = await saveSettings(settings())
+                    let req: response = await saveSettings(settings())
 
                     if (req.message != "") {
                         setLoading({title: "Saving", pending: true, msg: req.message})

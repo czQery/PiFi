@@ -3,15 +3,16 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"io"
+	"os"
+	"strings"
+	"time"
+
 	"github.com/czQery/PiFi/backend/api"
 	"github.com/czQery/PiFi/backend/cmd"
 	"github.com/czQery/PiFi/backend/hp"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
-	"io"
-	"os"
-	"strings"
-	"time"
 )
 
 func init() {

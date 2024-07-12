@@ -57,6 +57,19 @@ input:focus, input:focus-visible, button:focus, button:focus-visible {
     height: inherit;
 }
 
+.container div:only-child {
+    animation: pop var(--transition-duration) linear;
+}
+
+@keyframes pop {
+    from {
+        transform: scale(0.99);
+    }
+    to {
+        transform: none;
+    }
+}
+
 .card,
 div [data-scope="dialog"][data-part="positioner"]:has([data-state="open"]),
 div [data-scope="select"][data-part="positioner"]:has([data-state="open"]),
@@ -247,6 +260,11 @@ div [data-scope="select"][data-part="item"] {
 
 div [data-scope="select"][data-part="item"][data-state="checked"] {
     color: var(--green);
+}
+
+div [data-scope="select"][data-part="item"][data-disabled] {
+    filter: var(--hover);
+    cursor: default !important;
 }
 
 div [data-scope="select"][data-part="item"]:hover {

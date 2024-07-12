@@ -6,6 +6,7 @@ import {Portal} from "solid-js/web"
 
 import "./SettingsInterface.css"
 import {LucideUnplug} from "lucide-solid";
+import {setSettingsInterfaceHotspot, settingsInterfaceHotspot} from "../tabs/Settings";
 
 interface settingsInterfaceProps {
     name: string
@@ -14,12 +15,16 @@ interface settingsInterfaceProps {
 
 const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
 
-    const modes = ["none", "hotspot", "monitor"]
-
+    const modes: string[] = ["none", "hotspot", "monitor"]
     const [mode, setMode] = createSignal<string>(props.iface.mode)
 
     createEffect(() => {
         props.iface.mode = mode()
+        if (mode() === "hotspot") {
+            setSettingsInterfaceHotspot(props.name)
+        } else if (settingsInterfaceHotspot() === props.name) {
+            setSettingsInterfaceHotspot("")
+        }
     })
 
     return (
@@ -30,7 +35,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
                     <LucideUnplug class="card"/>
                 </Show>
             </div>
-            <Select.Root items={modes} required={true} value={[props.iface.mode ? props.iface.mode : "none"]} onValueChange={(e) => setMode(e.value[0])}>
+            <Select.Root items={modes} required={true} immediate={true} value={[props.iface.mode ? props.iface.mode : "none"]} onValueChange={(e) => setMode(e.value[0])}>
                 <Select.Label>Mode</Select.Label>
                 <Select.Control>
                     <Select.Trigger>
@@ -43,9 +48,15 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
                         <Select.Content>
                             <Select.ItemGroup id="test">
                                 <Index each={modes<string[]>}>{(item, i) => (
-                                    <Select.Item item={item()}>
-                                        <Select.ItemText>{item()}</Select.ItemText>
-                                    </Select.Item>
+                                    <Show when={settingsInterfaceHotspot() !== props.name && settingsInterfaceHotspot() !== "" && item() === "hotspot"<boolean>} fallback={
+                                        <Select.Item item={item()}>
+                                            <Select.ItemText>{item()}</Select.ItemText>
+                                        </Select.Item>
+                                    }>
+                                        <Select.Item item={item()} data-disabled aria-disabled disabled>
+                                            <Select.ItemText data-disabled aria-disabled>{item()}</Select.ItemText>
+                                        </Select.Item>
+                                    </Show>
                                 )}
                                 </Index>
                             </Select.ItemGroup>
