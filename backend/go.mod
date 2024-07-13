@@ -8,6 +8,7 @@ require (
 	github.com/knadh/koanf/providers/file v1.0.0
 	github.com/knadh/koanf/v2 v2.1.1
 	github.com/mackerelio/go-osstat v0.2.5
+	github.com/mitchellh/mapstructure v1.5.0
 	github.com/sirupsen/logrus v1.9.3
 )
 

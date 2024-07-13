@@ -1,8 +1,10 @@
 import {api} from "./var"
 
+import sha256 from "fast-sha256";
+
 export const auth = async (): Promise<boolean> => {
 
-    const rsp: Response = await fetch(api + "/api/auth", {
+    const rsp: Response = await fetch(api + "api/auth", {
         credentials: "include"
     })
 
@@ -10,14 +12,9 @@ export const auth = async (): Promise<boolean> => {
 }
 
 export const authSave = async (password: string): Promise<boolean> => {
-    const hash: string = await sha256(password)
-    document.cookie = "token="+hash+";path=/"
+    const hash: Uint8Array = sha256(new TextEncoder().encode(password))
+    const hashArray: number[] = Array.from(hash)
+    const hashString: string = hashArray.map((n: number) => n.toString(16).padStart(2, "0")).join("")
+    document.cookie = "token="+hashString+";path=/"
     return await auth()
-}
-
-export const sha256 = async (input: string): Promise<string> => {
-    const msgBuf: Uint8Array = new TextEncoder().encode(input)
-    const hashBuf: ArrayBuffer = await crypto.subtle.digest("SHA-256", msgBuf)
-    const hashArr: number[] = Array.from(new Uint8Array(hashBuf))
-    return hashArr.map((n: number) => n.toString(16).padStart(2, "0")).join("")
 }

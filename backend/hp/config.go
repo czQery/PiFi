@@ -27,6 +27,7 @@ func ConfigSave() {
 		logrus.WithFields(logrus.Fields{
 			"err": err.Error(),
 		}).Error("config - marshal failed")
+		return
 	}
 
 	err = os.WriteFile(ConfigName, data, 0644)

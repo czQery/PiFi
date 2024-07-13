@@ -19,6 +19,10 @@
     column-gap: 10px;
     color: var(--base);
 }
+#dash-overview[data-disabled=true] {
+    background-color: var(--base);
+    color: var(--white-hover);
+}
 
 #dash-overview-icon {
     height: 70px;
@@ -27,17 +31,24 @@
     grid-area: icon;
     stroke: var(--dark);
 }
+#dash-overview[data-disabled=true] #dash-overview-icon{
+    stroke: var(--white);
+}
 
 #dash-overview h2 {
     grid-area: title;
     margin: auto 0 0 0;
     color: var(--dark);
 }
+#dash-overview[data-disabled=true] h2, #dash-overview[data-disabled=true] h4{
+    color: var(--white);
+}
 
 #dash-overview h4 {
     grid-area: d1;
     height: 20px;
     margin: 0;
+    color: var(--dark);
 }
 
 #dash-overview span {

@@ -41,7 +41,7 @@ const Settings: Component = () => {
                         return
                     }
 
-                    setSettings()
+                    setSettings(req.data as settingsData)
                     setLoading({title: "Saving", pending: false, msg: ""})
                 }}>save
                 </button>

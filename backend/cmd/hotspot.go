@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"os/exec"
 	"strings"
 )
@@ -43,7 +44,7 @@ func InitHotspot(ifname string) error {
 func SetHotspot(ifname, ssid, channel, password string) error {
 	err := exec.Command(NM, "con", "modify", Con, "connection.interface-name", ifname, "802-11-wireless.ssid", ssid, "802-11-wireless.channel", channel).Run()
 	if err != nil {
-		return err
+		return errors.New("modify iface: " + err.Error())
 	}
 
 	if password == "" || len(password) < 8 {
@@ -52,12 +53,12 @@ func SetHotspot(ifname, ssid, channel, password string) error {
 		err = exec.Command(NM, "con", "modify", Con, "802-11-wireless-security.key-mgmt", "wpa-psk", "802-11-wireless-security.psk", "'"+password+"'").Run()
 	}
 	if err != nil {
-		return err
+		return errors.New("modify wpa: " + err.Error())
 	}
 
 	err = exec.Command(NM, "con", "up", Con).Run()
 	if err != nil {
-		return err
+		return errors.New("up: " + err.Error())
 	}
 
 	return nil

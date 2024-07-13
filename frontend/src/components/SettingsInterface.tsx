@@ -1,5 +1,5 @@
 import type {Component} from "solid-js"
-import {createEffect, createSignal, Index, Show} from "solid-js"
+import {createEffect, createSignal, Index, onMount, Show} from "solid-js"
 import {settingsInterfaceFieldsData} from "../lib/settings"
 import {Field, NumberInput, Select} from "@ark-ui/solid"
 import {Portal} from "solid-js/web"
@@ -17,6 +17,12 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
 
     const modes: string[] = ["none", "hotspot", "monitor"]
     const [mode, setMode] = createSignal<string>(props.iface.mode)
+
+    onMount(() => {
+        if (props.iface.channel === 0 || props.iface.channel > 14) {
+            props.iface.channel = 1
+        }
+    })
 
     createEffect(() => {
         props.iface.mode = mode()
@@ -76,7 +82,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
                         <Field.Input placeholder={"none"} value={props.iface.password} onInput={(e) => props.iface.password = e.currentTarget.value}/>
                         <Field.ErrorText>Error Info</Field.ErrorText>
                     </Field.Root>
-                    <NumberInput.Root value={props.iface.channel ? props.iface.channel.toString() : "1"} min={1} max={14} onValueChange={(e) => props.iface.channel = e.valueAsNumber}>
+                    <NumberInput.Root value={props.iface.channel.toString()} min={1} max={14} onValueChange={(e) => props.iface.channel = e.valueAsNumber}>
                         <NumberInput.Label>Channel</NumberInput.Label>
                         <NumberInput.Input/>
                         <NumberInput.Control>

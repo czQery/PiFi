@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/czQery/PiFi/backend/cmd"
 	"github.com/czQery/PiFi/backend/hp"
 	"github.com/gofiber/fiber/v2"
@@ -10,7 +11,7 @@ import (
 )
 
 type SettingsResponse struct {
-	Interface map[string]SettingsInterfaceResponse `json:"iface"`
+	Interface map[string]SettingsInterfaceResponse `json:"iface" mapstructure:"iface"`
 }
 
 type SettingsInterfaceResponse struct {
@@ -59,7 +60,7 @@ func ApplySettings(settings SettingsResponse) error {
 		case "hotspot":
 			err := cmd.SetHotspot(ifaceName, iface.SSID, strconv.Itoa(iface.Channel), iface.Password)
 			if err != nil {
-				return err
+				return errors.New("set hotspot: " + err.Error())
 			}
 			hotspot = true
 		}
@@ -67,8 +68,8 @@ func ApplySettings(settings SettingsResponse) error {
 
 	if !hotspot {
 		err := cmd.DisableHotspot()
-		if err != nil {
-			return err
+		if err != nil && err.Error() != "exit status 10" {
+			return errors.New("disable hotspot: " + err.Error())
 		}
 	}
 

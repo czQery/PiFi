@@ -8,7 +8,7 @@ export interface logData {
 }
 
 export const getLog = async (): Promise<logData[]> => {
-    const rsp: Response = await fetch(api + "/api/log", {
+    const rsp: Response = await fetch(api + "api/log", {
         credentials: "include"
     })
 

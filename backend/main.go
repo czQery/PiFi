@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"github.com/mitchellh/mapstructure"
 	"io"
 	"os"
 	"strings"
@@ -195,7 +196,22 @@ func nmInit() {
 			"err": ifaceConfigErr.Error(),
 		}).Panic("main - iface config save failed")
 	}
-	hp.ConfigSave()
+
+	// Apply saved settings
+	var settings api.SettingsResponse
+	settingsErr := mapstructure.Decode(hp.Config.Get("settings"), &settings)
+	if settingsErr != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": settingsErr.Error(),
+		}).Panic("main - settings load failed")
+	}
+
+	applyErr := api.ApplySettings(settings)
+	if applyErr != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": applyErr.Error(),
+		}).Panic("main - settings apply failed")
+	}
 
 	logrus.Info("main - nmcli loaded")
 }

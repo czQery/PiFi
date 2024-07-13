@@ -2,7 +2,7 @@ import type {Component} from "solid-js"
 import {createSignal, Index, onMount, Show} from "solid-js"
 
 import "./Dash.css"
-import {LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi} from "lucide-solid"
+import {LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi, LucideWifiOff} from "lucide-solid"
 import {useNavigate} from "@solidjs/router"
 import {getStats, statsData} from "../lib/stats"
 import {getLog, logData} from "../lib/log"
@@ -22,10 +22,12 @@ const Dash: Component = () => {
 
     return (
         <div id="dash">
-            <div id="dash-overview" class="card">
-                <LucideWifi id="dash-overview-icon"/>
-                <h2>{stats().hotspot.ssid}</h2>
-                <h4>Status: normal</h4>
+            <div id="dash-overview" class="card" data-disabled={(stats().hotspot.ssid !== "" ? "false" : "true")}>
+                <Show when={stats().hotspot.ssid !== ""<boolean>} fallback={<LucideWifiOff id="dash-overview-icon"/>}>
+                    <LucideWifi id="dash-overview-icon"/>
+                </Show>
+                <h2>{(stats().hotspot.ssid !== "" ? stats().hotspot.ssid : "xxxx")}</h2>
+                <h4>Status: {(stats().hotspot.ssid !== "" ? "normal" : "off")}</h4>
                 <span>Clients: 2, Passwords: 15</span>
                 <button id="dash-overview-settings" onClick={() => navigate("/settings")}>
                     <LucideSettings/>

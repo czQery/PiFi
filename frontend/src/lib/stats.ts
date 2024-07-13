@@ -12,7 +12,7 @@ export interface statsHotspotData {
 }
 
 export const getStats = async (): Promise<statsData> => {
-    const rsp: Response = await fetch(api + "/api/stats", {
+    const rsp: Response = await fetch(api + "api/stats", {
         credentials: "include"
     })
 

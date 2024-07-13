@@ -17,7 +17,7 @@ export interface settingsInterfaceFieldsData {
 }
 
 export const getSettings = async (): Promise<settingsData> => {
-    const rsp: Response = await fetch(api + "/api/settings", {
+    const rsp: Response = await fetch(api + "api/settings", {
         credentials: "include"
     })
 
@@ -31,7 +31,7 @@ export const getSettings = async (): Promise<settingsData> => {
 }
 
 export const saveSettings = async (data: settingsData):Promise<response> => {
-    const rsp: Response = await fetch(api + "/api/settings", {
+    const rsp: Response = await fetch(api + "api/settings", {
         method: "POST",
         credentials: "include",
         body: JSON.stringify(data),
