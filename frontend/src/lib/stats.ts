@@ -4,6 +4,11 @@ export interface statsData {
     cpu: number
     mem_total: number
     mem_used: number
+    hotspot: statsHotspotData
+}
+
+export interface statsHotspotData {
+    ssid: string
 }
 
 export const getStats = async (): Promise<statsData> => {
@@ -17,5 +22,5 @@ export const getStats = async (): Promise<statsData> => {
         return rspJson.data as statsData
     }
 
-    return {cpu: 0, mem_total: 0, mem_used: 0}
+    return {cpu: 0, mem_total: 0, mem_used: 0, hotspot: {ssid: ""}}
 }

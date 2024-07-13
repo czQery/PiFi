@@ -8,7 +8,7 @@ import {getStats, statsData} from "../lib/stats"
 import {getLog, logData} from "../lib/log"
 import {addZero} from "../lib/other";
 
-export const [stats, setStats] = createSignal<statsData>({cpu: 0, mem_total: 0, mem_used: 0})
+export const [stats, setStats] = createSignal<statsData>({cpu: 0, mem_total: 0, mem_used: 0, hotspot: {ssid: ""}})
 export const [log, setLog] = createSignal<logData[]>([])
 
 const Dash: Component = () => {
@@ -24,8 +24,8 @@ const Dash: Component = () => {
         <div id="dash">
             <div id="dash-overview" class="card">
                 <LucideWifi id="dash-overview-icon"/>
-                <h2>PizzaQY</h2>
-                <h4>Mode: hotspot</h4>
+                <h2>{stats().hotspot.ssid}</h2>
+                <h4>Status: normal</h4>
                 <span>Clients: 2, Passwords: 15</span>
                 <button id="dash-overview-settings" onClick={() => navigate("/settings")}>
                     <LucideSettings/>

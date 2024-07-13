@@ -65,13 +65,13 @@ func init() {
 func main() {
 
 	hp.ArtPrint()
-
 	hp.ConfigLoad()
 	logrus.Info("config - successfully loaded")
-
 	hp.DistLoad()
 
 	nmInit()
+
+	go ticker()
 
 	r := fiber.New(fiber.Config{
 		CaseSensitive:         false,
