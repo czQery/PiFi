@@ -65,6 +65,8 @@ func init() {
 
 func main() {
 
+	defer hp.LogFile.Close()
+
 	hp.ArtPrint()
 	hp.ConfigLoad()
 	logrus.Info("config - successfully loaded")
@@ -104,22 +106,42 @@ func main() {
 	})
 
 	// API
-
-	rApi := r.Group("/api", func(c *fiber.Ctx) error {
+	rAPI := r.Group("/api", func(c *fiber.Ctx) error {
 		if !api.VerifyToken(c) {
 			return &api.Error{Code: 401, Func: "api/settings", Message: "unauthorized"}
 		}
 		return c.Next()
 	})
 
-	rApi.Get("/auth", api.Auth)
-	rApi.Get("/stats", api.Stats)
-	rApi.Get("/log", api.Log)
-	rApi.Get("/settings", api.SettingsGet)
-	rApi.Post("/settings", api.SettingsPost)
+	rAPI.Get("/auth", api.Auth)
+	rAPI.Get("/stats", api.Stats)
+	rAPI.Get("/log", api.Log)
+	rAPI.Get("/settings", api.SettingsGet)
+	rAPI.Post("/settings", api.SettingsPost)
 
-	// Static files
-	r.Static("/", "./dist")
+	// Pifi UI
+	rUI := r.Group("/pifi", func(c *fiber.Ctx) error {
+
+		if strings.TrimSuffix(c.Path(), "/") == "/pifi" {
+			return c.Redirect("/pifi/dash", 308)
+		}
+
+		return c.Next()
+	})
+
+	rUI.All("/:tab", func(c *fiber.Ctx) error {
+		return c.SendFile("./dist/index.html")
+	})
+	rUI.All("/favicon.ico", func(c *fiber.Ctx) error {
+		return c.SendFile("./dist/favicon.ico")
+	})
+	rUI.Static("/assets", "./dist/assets")
+	rUI.Static("/font", "./dist/font")
+
+	// Captive portal
+	r.All("/", func(c *fiber.Ctx) error {
+		return c.SendFile("./portal/test/index.html")
+	})
 
 	// Default
 	r.Use(func(c *fiber.Ctx) error {
@@ -141,8 +163,6 @@ func main() {
 			"err": err.Error(),
 		}).Panic("fiber - server failed")
 	}
-
-	_ = hp.LogFile.Close()
 }
 
 func nmInit() {

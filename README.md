@@ -18,5 +18,17 @@ password setting:
 channel setting:
 - sudo nmcli con modify PiFi 802-11-wireless.channel 5
 
+dns setting
+- /etc/NetworkManager/dnsmasq-shared.d/PiFi.conf
+- ```address=/#/10.42.0.1```
+- sudo systemctl restart NetworkManager
+
 - enable hotspot:
 sudo nmcli con up PiFi
+
+# Setup
+
+NetworkManager
+- in /etc/NetworkManager/NetworkManager.con
+- ```[main].dns=dnsmasq```
+

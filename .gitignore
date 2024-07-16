@@ -7,3 +7,5 @@ backend/PiFi
 backend/log.txt
 backend/config.toml
 backend/config-backup.toml
+backend/portal
+backend/dist

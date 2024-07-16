@@ -1,3 +1,4 @@
 [main]
 address = ":80"
 password = "ligma"
+gateway = "10.42.0.1"
