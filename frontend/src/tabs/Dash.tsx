@@ -64,6 +64,9 @@ const Dash: Component = () => {
                         <Show when={log().err<string>}>
                             <span style={{color: "var(--pink)", "margin-left": "auto"}}>{"err=" + log().err}</span>
                         </Show>
+                        <Show when={log().data<string>}>
+                            <span style={{color: "var(--green)", "margin-left": "auto"}}>{"data=" + log().data}</span>
+                        </Show>
                     </li>
                 }</Index>
             </div>

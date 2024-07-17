@@ -214,8 +214,8 @@ div [data-scope="checkbox"][data-part="control"] div div {
     width: 100px;
     height: 40px;
     margin: 0 auto;
-    transform: skewY(-45deg) translate(0, -30px);
-    filter: var(--hover);
+    transform: skewY(-45deg) translate(0, -45px);
+    filter: brightness(0.4);
 }
 
 div [data-scope="checkbox"][data-part="control"] div span {

@@ -5,6 +5,7 @@ export interface logData {
     level: string
     msg: string
     err: string
+    data: string
 }
 
 export const getLog = async (): Promise<logData[]> => {
@@ -30,7 +31,7 @@ export const getLog = async (): Promise<logData[]> => {
 
             let time = new Date(Date.parse(getLogItem(line, "time")))
 
-            data.push({time: time, level: getLogItem(line, "level"), msg: getLogItem(line, "msg"), err: getLogItem(line, "err")})
+            data.push({time: time, level: getLogItem(line, "level"), msg: getLogItem(line, "msg"), err: getLogItem(line, "err"), data: getLogItem(line, "data")})
         }
 
         return data

@@ -143,6 +143,8 @@ func main() {
 	// Captive portal
 	rPortal := r.Group("/", func(c *fiber.Ctx) error {
 
+		c.Set("Cache-Control", "no-store")
+
 		if c.Path() == "/" {
 			if cmd.Portal == "" {
 				return c.Redirect("/pifi/dash", 307)
