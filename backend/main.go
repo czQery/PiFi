@@ -140,7 +140,12 @@ func main() {
 
 	// Captive portal
 	r.All("/", func(c *fiber.Ctx) error {
-		return c.SendFile("./portal/test/index.html")
+
+		if hp.Portal == "" {
+			return c.Redirect("/pifi/dash", 307)
+		}
+
+		return c.SendFile("./portal/" + hp.Portal + "/index.html")
 	})
 
 	// Default
@@ -204,9 +209,9 @@ func nmInit() {
 		}
 	}
 	if initErr != nil {
-		logrus.WithFields(logrus.Fields{
+		/*logrus.WithFields(logrus.Fields{
 			"err": initErr.Error(),
-		}).Panic("main - hotspot init failed")
+		}).Panic("main - hotspot init failed")*/
 	}
 
 	// Save edited interfaces config

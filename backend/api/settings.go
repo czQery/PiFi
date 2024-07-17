@@ -11,15 +11,17 @@ import (
 )
 
 type SettingsResponse struct {
-	Interface map[string]SettingsInterfaceResponse `json:"iface" mapstructure:"iface"`
+	Interface map[string]SettingsInterfaceResponse `json:"iface" mapstructure:"iface" koanf:"iface"`
 }
 
 type SettingsInterfaceResponse struct {
-	Mode     string `json:"mode"`
-	Ready    bool   `json:"ready"`
-	SSID     string `json:"ssid"`
-	Password string `json:"password"`
-	Channel  int    `json:"channel"`
+	Mode         string `json:"mode"`
+	Ready        bool   `json:"ready"`
+	SSID         string `json:"ssid"`
+	Password     string `json:"password"`
+	Channel      int    `json:"channel"`
+	Portal       bool   `json:"portal"`
+	PortalSource string `json:"portal_source" mapstructure:"portal_source" koanf:"portal_source"`
 }
 
 func SettingsGet(c *fiber.Ctx) error {
@@ -62,6 +64,11 @@ func ApplySettings(settings SettingsResponse) error {
 			if err != nil {
 				return errors.New("set hotspot: " + err.Error())
 			}
+
+			if iface.Portal {
+				hp.Portal = iface.PortalSource
+			}
+
 			hotspot = true
 		}
 	}
@@ -71,6 +78,7 @@ func ApplySettings(settings SettingsResponse) error {
 		if err != nil && err.Error() != "exit status 10" {
 			return errors.New("disable hotspot: " + err.Error())
 		}
+		hp.Portal = ""
 	}
 
 	// very retarded approach, but it works I guess

@@ -14,6 +14,8 @@ export interface settingsInterfaceFieldsData {
     ssid: string
     password: string
     channel: number
+    portal: boolean
+    portal_source: string
 }
 
 export const getSettings = async (): Promise<settingsData> => {

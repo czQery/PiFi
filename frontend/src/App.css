@@ -17,12 +17,12 @@ h3 {
     margin: 0 0 5px 0;
 }
 
-h4, span, label, button, input {
+h4, span, label, button, input, div [data-scope="checkbox"][data-part="control"] {
     font-size: 16px;
     margin: 0;
 }
 
-button, input {
+button, input, div [data-scope="checkbox"][data-part="control"] {
     border-radius: var(--rad);
     border: none;
     outline: var(--outline);
@@ -31,11 +31,11 @@ button, input {
     background-color: var(--dark);
 }
 
-input::placeholder {
+input::placeholder, div [data-scope="checkbox"][data-part="control"] {
     color: var(--white-hover);
 }
 
-input:focus, input:focus-visible, button:focus, button:focus-visible {
+input:focus, input:focus-visible, button:focus, button:focus-visible, div [data-scope="checkbox"][data-part="control"][data-active] {
     outline: var(--outline-active);
 }
 
@@ -196,6 +196,53 @@ div [data-scope="field"][data-part="input"] {
     height: 30px;
 }
 
+div [data-scope="checkbox"][data-part="root"] {
+    width: 100px !important;
+}
+
+div [data-scope="checkbox"][data-part="control"] {
+    height: 30px;
+    overflow: hidden;
+}
+
+div [data-scope="checkbox"][data-part="control"]:hover {
+    cursor: pointer;
+}
+
+div [data-scope="checkbox"][data-part="control"] div div {
+    display: block;
+    width: 100px;
+    height: 40px;
+    margin: 0 auto;
+    transform: skewY(-45deg) translate(0, -30px);
+    filter: var(--hover);
+}
+
+div [data-scope="checkbox"][data-part="control"] div span {
+    z-index: 2;
+    display: block;
+    position: relative;
+    text-align: center;
+    line-height: 30px;
+    color: var(--white);
+}
+
+div [data-scope="checkbox"][data-part="control"][data-state="unchecked"] div div {
+    background-color: var(--pink);
+}
+
+div [data-scope="checkbox"][data-part="control"][data-state="unchecked"] div span:after {
+    content: "disabled";
+}
+
+div [data-scope="checkbox"][data-part="control"][data-state="checked"] div div {
+    background-color: var(--green);
+}
+
+div [data-scope="checkbox"][data-part="control"][data-state="checked"] div span:after {
+    content: "enabled";
+}
+
 div [data-scope="number-input"][data-part="root"] {
     display: grid;
     grid-template-areas:
@@ -230,7 +277,7 @@ div [data-scope="number-input"][data-part="control"] button:disabled {
     filter: var(--hover);
 }
 
-div [data-scope="select"][data-part="root"], div [data-scope="field"][data-part="root"] {
+div [data-scope="select"][data-part="root"], div [data-scope="field"][data-part="root"], div [data-scope="checkbox"][data-part="root"] {
     display: flex;
     gap: 5px;
     flex-direction: column;

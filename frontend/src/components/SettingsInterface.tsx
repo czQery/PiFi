@@ -1,7 +1,7 @@
 import type {Component} from "solid-js"
 import {createEffect, createSignal, Index, onMount, Show} from "solid-js"
 import {settingsInterfaceFieldsData} from "../lib/settings"
-import {Field, NumberInput, Select} from "@ark-ui/solid"
+import {Checkbox, Field, NumberInput, Select} from "@ark-ui/solid"
 import {Portal} from "solid-js/web"
 
 import "./SettingsInterface.css"
@@ -18,9 +18,15 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
     const modes: string[] = ["none", "hotspot", "monitor"]
     const [mode, setMode] = createSignal<string>(props.iface.mode)
 
+    const portals: string[] = ["test", "nn"]
+
     onMount(() => {
         if (props.iface.channel === 0 || props.iface.channel > 14) {
             props.iface.channel = 1
+        }
+
+        if (!props.iface.portal_source) {
+            props.iface.portal_source = portals[0]
         }
     })
 
@@ -90,6 +96,41 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
                             <NumberInput.IncrementTrigger>+</NumberInput.IncrementTrigger>
                         </NumberInput.Control>
                     </NumberInput.Root>
+                </div>
+                <div class="settings-iface-hotspot">
+                    <Checkbox.Root checked={props.iface.portal} onCheckedChange={(e) => props.iface.portal = e.checked as boolean}>
+                        <Checkbox.Label>Portal</Checkbox.Label>
+                        <Checkbox.Control>
+                            <div>
+                                <span></span>
+                                <div></div>
+                            </div>
+                        </Checkbox.Control>
+                        <Checkbox.HiddenInput/>
+                    </Checkbox.Root>
+                    <Select.Root items={portals} required={true} immediate={true} value={[props.iface.portal_source ? props.iface.portal_source : portals[0]]} onValueChange={(e) => props.iface.portal_source = e.value[0]}>
+                        <Select.Label>Portal source</Select.Label>
+                        <Select.Control>
+                            <Select.Trigger>
+                                <Select.ValueText placeholder="select"/>
+                                <Select.Indicator>▼</Select.Indicator>
+                            </Select.Trigger>
+                        </Select.Control>
+                        <Portal>
+                            <Select.Positioner>
+                                <Select.Content>
+                                    <Select.ItemGroup id="test">
+                                        <Index each={portals<string[]>}>{(item, i) => (
+                                            <Select.Item item={item()}>
+                                                <Select.ItemText>{item()}</Select.ItemText>
+                                            </Select.Item>
+                                        )}
+                                        </Index>
+                                    </Select.ItemGroup>
+                                </Select.Content>
+                            </Select.Positioner>
+                        </Portal>
+                    </Select.Root>
                 </div>
             </Show>
         </div>
