@@ -118,6 +118,8 @@ func main() {
 	rAPI.Get("/log", api.Log)
 	rAPI.Get("/settings", api.SettingsGet)
 	rAPI.Post("/settings", api.SettingsPost)
+	rAPI.All("/portal", api.Portal)
+	rAPI.Get("/portals", api.Portals)
 
 	// Pifi UI
 	rUI := r.Group("/pifi", func(c *fiber.Ctx) error {
@@ -139,13 +141,22 @@ func main() {
 	rUI.Static("/font", "./dist/font")
 
 	// Captive portal
-	r.All("/", func(c *fiber.Ctx) error {
+	rPortal := r.Group("/", func(c *fiber.Ctx) error {
 
-		if hp.Portal == "" {
-			return c.Redirect("/pifi/dash", 307)
+		if c.Path() == "/" {
+			if cmd.Portal == "" {
+				return c.Redirect("/pifi/dash", 307)
+			}
+			return c.SendFile("./portal/" + cmd.Portal + "/index.html")
 		}
 
-		return c.SendFile("./portal/" + hp.Portal + "/index.html")
+		return c.Next()
+	})
+	rPortal.All("favicon.ico", func(c *fiber.Ctx) error {
+		return c.SendFile("./portal/" + cmd.Portal + "/favicon.ico")
+	})
+	rPortal.All(":dir/:file", func(c *fiber.Ctx) error {
+		return c.SendFile("./portal/" + cmd.Portal + "/" + c.Params("dir") + "/" + c.Params("file"))
 	})
 
 	// Default
@@ -209,9 +220,9 @@ func nmInit() {
 		}
 	}
 	if initErr != nil {
-		/*logrus.WithFields(logrus.Fields{
+		logrus.WithFields(logrus.Fields{
 			"err": initErr.Error(),
-		}).Panic("main - hotspot init failed")*/
+		}).Panic("main - hotspot init failed")
 	}
 
 	// Save edited interfaces config

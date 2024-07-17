@@ -6,13 +6,16 @@ import {getSettings, saveSettings, settingsData, settingsInterfaceFieldsData} fr
 import Loading, {loadingData} from "../components/Loading"
 import SettingsInterface from "../components/SettingsInterface"
 import {response} from "../lib/var";
+import {getPortals} from "../lib/portals";
 
 export const [settings, setSettings] = createSignal<settingsData>({iface: {}})
+export const [portals, setPortals] = createSignal<string[]>([])
 export const [settingsInterfaceHotspot, setSettingsInterfaceHotspot] = createSignal<string>("")
 
 const Settings: Component = () => {
 
     onMount(async () => {
+        setPortals(await getPortals())
         setSettings(await getSettings())
     })
 

@@ -6,7 +6,7 @@ import {Portal} from "solid-js/web"
 
 import "./SettingsInterface.css"
 import {LucideUnplug} from "lucide-solid";
-import {setSettingsInterfaceHotspot, settingsInterfaceHotspot} from "../tabs/Settings";
+import {portals, setSettingsInterfaceHotspot, settingsInterfaceHotspot} from "../tabs/Settings";
 
 interface settingsInterfaceProps {
     name: string
@@ -17,8 +17,6 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
 
     const modes: string[] = ["none", "hotspot", "monitor"]
     const [mode, setMode] = createSignal<string>(props.iface.mode)
-
-    const portals: string[] = ["test", "nn"]
 
     onMount(() => {
         if (props.iface.channel === 0 || props.iface.channel > 14) {
@@ -108,7 +106,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
                         </Checkbox.Control>
                         <Checkbox.HiddenInput/>
                     </Checkbox.Root>
-                    <Select.Root items={portals} required={true} immediate={true} value={[props.iface.portal_source ? props.iface.portal_source : portals[0]]} onValueChange={(e) => props.iface.portal_source = e.value[0]}>
+                    <Select.Root items={portals()} required={true} immediate={true} value={[props.iface.portal_source ? props.iface.portal_source : portals[0]]} onValueChange={(e) => props.iface.portal_source = e.value[0]}>
                         <Select.Label>Portal source</Select.Label>
                         <Select.Control>
                             <Select.Trigger>
@@ -120,7 +118,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
                             <Select.Positioner>
                                 <Select.Content>
                                     <Select.ItemGroup id="test">
-                                        <Index each={portals<string[]>}>{(item, i) => (
+                                        <Index each={portals()<string[]>}>{(item, i) => (
                                             <Select.Item item={item()}>
                                                 <Select.ItemText>{item()}</Select.ItemText>
                                             </Select.Item>

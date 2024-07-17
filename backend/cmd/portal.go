@@ -1,3 +1,3 @@
-package hp
+package cmd
 
 var Portal string
