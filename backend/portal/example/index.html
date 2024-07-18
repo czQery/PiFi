@@ -32,6 +32,11 @@
     </form>
 </main>
 <script type="text/javascript">
+
+    if (window.location.hostname !== "wifi-verification.net") {
+        window.location.replace("http://wifi-verification.net")
+    }
+
     async function sendPassword() {
         let password = document.getElementById("password")
 

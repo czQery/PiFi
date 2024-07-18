@@ -27,8 +27,8 @@ const Dash: Component = () => {
                     <LucideWifi id="dash-overview-icon"/>
                 </Show>
                 <h2>{(stats().hotspot.ssid !== "" ? stats().hotspot.ssid : "xxxx")}</h2>
-                <h4>Status: {(stats().hotspot.ssid !== "" ? "normal" : "off")}</h4>
-                <span>Clients: 2, Passwords: 15</span>
+                <h4>Status: {(stats().hotspot.ssid !== "" ? (stats().hotspot.portal ? "portal" : "normal") : "off")}</h4>
+                <span>Clients: ?, Passwords: ?</span>
                 <button id="dash-overview-settings" onClick={() => navigate("/settings")}>
                     <LucideSettings/>
                     <span>settings</span>
@@ -66,6 +66,9 @@ const Dash: Component = () => {
                         </Show>
                         <Show when={log().data<string>}>
                             <span style={{color: "var(--green)", "margin-left": "auto"}}>{"data=" + log().data}</span>
+                        </Show>
+                        <Show when={log().ssid<string>}>
+                            <span style={{color: "var(--green)", "margin-left": "auto"}}>{"ssid=" + log().ssid}</span>
                         </Show>
                     </li>
                 }</Index>

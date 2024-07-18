@@ -9,6 +9,7 @@ export interface statsData {
 
 export interface statsHotspotData {
     ssid: string
+    portal: boolean
 }
 
 export const getStats = async (): Promise<statsData> => {
@@ -22,5 +23,5 @@ export const getStats = async (): Promise<statsData> => {
         return rspJson.data as statsData
     }
 
-    return {cpu: 0, mem_total: 0, mem_used: 0, hotspot: {ssid: ""}}
+    return {cpu: 0, mem_total: 0, mem_used: 0, hotspot: {ssid: "", portal: false}}
 }

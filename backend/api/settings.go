@@ -60,16 +60,18 @@ func ApplySettings(settings SettingsResponse) error {
 
 		switch strings.ToLower(iface.Mode) {
 		case "hotspot":
+			if iface.Portal {
+				cmd.Portal = iface.PortalSource
+			} else {
+				cmd.Portal = ""
+			}
+
 			err := cmd.SetHotspot(ifaceName, iface.SSID, strconv.Itoa(iface.Channel), iface.Password)
 			if err != nil {
 				return errors.New("set hotspot: " + err.Error())
 			}
 
 			//fmt.Println(ifaceName)
-
-			if iface.Portal {
-				cmd.Portal = iface.PortalSource
-			}
 
 			hotspot = true
 		}
@@ -80,7 +82,6 @@ func ApplySettings(settings SettingsResponse) error {
 		if err != nil && err.Error() != "exit status 10" {
 			return errors.New("disable hotspot: " + err.Error())
 		}
-		cmd.Portal = ""
 	}
 
 	// very retarded approach, but it works I guess

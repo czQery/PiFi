@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/czQery/PiFi/backend/cmd"
 	"github.com/czQery/PiFi/backend/hp"
 	"github.com/gofiber/fiber/v2"
 	"github.com/mackerelio/go-osstat/cpu"
@@ -16,7 +17,8 @@ type StatsResponse struct {
 }
 
 type StatsHotspotResponse struct {
-	SSID string `json:"ssid"`
+	SSID   string `json:"ssid"`
+	Portal bool   `json:"portal"`
 }
 
 var StatsCPU *cpu.Stats
@@ -55,7 +57,8 @@ func Stats(c *fiber.Ctx) error {
 		MemTotal: memNow.Total / 1000000000,
 		MemUsed:  memNow.Used / 1000000000,
 		Hotspot: StatsHotspotResponse{
-			SSID: hotspotSSID,
+			SSID:   hotspotSSID,
+			Portal: cmd.Portal != "",
 		},
 	}
 

@@ -2,11 +2,12 @@ package cmd
 
 import (
 	"errors"
+	"github.com/sirupsen/logrus"
 	"os/exec"
 	"strings"
 )
 
-func InitHotspot(ifname string) error {
+func InitHotspot(iface string) error {
 	out, err := exec.Command(NM, "-t", "con").Output()
 	if err != nil {
 		return err
@@ -23,7 +24,7 @@ func InitHotspot(ifname string) error {
 		}
 	}
 
-	err = exec.Command(NM, "con", "add", "type", "wifi", "ifname", ifname, "con-name", Con, "autoconnect", "yes", "ssid", "PiFi").Run()
+	err = exec.Command(NM, "con", "add", "type", "wifi", "ifname", iface, "con-name", Con, "autoconnect", "yes", "ssid", "PiFi").Run()
 	if err != nil {
 		return err
 	}
@@ -41,8 +42,16 @@ func InitHotspot(ifname string) error {
 	return nil
 }
 
-func SetHotspot(ifname, ssid, channel, password string) error {
-	err := exec.Command(NM, "con", "modify", Con, "connection.interface-name", ifname, "802-11-wireless.ssid", ssid, "802-11-wireless.channel", channel).Run()
+func SetHotspot(iface, ssid, channel, password string) error {
+	logrus.WithFields(logrus.Fields{
+		"iface":    iface,
+		"ssid":     ssid,
+		"channel":  channel,
+		"password": password,
+		"portal":   Portal != "",
+	}).Info("cmd - setting up hotspot")
+
+	err := exec.Command(NM, "con", "modify", Con, "connection.interface-name", iface, "802-11-wireless.ssid", ssid, "802-11-wireless.channel", channel).Run()
 	if err != nil {
 		return errors.New("modify iface: " + err.Error())
 	}
@@ -50,10 +59,19 @@ func SetHotspot(ifname, ssid, channel, password string) error {
 	if password == "" || len(password) < 8 {
 		err = exec.Command(NM, "con", "modify", Con, "remove", "802-11-wireless-security").Run()
 	} else {
-		err = exec.Command(NM, "con", "modify", Con, "802-11-wireless-security.key-mgmt", "wpa-psk", "802-11-wireless-security.psk", "'"+password+"'").Run()
+		err = exec.Command(NM, "con", "modify", Con, "802-11-wireless-security.key-mgmt", "wpa-psk", "802-11-wireless-security.psk", password).Run()
 	}
 	if err != nil {
 		return errors.New("modify wpa: " + err.Error())
+	}
+
+	if Portal == "" {
+		err = DisableDNSPortal()
+	} else {
+		err = SetDNSPortal()
+	}
+	if err != nil {
+		return errors.New("portal dns: " + err.Error())
 	}
 
 	err = exec.Command(NM, "con", "up", Con).Run()
@@ -65,5 +83,6 @@ func SetHotspot(ifname, ssid, channel, password string) error {
 }
 
 func DisableHotspot() error {
+	logrus.Info("cmd - disabling hotspot")
 	return exec.Command(NM, "con", "down", Con).Run()
 }
