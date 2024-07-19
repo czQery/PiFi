@@ -71,8 +71,8 @@ input:focus, input:focus-visible, button:focus, button:focus-visible, div [data-
 }
 
 .card,
-div [data-scope="dialog"][data-part="positioner"]:has([data-state="open"]),
-div [data-scope="select"][data-part="positioner"]:has([data-state="open"]),
+div [data-scope="dialog"][data-part="content"][data-state="open"],
+div [data-scope="select"][data-part="content"][data-state="open"],
 div [data-scope="progress"][data-part="track"] {
     border-radius: var(--rad);
     box-shadow: var(--shadow);
@@ -219,7 +219,7 @@ div [data-scope="checkbox"][data-part="control"] div div {
 }
 
 div [data-scope="checkbox"][data-part="control"] div span {
-    z-index: 2;
+    z-index: 1;
     display: block;
     position: relative;
     text-align: center;
@@ -294,15 +294,21 @@ div [data-scope="select"][data-part="trigger"] {
     justify-content: space-between;
 }
 
-div [data-scope="select"][data-part="positioner"]:has([data-state="open"]) { /*+card*/
+div [data-scope="select"][data-part="content"][data-state="open"] { /*+card*/
     background-color: var(--dark);
     width: var(--reference-width); /*dynamic variable created by ark ui*/
+    padding: 5px;
+}
+
+div [data-scope="select"][data-part="item-group"] {
+display: flex;
+flex-direction: column;
+gap: 2px;
 }
 
 div [data-scope="select"][data-part="item"] {
     display: flex;
     color: var(--white);
-    margin: 5px;
 }
 
 div [data-scope="select"][data-part="item"][data-state="checked"] {
@@ -326,15 +332,17 @@ div [data-scope="dialog"][data-part="backdrop"][data-state="open"] {
     width: 100dvw;
     height: 100dvh;
     background-color: var(--dark-hover);
+    z-index: 1;
 }
 
-div [data-scope="dialog"][data-part="positioner"]:has([data-state="open"]) { /*+card*/
+div [data-scope="dialog"][data-part="content"][data-state="open"] { /*+card*/
     position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     background-color: var(--base);
     padding: 10px;
+    z-index: 2;
 }
 
 div [data-scope="dialog"][data-part="close-trigger"] {
