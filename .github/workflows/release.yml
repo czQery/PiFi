@@ -1,0 +1,80 @@
+name: Release
+
+on:
+  release:
+    branches: [ main ]
+    types:
+      - created
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ amd64, arm64 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set env
+        run: echo "ASSET_NAME=release-${{matrix.arch}}" >> $GITHUB_ENV
+
+      - name: Login to GitHub
+        uses: de-vri-es/setup-git-credentials@v2
+        with:
+          credentials: ${{secrets.GIT_TOKEN}}
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Bun install dependencies
+        working-directory: ./frontend
+        run: bun i
+
+      - name: Bun build
+        working-directory: ./frontend
+        run: |
+          bun run build
+          mkdir -p ../${{env.ASSET_NAME}} && cp -r dist ../${{env.ASSET_NAME}}/dist
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache-dependency-path: "./backend/go.sum"
+
+      - name: Go get
+        working-directory: ./backend
+        run: go mod download
+
+      - name: Go build
+        working-directory: ./backend
+        env:
+          GOOS: linux
+          GOARCH: ${{matrix.arch}}
+          CGO_ENABLED: 0
+        run: |
+          go build -o pifi -ldflags="-s -w -X github.com/czQery/pifi/hp.Build=${{github.event.release.tag_name}}"
+          cp -r pifi ../${{env.ASSET_NAME}}
+          cp .config.toml ../${{env.ASSET_NAME}}/config.toml
+
+      - name: Compress release
+        uses: thedoctor0/zip-release@0.7.5
+        with:
+          type: "tar"
+          path: ${{env.ASSET_NAME}}/
+          filename: "${{env.ASSET_NAME}}.tar.gz"
+
+      - name: Upload release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          artifacts: "${{env.ASSET_NAME}}.tar.gz"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }}

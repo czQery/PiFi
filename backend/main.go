@@ -68,6 +68,8 @@ func main() {
 	defer hp.LogFile.Close()
 
 	hp.ArtPrint()
+	logrus.Info("main - Created by Štěpán Aubrecht")
+	logrus.Info("main - Build: " + hp.Build)
 	hp.ConfigLoad()
 	logrus.Info("config - successfully loaded")
 	hp.DistLoad()
