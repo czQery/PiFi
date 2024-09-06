@@ -1,34 +1,16 @@
-# PiFi
-Raspberry pi zero wifi pentesting kit
+<p align="center" style="text-align: center">
+  <img src="https://github.com/czQery/pifi/blob/main/assets/dash.png?raw=true" alt="Banner">
+  <br>
+  <a href="https://goreportcard.com/report/github.com/czQery/pifi/backend">
+      <img src="https://goreportcard.com/badge/github.com/czQery/pifi/backend" alt="report"/>
+  </a>
+  <a href="https://github.com/czQery/pifi/actions" style="text-decoration: none">
+    <img src="https://img.shields.io/github/actions/workflow/status/czQery/pifi/release.yml" alt="build"/>
+  </a>
+  <a href="https://github.com/czQery/pifi/releases/latest" style="text-decoration: none">
+    <img src="https://img.shields.io/github/v/release/czQery/pifi" alt="release"/>
+  </a>
+  <br>
+</p>
 
-
-# Commands
-
-device list:
-- nmcli -t device status
-
-hotspot setup:
-- sudo nmcli con add type wifi ifname wlan0 con-name PiFi autoconnect yes ssid kvn
-- sudo nmcli con modify PiFi 802-11-wireless.mode ap 802-11-wireless.band bg ipv4.method shared
-
-password setting:
-- sudo nmcli con modify PiFi wifi-sec.key-mgmt wpa-psk
-- sudo nmcli con modify PiFi wifi-sec.psk "12345678"
-
-channel setting:
-- sudo nmcli con modify PiFi 802-11-wireless.channel 5
-
-dns setting
-- /etc/NetworkManager/dnsmasq-shared.d/PiFi.conf
-- ```address=/#/10.42.0.1```
-- sudo systemctl restart NetworkManager
-
-- enable hotspot:
-sudo nmcli con up PiFi
-
-# Setup
-
-NetworkManager
-- in /etc/NetworkManager/NetworkManager.con
-- ```[main].dns=dnsmasq```
-
+# ⚠️ In Early development!
