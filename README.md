@@ -8,7 +8,7 @@
     <img src="https://img.shields.io/github/actions/workflow/status/czQery/PiFi/release.yml" alt="build"/>
   </a>
   <a href="https://github.com/czQery/PiFi/releases/latest" style="text-decoration: none">
-    <img src="https://img.shields.io/github/v/release/czQery/PiFi" alt="release"/>
+    <img src="https://img.shields.io/github/v/release/czQery/PiFi?include_prereleases" alt="release"/>
   </a>
   <br>
 </p>
