@@ -67,6 +67,7 @@ jobs:
           cp .config.toml ../${{env.ASSET_NAME}}/config.toml
 
       - name: Include portals
+        working-directory: ./backend
         run: cp -r portal ../${{env.ASSET_NAME}}/portal
 
       - name: Compress release
@@ -83,5 +84,7 @@ jobs:
           replacesArtifacts: true
           makeLatest: false
           omitName: true
+          prerelease: true
+          omitBody: true
           artifacts: "${{env.ASSET_NAME}}.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN }}
