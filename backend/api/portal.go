@@ -1,9 +1,10 @@
 package api
 
 import (
+	"strings"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
-	"strings"
 )
 
 func Portal(c *fiber.Ctx) error {
@@ -14,9 +15,11 @@ func Portal(c *fiber.Ctx) error {
 		data = append(data, name+"='"+value+"'")
 	}
 
-	logrus.WithFields(logrus.Fields{
-		"data": "[" + strings.Join(data, ",") + "]",
-	}).Info("portal - received")
+	if len(data) != 0 {
+		logrus.WithFields(logrus.Fields{
+			"data": "[" + strings.Join(data, ",") + "]",
+		}).Info("portal - received")
+	}
 
 	return c.Status(200).JSON(Response{Message: "success"})
 }

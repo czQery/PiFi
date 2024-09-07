@@ -3,11 +3,12 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"github.com/mitchellh/mapstructure"
 	"io"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/mitchellh/mapstructure"
 
 	"github.com/czQery/PiFi/backend/api"
 	"github.com/czQery/PiFi/backend/cmd"
@@ -109,7 +110,7 @@ func main() {
 
 	// API
 	rAPI := r.Group("/api", func(c *fiber.Ctx) error {
-		if !api.VerifyToken(c) {
+		if c.Path() != "/api/portal" && !api.VerifyToken(c) { // require password for all api endpoints except /api/portal
 			return &api.Error{Code: 401, Func: "api/settings", Message: "unauthorized"}
 		}
 		return c.Next()

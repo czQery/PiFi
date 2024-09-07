@@ -2,7 +2,7 @@ name: Release
 
 on:
   release:
-    branches: [ main ]
+    branches: [main]
     types:
       - created
 
@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [ amd64, arm64 ]
+        arch: [amd64, arm]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,7 +41,7 @@ jobs:
       - name: Bun build
         working-directory: ./frontend
         run: |
-          bun run build
+          bun --env-file=.env.production run build
           mkdir -p ../${{env.ASSET_NAME}} && cp -r dist ../${{env.ASSET_NAME}}/dist
 
       - name: Set up Go
@@ -58,12 +58,16 @@ jobs:
         working-directory: ./backend
         env:
           GOOS: linux
+          GOARM: 6
           GOARCH: ${{matrix.arch}}
           CGO_ENABLED: 0
         run: |
           go build -o pifi -ldflags="-s -w -X github.com/czQery/pifi/hp.Build=${{github.event.release.tag_name}}"
           cp -r pifi ../${{env.ASSET_NAME}}
           cp .config.toml ../${{env.ASSET_NAME}}/config.toml
+
+      - name: Include portals
+        run: cp -r portal ../${{env.ASSET_NAME}}/portal
 
       - name: Compress release
         uses: thedoctor0/zip-release@0.7.5
@@ -77,5 +81,7 @@ jobs:
         with:
           allowUpdates: true
           replacesArtifacts: true
+          makeLatest: false
+          omitName: true
           artifacts: "${{env.ASSET_NAME}}.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN }}

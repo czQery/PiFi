@@ -54,8 +54,8 @@ const App: Component = (props: { children }) => {
                                     <div id="header-menu-list">
                                         <Tabs.Trigger value={"dash"}><LucideLayoutDashboard/></Tabs.Trigger>
                                         <Tabs.Trigger value={"settings"}><LucideSettings/></Tabs.Trigger>
-                                        <Tabs.Trigger value={"scan"}><LucideRadar/></Tabs.Trigger>
-                                        <Tabs.Trigger value={"portal"}><LucideFileCog/></Tabs.Trigger>
+                                        {/*<Tabs.Trigger value={"scan"}><LucideRadar/></Tabs.Trigger>
+                                        <Tabs.Trigger value={"portal"}><LucideFileCog/></Tabs.Trigger>*/}
                                         <Tabs.Indicator/>
                                     </div>
                                     <button id="header-menu-logout" onClick={async () => {
