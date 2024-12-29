@@ -9,7 +9,7 @@ const Auth: Component = () => {
     let inputRef
 
     return (
-        <div id="c-auth">
+        <form id="c-auth" onsubmit="return false">
             <h1 id="pifi">PiFi</h1>
             <input class="card" ref={inputRef} onKeyPress={async (e) => {
                 if (e.key == "Enter") {
@@ -18,9 +18,9 @@ const Auth: Component = () => {
                     inputRef.value = ""
                     inputRef.disabled = false
                 }
-            }} type="password" placeholder="password" required="required" value=""/>
+            }} type="password" placeholder="password" autocomplete="current-password" required="required" value=""/>
             <button class="card pink" onClick={() => authSave(inputRef.value)}>login</button>
-        </div>
+        </form>
     )
 }
 

@@ -6,9 +6,9 @@ import {LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi, LucideWifiOff}
 import {useNavigate} from "@solidjs/router"
 import {getStats, statsData} from "../lib/stats"
 import {getLog, logData} from "../lib/log"
-import {addZero} from "../lib/other";
+import {addZero} from "../lib/other"
 
-export const [stats, setStats] = createSignal<statsData>({cpu: 0, mem_total: 0, mem_used: 0, hotspot: {ssid: ""}})
+export const [stats, setStats] = createSignal<statsData>({cpu: 0, mem_total: 0, mem_used: 0, hotspot: {ssid: ""}} as statsData)
 export const [log, setLog] = createSignal<logData[]>([])
 
 const Dash: Component = () => {

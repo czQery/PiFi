@@ -117,5 +117,5 @@
 
 #dash-log li span {
     display: inline-block;
-    font-family: monospace;
+    font-family: var(--mono), monospace;
 }

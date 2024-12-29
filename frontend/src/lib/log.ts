@@ -1,4 +1,5 @@
 import {api, response} from "./var"
+import {atobUnicode} from "./other"
 
 export interface logData {
     time: Date
@@ -19,10 +20,10 @@ export const getLog = async (): Promise<logData[]> => {
     if (rsp.status === 200 && rspJson.data) {
 
         let data: logData[] = []
-        let lines = atob(rspJson.data as string).split("\n")
+        let lines = atobUnicode(rspJson.data as string).split("\n")
 
         const getLogItem = (line: string, name: string): string => {
-            return (new RegExp(`${name}="(.*?)"`).exec(line))?.[1]
+            return <string>(new RegExp(`${name}="(.*?)"`).exec(line))?.[1]
         }
 
         for (const line of lines) {
