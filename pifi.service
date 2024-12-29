@@ -1,0 +1,15 @@
+[Unit]
+Description=PiFi
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+Restart=on-failure
+RestartSec=10
+WorkingDirectory=/path/to/your/release-arm
+ExecStart=/path/to/your/release-arm/pifi
+
+[Install]
+WantedBy=multi-user.target

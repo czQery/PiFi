@@ -14,3 +14,48 @@
 </p>
 
 # ⚠️ In Early development!
+
+# Setup
+
+### 1. Install Rasbian
+
+- Download [Raspberry Pi OS Lite](https://www.raspberrypi.com/software/operating-systems/)
+- Flash using [balenaEtcher](https://etcher.balena.io/)
+- Create `ssh` file in boot partition
+- Create `userconf` file with data: `username:hashed-password`
+  - Use this command to generate hashed-password
+    ```bash
+    echo 'password' | openssl passwd -6 -stdin
+    ```
+
+### 2. Update system
+
+- Edit hostname in `/etc/hosts` & `/etc/hostname`
+  ```bash
+  sudo apt update
+  sudo apt upgrade
+  sudo reboot
+  ```
+  
+### 3. Install PiFi
+
+- Download [latest release](https://github.com/czQery/PiFi/releases)
+  ```bash
+  curl -L https://github.com/czQery/PiFi/releases/download/v0.0.4/release-arm.tar.gz | tar -xzv
+  ```
+
+### 4. Create service
+
+- Edit the example `pifi.service` file in this repo and put it in `/etc/systemd/system/`
+- Reload systemd daemon
+  ```bash
+  sudo systemctl daemon-reload
+  ```
+- Enable service
+  ```bash
+  sudo systemctl enable pifi.service
+  ```
+- Start service
+  ```bash
+  sudo systemctl start pifi.service
+  ```
