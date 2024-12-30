@@ -59,3 +59,17 @@
   ```bash
   sudo systemctl start pifi.service
   ```
+# GPS
+
+- Enable serial interface
+  ```bash
+  sudo raspi-config
+  ```
+- Select -> Interfacing Options
+- Select -> Serial
+- Login shell -> No
+- Hardware Serial -> Yes
+- Reboot
+  ```bash
+  sudo reboot
+  ```
