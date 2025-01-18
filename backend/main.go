@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"github.com/czQery/PiFi/backend/gps"
 	"io"
 	"os"
 	"strings"
@@ -33,6 +34,10 @@ func init() {
 			TimestampFormat: format,
 		},
 	})
+
+	if hp.Build == "dev" {
+		logrus.SetLevel(logrus.DebugLevel)
+	}
 
 	// Log file
 	var err error
@@ -78,6 +83,7 @@ func main() {
 	nmInit()
 
 	go ticker()
+	go gps.SerialListen()
 
 	r := fiber.New(fiber.Config{
 		CaseSensitive:         false,
