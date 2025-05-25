@@ -1,9 +1,10 @@
 package hp
 
 import (
-	"github.com/sirupsen/logrus"
 	"io"
 	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
 const LogFileName = "log.txt"

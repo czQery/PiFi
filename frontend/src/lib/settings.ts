@@ -1,5 +1,5 @@
-import type {response} from "./var.ts"
-import {api} from "./var.ts"
+import type { response } from "./var.ts"
+import { api } from "./var.ts"
 
 export interface settingsData {
 	iface: settingsInterfaceData
@@ -20,9 +20,7 @@ export interface settingsInterfaceFieldsData {
 }
 
 export const getSettings = async (): Promise<settingsData> => {
-	const rsp: Response = await fetch(api + "api/settings", {
-		credentials: "include"
-	})
+	const rsp: Response = await fetch(api + "api/settings", { credentials: "include" })
 
 	const rspJson: response = await rsp.json()
 
@@ -30,21 +28,17 @@ export const getSettings = async (): Promise<settingsData> => {
 		return rspJson.data as settingsData
 	}
 
-	return {iface: {}}
+	return { iface: {} }
 }
 
 export const saveSettings = async (data: settingsData): Promise<response> => {
-	const rsp: Response = await fetch(api + "api/settings", {
-		method: "POST",
-		credentials: "include",
-		body: JSON.stringify(data)
-	})
+	const rsp: Response = await fetch(api + "api/settings", { method: "POST", credentials: "include", body: JSON.stringify(data) })
 
 	const rspJson: response = await rsp.json()
 
 	if (rsp.status === 200 && rspJson.data) {
-		return {message: "", data: rspJson.data as settingsData}
+		return { message: "", data: rspJson.data as settingsData }
 	}
 
-	return {message: rspJson.message, data: {iface: {}}}
+	return { message: rspJson.message, data: { iface: {} } }
 }

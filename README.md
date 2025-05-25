@@ -36,7 +36,7 @@
   sudo apt upgrade
   sudo reboot
   ```
-  
+
 ### 3. Install PiFi
 
 - Download [latest release](https://github.com/czQery/PiFi/releases)
@@ -59,6 +59,7 @@
   ```bash
   sudo systemctl start pifi.service
   ```
+
 # GPS
 
 - Enable serial interface

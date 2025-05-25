@@ -11,16 +11,16 @@
 
 	display: grid;
 	grid-template-areas:
-        "icon title btn"
-        "icon d1 btn"
-        "icon d2 btn";
+		"icon title btn"
+		"icon d1 btn"
+		"icon d2 btn";
 	grid-template-columns: 80px auto 80px;
 	grid-template-rows: 40px 20px 20px;
 	column-gap: 10px;
 	color: var(--base);
 }
 
-#dash-overview[data-disabled=true] {
+#dash-overview[data-disabled="true"] {
 	background-color: var(--base);
 	color: var(--white-hover);
 }
@@ -33,7 +33,7 @@
 	stroke: var(--dark);
 }
 
-#dash-overview[data-disabled=true] #dash-overview-icon {
+#dash-overview[data-disabled="true"] #dash-overview-icon {
 	stroke: var(--white);
 }
 
@@ -43,7 +43,8 @@
 	color: var(--dark);
 }
 
-#dash-overview[data-disabled=true] h2, #dash-overview[data-disabled=true] h4 {
+#dash-overview[data-disabled="true"] h2,
+#dash-overview[data-disabled="true"] h4 {
 	color: var(--white);
 }
 
@@ -120,5 +121,6 @@
 
 #dash-log li span {
 	display: inline-block;
-	font-family: var(--mono), monospace;
+	font-family:
+		var(--mono), monospace;
 }

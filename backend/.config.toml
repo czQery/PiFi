@@ -4,4 +4,4 @@ password = "ligma"
 gateway = "10.42.0.1"
 
 [wigle]
-  gps = "/dev/serial0"
+gps = "/dev/serial0"

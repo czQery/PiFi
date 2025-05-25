@@ -1,25 +1,26 @@
-import type {Component} from "solid-js"
-import {createEffect, createSignal, onMount, Show} from "solid-js"
-import type {settingsInterfaceFieldsData} from "../lib/settings.ts"
-import type {ListCollection} from "@ark-ui/solid"
-import {Checkbox, createListCollection, Field, NumberInput, Select} from "@ark-ui/solid"
-import {Index, Portal} from "solid-js/web"
+import type { ListCollection } from "@ark-ui/solid"
+import { Checkbox, createListCollection, Field, NumberInput, Select } from "@ark-ui/solid"
+import type { Component } from "solid-js"
+import { createEffect, createSignal, onMount, Show } from "solid-js"
+import { Index, Portal } from "solid-js/web"
+
+import type { settingsInterfaceFieldsData } from "../lib/settings.ts"
 
 import "./SettingsInterface.css"
-import {LucideUnplug} from "lucide-solid"
-import {portals, setSettingsInterfaceHotspot, settingsInterfaceHotspot} from "../tabs/Settings.tsx"
+
+import { LucideUnplug } from "lucide-solid"
+import { portals, setSettingsInterfaceHotspot, settingsInterfaceHotspot } from "../tabs/Settings.tsx"
 
 interface settingsInterfaceProps {
 	name: string
 	iface: settingsInterfaceFieldsData
 }
 
-const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
-
-	const portalsCollection: ListCollection<string> = createListCollection({items: portals()})
+const SettingsInterface: Component<settingsInterfaceProps> = props => {
+	const portalsCollection: ListCollection<string> = createListCollection({ items: portals() })
 	const [portal, setPortal] = createSignal<string>(props.iface.portal_source ? props.iface.portal_source : portalsCollection.items[0])
 
-	const modesCollection: ListCollection<string> = createListCollection({items: ["none", "hotspot", "monitor"]})
+	const modesCollection: ListCollection<string> = createListCollection({ items: ["none", "hotspot", "monitor"] })
 	const [mode, setMode] = createSignal<string>(props.iface.mode ? props.iface.mode : modesCollection.items[0])
 
 	onMount(() => {
@@ -42,17 +43,15 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
 		<div class="settings-iface card">
 			<div class="settings-iface-title">
 				<h2>{props.name}</h2>
-				<Show when={!props.iface.ready<boolean>}>
-					<LucideUnplug class="card"/>
+				<Show when={!props.iface.ready}>
+					<LucideUnplug class="card" />
 				</Show>
 			</div>
-			<Select.Root required={true} immediate={true} value={[mode()]} onValueChange={(e) => {
-				setMode(e.value[0])
-			}} collection={modesCollection}>
+			<Select.Root required={true} immediate={true} value={[mode()]} onValueChange={e => setMode(e.value[0])} collection={modesCollection}>
 				<Select.Label>Mode</Select.Label>
 				<Select.Control>
 					<Select.Trigger>
-						<Select.ValueText placeholder="select"/>
+						<Select.ValueText placeholder="select" />
 						<Select.Indicator>▼</Select.Indicator>
 					</Select.Trigger>
 				</Select.Control>
@@ -61,12 +60,15 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
 						<Select.Content>
 							<Select.ItemGroup id="test">
 								<Index each={modesCollection.items}>
-									{(item) => (
-										<Show when={settingsInterfaceHotspot() !== props.name && settingsInterfaceHotspot() !== "" && item() === "hotspot"<boolean>} fallback={
-											<Select.Item item={item()}>
-												<Select.ItemText>{item()}</Select.ItemText>
-											</Select.Item>
-										}>
+									{item => (
+										<Show
+											when={settingsInterfaceHotspot() !== props.name && settingsInterfaceHotspot() !== "" && item() === "hotspot"}
+											fallback={
+												<Select.Item item={item()}>
+													<Select.ItemText>{item()}</Select.ItemText>
+												</Select.Item>
+											}
+										>
 											<Select.Item item={item()} data-disabled aria-disabled disabled>
 												<Select.ItemText data-disabled aria-disabled>{item()}</Select.ItemText>
 											</Select.Item>
@@ -78,21 +80,21 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
 					</Select.Positioner>
 				</Portal>
 			</Select.Root>
-			<Show when={mode() === "hotspot"<boolean>}>
+			<Show when={mode() === "hotspot"}>
 				<div class="settings-iface-hotspot">
 					<Field.Root>
 						<Field.Label>SSID</Field.Label>
-						<Field.Input placeholder={"PiFi"} value={props.iface.ssid} onInput={(e) => props.iface.ssid = e.currentTarget.value}/>
+						<Field.Input placeholder={"PiFi"} value={props.iface.ssid} onInput={e => (props.iface.ssid = e.currentTarget.value)} />
 						<Field.ErrorText>Error Info</Field.ErrorText>
 					</Field.Root>
 					<Field.Root>
 						<Field.Label>Password</Field.Label>
-						<Field.Input placeholder={"none"} value={props.iface.password} onInput={(e) => props.iface.password = e.currentTarget.value}/>
+						<Field.Input placeholder={"none"} value={props.iface.password} onInput={e => (props.iface.password = e.currentTarget.value)} />
 						<Field.ErrorText>Error Info</Field.ErrorText>
 					</Field.Root>
-					<NumberInput.Root value={props.iface.channel.toString()} min={1} max={14} onValueChange={(e) => props.iface.channel = e.valueAsNumber}>
+					<NumberInput.Root value={props.iface.channel.toString()} min={1} max={14} onValueChange={e => (props.iface.channel = e.valueAsNumber)}>
 						<NumberInput.Label>Channel</NumberInput.Label>
-						<NumberInput.Input/>
+						<NumberInput.Input />
 						<NumberInput.Control>
 							<NumberInput.DecrementTrigger>-</NumberInput.DecrementTrigger>
 							<NumberInput.IncrementTrigger>+</NumberInput.IncrementTrigger>
@@ -100,7 +102,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
 					</NumberInput.Root>
 				</div>
 				<div class="settings-iface-hotspot">
-					<Checkbox.Root checked={props.iface.portal} onCheckedChange={(e) => props.iface.portal = e.checked as boolean}>
+					<Checkbox.Root checked={props.iface.portal} onCheckedChange={e => (props.iface.portal = e.checked as boolean)}>
 						<Checkbox.Label>Portal</Checkbox.Label>
 						<Checkbox.Control>
 							<div>
@@ -108,15 +110,13 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
 								<div></div>
 							</div>
 						</Checkbox.Control>
-						<Checkbox.HiddenInput/>
+						<Checkbox.HiddenInput />
 					</Checkbox.Root>
-					<Select.Root required={true} immediate={true} value={[portal()]} onValueChange={(e) => {
-						setPortal(e.value[0])
-					}} collection={portalsCollection}>
+					<Select.Root required={true} immediate={true} value={[portal()]} onValueChange={e => setPortal(e.value[0])} collection={portalsCollection}>
 						<Select.Label>Portal source</Select.Label>
 						<Select.Control>
 							<Select.Trigger>
-								<Select.ValueText placeholder="select"/>
+								<Select.ValueText placeholder="select" />
 								<Select.Indicator>▼</Select.Indicator>
 							</Select.Trigger>
 						</Select.Control>
@@ -125,7 +125,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = (props) => {
 								<Select.Content>
 									<Select.ItemGroup id="test">
 										<Index each={portalsCollection.items}>
-											{(item) => (
+											{item => (
 												<Select.Item item={item()}>
 													<Select.ItemText>{item()}</Select.ItemText>
 												</Select.Item>

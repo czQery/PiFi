@@ -17,12 +17,19 @@ h3 {
 	margin: 0 0 5px 0;
 }
 
-h4, span, label, button, input, div [data-scope="checkbox"][data-part="control"] {
+h4,
+span,
+label,
+button,
+input,
+div [data-scope="checkbox"][data-part="control"] {
 	font-size: 16px;
 	margin: 0;
 }
 
-button, input, div [data-scope="checkbox"][data-part="control"] {
+button,
+input,
+div [data-scope="checkbox"][data-part="control"] {
 	border-radius: var(--rad);
 	border: none;
 	outline: var(--outline);
@@ -31,11 +38,16 @@ button, input, div [data-scope="checkbox"][data-part="control"] {
 	background-color: var(--dark);
 }
 
-input::placeholder, div [data-scope="checkbox"][data-part="control"] {
+input::placeholder,
+div [data-scope="checkbox"][data-part="control"] {
 	color: var(--white-hover);
 }
 
-input:focus, input:focus-visible, button:focus, button:focus-visible, div [data-scope="checkbox"][data-part="control"][data-active] {
+input:focus,
+input:focus-visible,
+button:focus,
+button:focus-visible,
+div [data-scope="checkbox"][data-part="control"][data-active] {
 	outline: var(--outline-active);
 }
 
@@ -143,7 +155,8 @@ header [data-scope="tabs"][data-part="root"] {
 	height: calc(100% - 50px);
 }
 
-header [data-scope="tabs"][data-part="list"], #header-menu-list {
+header [data-scope="tabs"][data-part="list"],
+#header-menu-list {
 	height: 100%;
 	display: flex;
 	flex-direction: column;
@@ -154,7 +167,8 @@ header [data-scope="tabs"][data-part="trigger"] {
 	outline: none;
 }
 
-header [data-scope="tabs"][data-part="trigger"], #header-menu-logout {
+header [data-scope="tabs"][data-part="trigger"],
+#header-menu-logout {
 	background: none;
 	font-size: 20px;
 	font-weight: bold;
@@ -165,7 +179,8 @@ header [data-scope="tabs"][data-part="trigger"], #header-menu-logout {
 	outline: none;
 }
 
-header [data-scope="tabs"][data-part="trigger"] svg, #header-menu-logout svg {
+header [data-scope="tabs"][data-part="trigger"] svg,
+#header-menu-logout svg {
 	height: 100%;
 	width: auto;
 	stroke: var(--white);
@@ -246,8 +261,8 @@ div [data-scope="checkbox"][data-part="control"][data-state="checked"] div span:
 div [data-scope="number-input"][data-part="root"] {
 	display: grid;
 	grid-template-areas:
-        "label label"
-        "input btn";
+		"label label"
+		"input btn";
 	grid-template-columns: 130px 65px; /*2*30 + 5gap*/
 	grid-template-rows: auto 30px;
 	gap: 5px;
@@ -277,7 +292,9 @@ div [data-scope="number-input"][data-part="control"] button:disabled {
 	filter: var(--hover);
 }
 
-div [data-scope="select"][data-part="root"], div [data-scope="field"][data-part="root"], div [data-scope="checkbox"][data-part="root"] {
+div [data-scope="select"][data-part="root"],
+div [data-scope="field"][data-part="root"],
+div [data-scope="checkbox"][data-part="root"] {
 	display: flex;
 	gap: 5px;
 	flex-direction: column;
@@ -294,7 +311,8 @@ div [data-scope="select"][data-part="trigger"] {
 	justify-content: space-between;
 }
 
-div [data-scope="select"][data-part="content"][data-state="open"] { /*+card*/
+div [data-scope="select"][data-part="content"][data-state="open"] {
+	/*+card*/
 	background-color: var(--dark);
 	width: var(--reference-width); /*dynamic variable created by ark ui*/
 	padding: 5px;
@@ -335,7 +353,8 @@ div [data-scope="dialog"][data-part="backdrop"][data-state="open"] {
 	z-index: 1;
 }
 
-div [data-scope="dialog"][data-part="content"][data-state="open"] { /*+card*/
+div [data-scope="dialog"][data-part="content"][data-state="open"] {
+	/*+card*/
 	position: fixed;
 	left: 50%;
 	top: 50%;

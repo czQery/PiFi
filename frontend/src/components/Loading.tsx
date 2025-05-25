@@ -1,7 +1,7 @@
-import type {Component, Setter} from "solid-js"
-import {createEffect, createSignal, Show} from "solid-js"
-import {Portal} from "solid-js/web"
-import {Dialog, Progress} from "@ark-ui/solid"
+import { Dialog, Progress } from "@ark-ui/solid"
+import type { Component, Setter } from "solid-js"
+import { createEffect, createSignal, Show } from "solid-js"
+import { Portal } from "solid-js/web"
 
 export interface loadingData {
 	title: string
@@ -13,8 +13,7 @@ interface loadingProps {
 	data: loadingData
 }
 
-const Loading: Component<loadingProps> = (props) => {
-
+const Loading: Component<loadingProps> = props => {
 	const [pending, setPending] = createSignal(false)
 	const [name, setName] = createSignal("loading")
 	const [message, setMessage] = createSignal("")
@@ -53,24 +52,28 @@ const Loading: Component<loadingProps> = (props) => {
 	return (
 		<Dialog.Root className={"card"} open={pending()} closeOnEscape={false} closeOnInteractOutside={false}>
 			<Portal>
-				<Dialog.Backdrop/>
+				<Dialog.Backdrop />
 				<Dialog.Positioner>
 					<Dialog.Content>
 						<Show when={message() == ""<boolean>}>
 							<Progress.Root value={progress()}>
 								<Progress.Label>{name()}</Progress.Label>
 								<Progress.Track>
-									<Progress.Range/>
+									<Progress.Range />
 								</Progress.Track>
 							</Progress.Root>
 						</Show>
 						<Show when={message() != ""<boolean>}>
-							<label style={{display: "block", "margin-bottom": "5px", color: "var(--white)"}}>Error</label>
-							<Dialog.Description style={{width: "300px", color: "var(--pink)"}}>{message()}</Dialog.Description>
-							<Dialog.CloseTrigger onClick={() => {
-								props.data.pending = false
-								setPending(false)
-							}}>close</Dialog.CloseTrigger>
+							<label style={{ "display": "block", "margin-bottom": "5px", "color": "var(--white)" }}>Error</label>
+							<Dialog.Description style={{ width: "300px", color: "var(--pink)" }}>{message()}</Dialog.Description>
+							<Dialog.CloseTrigger
+								onClick={() => {
+									props.data.pending = false
+									setPending(false)
+								}}
+							>
+								close
+							</Dialog.CloseTrigger>
 						</Show>
 					</Dialog.Content>
 				</Dialog.Positioner>

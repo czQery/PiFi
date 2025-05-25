@@ -1,5 +1,5 @@
-import type {response} from "./var.ts"
-import {api} from "./var.ts"
+import type { response } from "./var.ts"
+import { api } from "./var.ts"
 
 export interface statsData {
 	cpu: number
@@ -14,9 +14,7 @@ export interface statsHotspotData {
 }
 
 export const getStats = async (): Promise<statsData> => {
-	const rsp: Response = await fetch(api + "api/stats", {
-		credentials: "include"
-	})
+	const rsp: Response = await fetch(api + "api/stats", { credentials: "include" })
 
 	const rspJson: response = await rsp.json()
 
@@ -24,5 +22,5 @@ export const getStats = async (): Promise<statsData> => {
 		return rspJson.data as statsData
 	}
 
-	return {cpu: 0, mem_total: 0, mem_used: 0, hotspot: {ssid: "", portal: false}}
+	return { cpu: 0, mem_total: 0, mem_used: 0, hotspot: { ssid: "", portal: false } }
 }

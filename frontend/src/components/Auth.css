@@ -14,7 +14,8 @@
 	color: var(--white);
 }
 
-#c-auth input, #c-auth button {
+#c-auth input,
+#c-auth button {
 	width: 250px;
 	height: 40px;
 	font-size: 18px;

@@ -1,6 +1,6 @@
-import type {response} from "./var.ts"
-import {api} from "./var.ts"
-import {atobUnicode} from "./other.ts"
+import { atobUnicode } from "./other.ts"
+import type { response } from "./var.ts"
+import { api } from "./var.ts"
 
 export interface logData {
 	time: Date
@@ -12,23 +12,19 @@ export interface logData {
 }
 
 export const getLog = async (): Promise<logData[]> => {
-
 	// !DEBUG REMOVE!
 	return []
 
-	const rsp: Response = await fetch(api + "api/log", {
-		credentials: "include"
-	})
+	const rsp: Response = await fetch(api + "api/log", { credentials: "include" })
 
 	const rspJson: response = await rsp.json()
 
 	if (rsp.status === 200 && rspJson.data) {
-
-		let data: logData[] = []
-		let lines = atobUnicode(rspJson.data as string).split("\n")
+		const data: logData[] = []
+		const lines = atobUnicode(rspJson.data as string).split("\n")
 
 		const getLogItem = (line: string, name: string): string => {
-			return <string>(new RegExp(`${name}="(.*?)"`).exec(line))?.[1]
+			return <string> new RegExp(`${name}="(.*?)"`).exec(line)?.[1]
 		}
 
 		for (const line of lines) {
@@ -36,7 +32,7 @@ export const getLog = async (): Promise<logData[]> => {
 				continue
 			}
 
-			let time = new Date(Date.parse(getLogItem(line, "time")))
+			const time = new Date(Date.parse(getLogItem(line, "time")))
 
 			data.push({
 				time: time,
@@ -44,7 +40,7 @@ export const getLog = async (): Promise<logData[]> => {
 				msg: getLogItem(line, "msg"),
 				err: getLogItem(line, "err"),
 				data: getLogItem(line, "data"),
-				ssid: getLogItem(line, "ssid")
+				ssid: getLogItem(line, "ssid"),
 			})
 		}
 
