@@ -1,29 +1,29 @@
 .settings-iface {
-    display: grid;
-    padding: 10px;
-    gap: 10px;
-    background-color: var(--base);
+	display: grid;
+	padding: 10px;
+	gap: 10px;
+	background-color: var(--base);
 }
 
 .settings-iface h2 {
-    margin: 0;
+	margin: 0;
 }
 
 .settings-iface-title {
-    display: flex;
-    justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 
 .settings-iface-title svg {
-    stroke: var(--pink);
-    background-color: var(--dark);
-    padding: 5px;
-    height: 30px;
-    width: 30px;
+	stroke: var(--pink);
+	background-color: var(--dark);
+	padding: 5px;
+	height: 30px;
+	width: 30px;
 }
 
 .settings-iface-hotspot {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
 }

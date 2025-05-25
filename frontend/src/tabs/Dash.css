@@ -1,121 +1,124 @@
 #dash {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 }
 
 #dash-overview {
-    height: 80px;
-    background-color: var(--green);
+	height: 80px;
+	background-color: var(--green);
 
-    display: grid;
-    grid-template-areas:
+	display: grid;
+	grid-template-areas:
         "icon title btn"
         "icon d1 btn"
         "icon d2 btn";
-    grid-template-columns: 80px auto 80px;
-    grid-template-rows: 40px 20px 20px;
-    column-gap: 10px;
-    color: var(--base);
+	grid-template-columns: 80px auto 80px;
+	grid-template-rows: 40px 20px 20px;
+	column-gap: 10px;
+	color: var(--base);
 }
+
 #dash-overview[data-disabled=true] {
-    background-color: var(--base);
-    color: var(--white-hover);
+	background-color: var(--base);
+	color: var(--white-hover);
 }
 
 #dash-overview-icon {
-    height: 70px;
-    width: auto;
-    margin: 5px;
-    grid-area: icon;
-    stroke: var(--dark);
+	height: 70px;
+	width: auto;
+	margin: 5px;
+	grid-area: icon;
+	stroke: var(--dark);
 }
-#dash-overview[data-disabled=true] #dash-overview-icon{
-    stroke: var(--white);
+
+#dash-overview[data-disabled=true] #dash-overview-icon {
+	stroke: var(--white);
 }
 
 #dash-overview h2 {
-    grid-area: title;
-    margin: auto 0 0 0;
-    color: var(--dark);
+	grid-area: title;
+	margin: auto 0 0 0;
+	color: var(--dark);
 }
-#dash-overview[data-disabled=true] h2, #dash-overview[data-disabled=true] h4{
-    color: var(--white);
+
+#dash-overview[data-disabled=true] h2, #dash-overview[data-disabled=true] h4 {
+	color: var(--white);
 }
 
 #dash-overview h4 {
-    grid-area: d1;
-    height: 20px;
-    margin: 0;
-    color: var(--dark);
+	grid-area: d1;
+	height: 20px;
+	margin: 0;
+	color: var(--dark);
 }
 
 #dash-overview span {
-    grid-area: d2;
-    height: 20px;
-    margin: 0;
+	grid-area: d2;
+	height: 20px;
+	margin: 0;
 }
 
 #dash-overview-settings {
-    grid-area: btn;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 80px;
-    height: 100%;
-    gap: 5px;
-    border-radius: 0;
-    background-color: var(--base);
-    outline: none;
+	grid-area: btn;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 80px;
+	height: 100%;
+	gap: 5px;
+	border-radius: 0;
+	background-color: var(--base);
+	outline: none;
 }
 
 #dash-overview-settings svg {
-    height: 30px;
-    width: 30px;
-    margin: 0 auto;
+	height: 30px;
+	width: 30px;
+	margin: 0 auto;
 }
 
 #dash-overview-settings span {
-    margin: 0 auto;
+	margin: 0 auto;
 }
 
 #dash-stats {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
 }
 
 #dash-stats div {
-    flex: 1 1 auto;
-    width: 200px;
-    display: flex;
-    padding: 10px;
-    gap: 10px;
-    background-color: var(--base);
+	flex: 1 1 auto;
+	width: 200px;
+	display: flex;
+	padding: 10px;
+	gap: 10px;
+	background-color: var(--base);
 }
 
 #dash-stats div svg {
-    height: 30px;
-    width: 30px;
+	height: 30px;
+	width: 30px;
 }
 
 #dash-stats div span {
-    margin: auto 0;
+	margin: auto 0;
 }
 
 #dash-log {
-    background-color: var(--base);
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
+	background-color: var(--base);
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
 }
 
 #dash-log li {
-    display: flex;
+	display: flex;
 }
 
 #dash-log li span {
-    display: inline-block;
-    font-family: var(--mono), monospace;
+	display: inline-block;
+	font-family: var(--mono), monospace;
 }

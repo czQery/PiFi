@@ -78,7 +78,7 @@ jobs:
           filename: "${{env.ASSET_NAME}}.tar.gz"
 
       - name: Upload release
-        uses: ncipollo/release-action@v1.12.0
+        uses: ncipollo/release-action@v1.16
         with:
           allowUpdates: true
           replacesArtifacts: true

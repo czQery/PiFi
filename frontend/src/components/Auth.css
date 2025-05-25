@@ -1,22 +1,22 @@
 #c-auth {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 
-    width: 100dvw;
-    height: 100dvh;
-    gap: 10px;
+	width: 100dvw;
+	height: 100dvh;
+	gap: 10px;
 }
 
 #c-auth #pifi {
-    margin: 0 0 10px 0;
-    color: var(--white);
+	margin: 0 0 10px 0;
+	color: var(--white);
 }
 
 #c-auth input, #c-auth button {
-    width: 250px;
-    height: 40px;
-    font-size: 18px;
-    font-weight: bold;
+	width: 250px;
+	height: 40px;
+	font-size: 18px;
+	font-weight: bold;
 }

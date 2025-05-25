@@ -1,25 +1,28 @@
 module github.com/czQery/PiFi/backend
 
-go 1.23
+go 1.24
+
+toolchain go1.24.3
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.6
 	github.com/knadh/koanf/parsers/toml v0.1.0
-	github.com/knadh/koanf/providers/file v1.1.2
-	github.com/knadh/koanf/v2 v2.1.2
+	github.com/knadh/koanf/providers/file v1.2.0
+	github.com/knadh/koanf/v2 v2.2.0
 	github.com/mackerelio/go-osstat v0.2.5
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/sirupsen/logrus v1.9.3
+	go.bug.st/serial v1.6.4
 )
 
 require (
 	github.com/andybalholm/brotli v1.1.1 // indirect
-	github.com/creack/goselect v0.1.2 // indirect
-	github.com/fsnotify/fsnotify v1.8.0 // indirect
+	github.com/creack/goselect v0.1.3 // indirect
+	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/klauspost/compress v1.17.11 // indirect
-	github.com/knadh/koanf/maps v0.1.1 // indirect
+	github.com/klauspost/compress v1.18.0 // indirect
+	github.com/knadh/koanf/maps v0.1.2 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
@@ -28,8 +31,6 @@ require (
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.58.0 // indirect
-	github.com/valyala/tcplisten v1.0.0 // indirect
-	go.bug.st/serial v1.6.2 // indirect
-	golang.org/x/sys v0.29.0 // indirect
+	github.com/valyala/fasthttp v1.62.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
 )

@@ -1,17 +1,17 @@
 #settings {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 }
 
 #settings-btn {
-    display: flex;
-    justify-content: right;
-    height: 30px;
-    gap: 10px;
+	display: flex;
+	justify-content: right;
+	height: 30px;
+	gap: 10px;
 }
 
 #settings-btn button {
-    width: 100px;
+	width: 100px;
 }

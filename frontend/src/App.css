@@ -1,381 +1,381 @@
 /*global*/
 h1 {
-    /*fine tuned to be pixel perfect*/
-    line-height: 33px;
-    font-size: 38px;
-    font-weight: bold;
-    font-style: italic;
+	/*fine tuned to be pixel perfect*/
+	line-height: 33px;
+	font-size: 38px;
+	font-weight: bold;
+	font-style: italic;
 }
 
 h2 {
-    font-size: 28px;
-    margin: 0 0 10px 0;
+	font-size: 28px;
+	margin: 0 0 10px 0;
 }
 
 h3 {
-    font-size: 18px;
-    margin: 0 0 5px 0;
+	font-size: 18px;
+	margin: 0 0 5px 0;
 }
 
 h4, span, label, button, input, div [data-scope="checkbox"][data-part="control"] {
-    font-size: 16px;
-    margin: 0;
+	font-size: 16px;
+	margin: 0;
 }
 
 button, input, div [data-scope="checkbox"][data-part="control"] {
-    border-radius: var(--rad);
-    border: none;
-    outline: var(--outline);
-    padding: 0 10px;
-    color: var(--white);
-    background-color: var(--dark);
+	border-radius: var(--rad);
+	border: none;
+	outline: var(--outline);
+	padding: 0 10px;
+	color: var(--white);
+	background-color: var(--dark);
 }
 
 input::placeholder, div [data-scope="checkbox"][data-part="control"] {
-    color: var(--white-hover);
+	color: var(--white-hover);
 }
 
 input:focus, input:focus-visible, button:focus, button:focus-visible, div [data-scope="checkbox"][data-part="control"][data-active] {
-    outline: var(--outline-active);
+	outline: var(--outline-active);
 }
 
 .pink {
-    background-color: var(--pink);
-    color: var(--white);
-    outline: none !important;
+	background-color: var(--pink);
+	color: var(--white);
+	outline: none !important;
 }
 
 .green {
-    background-color: var(--green);
-    color: var(--dark);
-    outline: none !important;
+	background-color: var(--green);
+	color: var(--dark);
+	outline: none !important;
 }
 
 .container {
-    max-width: 1024px;
-    margin-inline: auto;
-    height: inherit;
+	max-width: 1024px;
+	margin-inline: auto;
+	height: inherit;
 }
 
 .container div:only-child {
-    animation: pop var(--transition-duration) linear;
+	animation: pop var(--transition-duration) linear;
 }
 
 @keyframes pop {
-    from {
-        transform: scale(0.99);
-    }
-    to {
-        transform: none;
-    }
+	from {
+		transform: scale(0.99);
+	}
+	to {
+		transform: none;
+	}
 }
 
 .card,
 div [data-scope="dialog"][data-part="content"][data-state="open"],
 div [data-scope="select"][data-part="content"][data-state="open"],
 div [data-scope="progress"][data-part="track"] {
-    border-radius: var(--rad);
-    box-shadow: var(--shadow);
-    outline: var(--outline);
+	border-radius: var(--rad);
+	box-shadow: var(--shadow);
+	outline: var(--outline);
 }
 
 #pifi {
-    margin: 0;
-    height: 30px;
-    user-select: none;
-    -webkit-user-select: none;
+	margin: 0;
+	height: 30px;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 #pifi:hover {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 @media (hover: hover) and (pointer: fine) {
-    button:hover {
-        cursor: pointer;
-        filter: var(--hover);
-    }
+	button:hover {
+		cursor: pointer;
+		filter: var(--hover);
+	}
 }
 
 /*ui*/
 header {
-    width: 100%;
-    background-color: var(--pink);
-    height: 50px;
-    box-shadow: var(--shadow);
+	width: 100%;
+	background-color: var(--pink);
+	height: 50px;
+	box-shadow: var(--shadow);
 
-    display: grid;
-    padding: 10px;
-    grid-template-columns: 100px auto;
+	display: grid;
+	padding: 10px;
+	grid-template-columns: 100px auto;
 }
 
 header #pifi {
-    color: var(--white);
+	color: var(--white);
 }
 
 header [data-scope="menu"][data-part="trigger"] {
-    margin-left: auto;
-    background: none;
-    height: 30px;
-    width: 30px;
-    padding: 0;
-    outline: none;
+	margin-left: auto;
+	background: none;
+	height: 30px;
+	width: 30px;
+	padding: 0;
+	outline: none;
 }
 
 header [data-scope="menu"][data-part="trigger"] svg {
-    stroke: var(--white);
-    stroke-width: 4px;
-    width: inherit;
-    height: inherit;
+	stroke: var(--white);
+	stroke-width: 4px;
+	width: inherit;
+	height: inherit;
 }
 
 header [data-scope="menu"][data-part="content"] {
-    background-color: var(--pink);
-    padding: 10px;
-    border-radius: 0 0 var(--rad) var(--rad);
-    outline: none;
-    width: 50px;
-    height: 100dvh;
-    margin-right: -10px;
+	background-color: var(--pink);
+	padding: 10px;
+	border-radius: 0 0 var(--rad) var(--rad);
+	outline: none;
+	width: 50px;
+	height: 100dvh;
+	margin-right: -10px;
 }
 
 header [data-scope="tabs"][data-part="root"] {
-    height: calc(100% - 50px);
+	height: calc(100% - 50px);
 }
 
 header [data-scope="tabs"][data-part="list"], #header-menu-list {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 }
 
 header [data-scope="tabs"][data-part="trigger"] {
-    outline: none;
+	outline: none;
 }
 
 header [data-scope="tabs"][data-part="trigger"], #header-menu-logout {
-    background: none;
-    font-size: 20px;
-    font-weight: bold;
-    z-index: 2;
-    padding: 0;
-    height: 30px;
-    width: 30px;
-    outline: none;
+	background: none;
+	font-size: 20px;
+	font-weight: bold;
+	z-index: 2;
+	padding: 0;
+	height: 30px;
+	width: 30px;
+	outline: none;
 }
 
 header [data-scope="tabs"][data-part="trigger"] svg, #header-menu-logout svg {
-    height: 100%;
-    width: auto;
-    stroke: var(--white);
+	height: 100%;
+	width: auto;
+	stroke: var(--white);
 }
 
 #header-menu-logout {
-    margin-top: auto;
+	margin-top: auto;
 }
 
 /*ark ui*/
 header [data-scope="tabs"][data-part="indicator"] {
-    background-color: var(--dark);
-    border-radius: 0;
-    width: 50px;
-    height: 40px;
-    transform: skewY(-25deg) translate(-10px, -9px);
-    top: 0;
-    opacity: 0.5;
-    transition-duration: var(--transition-duration) !important;
+	background-color: var(--dark);
+	border-radius: 0;
+	width: 50px;
+	height: 40px;
+	transform: skewY(-25deg) translate(-10px, -9px);
+	top: 0;
+	opacity: 0.5;
+	transition-duration: var(--transition-duration) !important;
 }
 
 main {
-    color: var(--white);
-    padding: 10px;
+	color: var(--white);
+	padding: 10px;
 }
 
 div [data-scope="field"][data-part="input"] {
-    height: 30px;
+	height: 30px;
 }
 
 div [data-scope="checkbox"][data-part="root"] {
-    width: 100px !important;
+	width: 100px !important;
 }
 
 div [data-scope="checkbox"][data-part="control"] {
-    height: 30px;
-    overflow: hidden;
+	height: 30px;
+	overflow: hidden;
 }
 
 div [data-scope="checkbox"][data-part="control"]:hover {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 div [data-scope="checkbox"][data-part="control"] div div {
-    display: block;
-    width: 100px;
-    height: 40px;
-    margin: 0 auto;
-    transform: skewY(-45deg) translate(0, -45px);
-    filter: brightness(0.4);
+	display: block;
+	width: 100px;
+	height: 40px;
+	margin: 0 auto;
+	transform: skewY(-45deg) translate(0, -45px);
+	filter: brightness(0.4);
 }
 
 div [data-scope="checkbox"][data-part="control"] div span {
-    z-index: 1;
-    display: block;
-    position: relative;
-    text-align: center;
-    line-height: 30px;
-    color: var(--white);
+	z-index: 1;
+	display: block;
+	position: relative;
+	text-align: center;
+	line-height: 30px;
+	color: var(--white);
 }
 
 div [data-scope="checkbox"][data-part="control"][data-state="unchecked"] div div {
-    background-color: var(--pink);
+	background-color: var(--pink);
 }
 
 div [data-scope="checkbox"][data-part="control"][data-state="unchecked"] div span:after {
-    content: "disabled";
+	content: "disabled";
 }
 
 div [data-scope="checkbox"][data-part="control"][data-state="checked"] div div {
-    background-color: var(--green);
+	background-color: var(--green);
 }
 
 div [data-scope="checkbox"][data-part="control"][data-state="checked"] div span:after {
-    content: "enabled";
+	content: "enabled";
 }
 
 div [data-scope="number-input"][data-part="root"] {
-    display: grid;
-    grid-template-areas:
+	display: grid;
+	grid-template-areas:
         "label label"
         "input btn";
-    grid-template-columns: 130px 65px; /*2*30 + 5gap*/
-    grid-template-rows: auto 30px;
-    gap: 5px;
-    color: var(--white);
+	grid-template-columns: 130px 65px; /*2*30 + 5gap*/
+	grid-template-rows: auto 30px;
+	gap: 5px;
+	color: var(--white);
 }
 
 div [data-scope="number-input"][data-part="label"] {
-    grid-area: label;
+	grid-area: label;
 }
 
 div [data-scope="number-input"][data-part="input"] {
-    grid-area: input;
+	grid-area: input;
 }
 
 div [data-scope="number-input"][data-part="control"] {
-    grid-area: btn;
-    display: flex;
-    gap: 5px;
+	grid-area: btn;
+	display: flex;
+	gap: 5px;
 }
 
 div [data-scope="number-input"][data-part="control"] button {
-    width: 30px;
+	width: 30px;
 }
 
 div [data-scope="number-input"][data-part="control"] button:disabled {
-    cursor: default;
-    filter: var(--hover);
+	cursor: default;
+	filter: var(--hover);
 }
 
 div [data-scope="select"][data-part="root"], div [data-scope="field"][data-part="root"], div [data-scope="checkbox"][data-part="root"] {
-    display: flex;
-    gap: 5px;
-    flex-direction: column;
-    width: 200px;
-    color: var(--white);
+	display: flex;
+	gap: 5px;
+	flex-direction: column;
+	width: 200px;
+	color: var(--white);
 }
 
 div [data-scope="select"][data-part="trigger"] {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-    height: 30px;
-    align-items: center;
-    justify-content: space-between;
+	display: flex;
+	gap: 10px;
+	width: 100%;
+	height: 30px;
+	align-items: center;
+	justify-content: space-between;
 }
 
 div [data-scope="select"][data-part="content"][data-state="open"] { /*+card*/
-    background-color: var(--dark);
-    width: var(--reference-width); /*dynamic variable created by ark ui*/
-    padding: 5px;
+	background-color: var(--dark);
+	width: var(--reference-width); /*dynamic variable created by ark ui*/
+	padding: 5px;
 }
 
 div [data-scope="select"][data-part="item-group"] {
-display: flex;
-flex-direction: column;
-gap: 2px;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
 }
 
 div [data-scope="select"][data-part="item"] {
-    display: flex;
-    color: var(--white);
+	display: flex;
+	color: var(--white);
 }
 
 div [data-scope="select"][data-part="item"][data-state="checked"] {
-    color: var(--green);
+	color: var(--green);
 }
 
 div [data-scope="select"][data-part="item"][data-disabled] {
-    filter: var(--hover);
-    cursor: default !important;
+	filter: var(--hover);
+	cursor: default !important;
 }
 
 div [data-scope="select"][data-part="item"]:hover {
-    cursor: pointer;
-    filter: var(--hover);
+	cursor: pointer;
+	filter: var(--hover);
 }
 
 div [data-scope="dialog"][data-part="backdrop"][data-state="open"] {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100dvw;
-    height: 100dvh;
-    background-color: var(--dark-hover);
-    z-index: 1;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100dvw;
+	height: 100dvh;
+	background-color: var(--dark-hover);
+	z-index: 1;
 }
 
 div [data-scope="dialog"][data-part="content"][data-state="open"] { /*+card*/
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--base);
-    padding: 10px;
-    z-index: 2;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	background-color: var(--base);
+	padding: 10px;
+	z-index: 2;
 }
 
 div [data-scope="dialog"][data-part="close-trigger"] {
-    height: 30px;
-    width: 100px;
-    margin: 10px 0 0 auto;
-    display: block;
+	height: 30px;
+	width: 100px;
+	margin: 10px 0 0 auto;
+	display: block;
 }
 
 div [data-scope="progress"][data-part="root"] {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    color: var(--white);
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	color: var(--white);
 }
 
 div [data-scope="progress"][data-part="track"] {
-    height: 10px;
-    background-color: var(--dark);
-    min-width: 200px;
+	height: 10px;
+	background-color: var(--dark);
+	min-width: 200px;
 }
 
 div [data-scope="progress"][data-part="range"] {
-    background-color: var(--pink);
-    height: 100%;
-    border-radius: var(--rad);
+	background-color: var(--pink);
+	height: 100%;
+	border-radius: var(--rad);
 }
 
 @media (hover: hover) and (pointer: fine) {
-    header [data-scope="menu"][data-part="trigger"]:hover,
-    header [data-scope="tabs"][data-part="trigger"]:hover,
-    #header-menu-logout:hover {
-        cursor: pointer;
-        filter: var(--hover);
-    }
+	header [data-scope="menu"][data-part="trigger"]:hover,
+	header [data-scope="tabs"][data-part="trigger"]:hover,
+	#header-menu-logout:hover {
+		cursor: pointer;
+		filter: var(--hover);
+	}
 }
