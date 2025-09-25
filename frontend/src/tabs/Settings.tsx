@@ -24,8 +24,8 @@ const Settings: Component = () => {
 
 	return (
 		<div id="settings">
-			<For each={Object.entries(settings().iface)<[string, settingsInterfaceFieldsData][]>}>
-				{(iface, i) => <SettingsInterface name={iface[0]} iface={iface[1]} />}
+			<For each={Object.entries(settings().iface) as [string, settingsInterfaceFieldsData][]}>
+				{(iface, _) => <SettingsInterface name={iface[0]} iface={iface[1]} />}
 			</For>
 			<div id="settings-btn">
 				<button

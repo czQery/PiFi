@@ -1,7 +1,7 @@
-import { Dialog, Progress } from "@ark-ui/solid"
-import type { Component, Setter } from "solid-js"
-import { createEffect, createSignal, Show } from "solid-js"
-import { Portal } from "solid-js/web"
+import {Dialog, Progress} from "@ark-ui/solid"
+import type {Component} from "solid-js"
+import {createEffect, createSignal, Show} from "solid-js"
+import {Portal} from "solid-js/web"
 
 export interface loadingData {
 	title: string
@@ -19,7 +19,7 @@ const Loading: Component<loadingProps> = props => {
 	const [message, setMessage] = createSignal("")
 	const [progress, setProgress] = createSignal(0)
 
-	const fakePending = async (pending: () => boolean, progress: Setter<number>) => {
+	const fakePending = async (pending: () => boolean) => {
 		for (let i = 0; i < 80; i++) {
 			if (!pending()) return
 
@@ -42,7 +42,7 @@ const Loading: Component<loadingProps> = props => {
 			setName(props.data.title)
 			setMessage(props.data.msg)
 			setPending(true)
-			fakePending(pending, setProgress).then()
+			fakePending(pending).then()
 		} else {
 			await sleep(100)
 			setPending(false)
@@ -50,12 +50,13 @@ const Loading: Component<loadingProps> = props => {
 	})
 
 	return (
+		// @ts-ignore
 		<Dialog.Root className={"card"} open={pending()} closeOnEscape={false} closeOnInteractOutside={false}>
 			<Portal>
 				<Dialog.Backdrop />
 				<Dialog.Positioner>
 					<Dialog.Content>
-						<Show when={message() == ""<boolean>}>
+						<Show when={message() == ""}>
 							<Progress.Root value={progress()}>
 								<Progress.Label>{name()}</Progress.Label>
 								<Progress.Track>
@@ -63,7 +64,7 @@ const Loading: Component<loadingProps> = props => {
 								</Progress.Track>
 							</Progress.Root>
 						</Show>
-						<Show when={message() != ""<boolean>}>
+						<Show when={message() != ""}>
 							<label style={{ "display": "block", "margin-bottom": "5px", "color": "var(--white)" }}>Error</label>
 							<Dialog.Description style={{ width: "300px", color: "var(--pink)" }}>{message()}</Dialog.Description>
 							<Dialog.CloseTrigger

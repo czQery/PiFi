@@ -1,7 +1,7 @@
 import type { ListCollection } from "@ark-ui/solid"
 import { Checkbox, createListCollection, Field, NumberInput, Select } from "@ark-ui/solid"
 import type { Component } from "solid-js"
-import { createEffect, createSignal, onMount, Show } from "solid-js"
+import { createEffect, createSignal, Show } from "solid-js"
 import { Index, Portal } from "solid-js/web"
 
 import type { settingsInterfaceFieldsData } from "../lib/settings.ts"
@@ -18,20 +18,19 @@ interface settingsInterfaceProps {
 
 const SettingsInterface: Component<settingsInterfaceProps> = props => {
 	const portalsCollection: ListCollection<string> = createListCollection({ items: portals() })
-	const [portal, setPortal] = createSignal<string>(props.iface.portal_source ? props.iface.portal_source : portalsCollection.items[0])
+	const [portal, setPortal] = createSignal<boolean>(props.iface.portal)
+	const [portalSource, setPortalSource] = createSignal<string>(props.iface.portal_source ? props.iface.portal_source : portalsCollection.items[0])
 
 	const modesCollection: ListCollection<string> = createListCollection({ items: ["none", "hotspot", "monitor"] })
 	const [mode, setMode] = createSignal<string>(props.iface.mode ? props.iface.mode : modesCollection.items[0])
 
-	onMount(() => {
-		if (props.iface.channel === 0 || props.iface.channel > 14) {
-			props.iface.channel = 1
-		}
-	})
+	const [channel, setChannel] = createSignal<number>(props.iface.channel === 0 || props.iface.channel > 14 ? 1 : props.iface.channel)
 
 	createEffect(() => {
 		props.iface.mode = mode()
-		props.iface.portal_source = portal()
+		props.iface.portal = portal()
+		props.iface.portal_source = portalSource()
+		props.iface.channel = channel()
 		if (mode() === "hotspot") {
 			setSettingsInterfaceHotspot(props.name)
 		} else if (settingsInterfaceHotspot() === props.name) {
@@ -69,6 +68,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 												</Select.Item>
 											}
 										>
+											{/*@ts-ignore*/}
 											<Select.Item item={item()} data-disabled aria-disabled disabled>
 												<Select.ItemText data-disabled aria-disabled>{item()}</Select.ItemText>
 											</Select.Item>
@@ -92,7 +92,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 						<Field.Input placeholder={"none"} value={props.iface.password} onInput={e => (props.iface.password = e.currentTarget.value)} />
 						<Field.ErrorText>Error Info</Field.ErrorText>
 					</Field.Root>
-					<NumberInput.Root value={props.iface.channel.toString()} min={1} max={14} onValueChange={e => (props.iface.channel = e.valueAsNumber)}>
+					<NumberInput.Root value={channel().toString()} min={1} max={14} onValueChange={e => (setChannel(e.valueAsNumber))}>
 						<NumberInput.Label>Channel</NumberInput.Label>
 						<NumberInput.Input />
 						<NumberInput.Control>
@@ -102,7 +102,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 					</NumberInput.Root>
 				</div>
 				<div class="settings-iface-hotspot">
-					<Checkbox.Root checked={props.iface.portal} onCheckedChange={e => (props.iface.portal = e.checked as boolean)}>
+					<Checkbox.Root checked={portal()} onCheckedChange={e => (setPortal(e.checked as boolean))}>
 						<Checkbox.Label>Portal</Checkbox.Label>
 						<Checkbox.Control>
 							<div>
@@ -112,7 +112,13 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 						</Checkbox.Control>
 						<Checkbox.HiddenInput />
 					</Checkbox.Root>
-					<Select.Root required={true} immediate={true} value={[portal()]} onValueChange={e => setPortal(e.value[0])} collection={portalsCollection}>
+					<Select.Root
+						required={true}
+						immediate={true}
+						value={[portalSource()]}
+						onValueChange={e => setPortalSource(e.value[0])}
+						collection={portalsCollection}
+					>
 						<Select.Label>Portal source</Select.Label>
 						<Select.Control>
 							<Select.Trigger>

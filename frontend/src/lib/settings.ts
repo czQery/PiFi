@@ -32,6 +32,8 @@ export const getSettings = async (): Promise<settingsData> => {
 }
 
 export const saveSettings = async (data: settingsData): Promise<response> => {
+	/*console.log(data)
+	return { message: "", data: data }*/
 	const rsp: Response = await fetch(api + "api/settings", { method: "POST", credentials: "include", body: JSON.stringify(data) })
 
 	const rspJson: response = await rsp.json()

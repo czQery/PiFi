@@ -24,7 +24,7 @@ const Dash: Component = () => {
 	return (
 		<div id="dash">
 			<div id="dash-overview" class="card" data-disabled={stats().hotspot.ssid !== "" ? "false" : "true"}>
-				<Show when={stats().hotspot.ssid !== ""<boolean>} fallback={<LucideWifiOff id="dash-overview-icon" />}>
+				<Show when={stats().hotspot.ssid !== ""} fallback={<LucideWifiOff id="dash-overview-icon" />}>
 					<LucideWifi id="dash-overview-icon" />
 				</Show>
 				<h2>{stats().hotspot.ssid !== "" ? stats().hotspot.ssid : "xxxx"}</h2>
@@ -46,8 +46,8 @@ const Dash: Component = () => {
 				</div>
 			</div>
 			<div id="dash-log" class="card">
-				<Index each={log()<logData[]>}>
-					{(log, i) => (
+				<Index each={log() as logData[]}>
+					{(log, _) => (
 						<li>
 							<span
 								style={{
@@ -69,13 +69,13 @@ const Dash: Component = () => {
 								{"[" + addZero(log().time.getHours()) + ":" + addZero(log().time.getMinutes()) + ":" + addZero(log().time.getSeconds()) + "]"}
 							</span>
 							<span>{log().msg}</span>
-							<Show when={log().err<string>}>
+							<Show when={log().err as string}>
 								<span style={{ "color": "var(--pink)", "margin-left": "auto" }}>{"err=" + log().err}</span>
 							</Show>
-							<Show when={log().data<string>}>
+							<Show when={log().data as string}>
 								<span style={{ "color": "var(--green)", "margin-left": "auto" }}>{"data=" + log().data}</span>
 							</Show>
-							<Show when={log().ssid<string>}>
+							<Show when={log().ssid as string}>
 								<span style={{ "color": "var(--green)", "margin-left": "auto" }}>{"ssid=" + log().ssid}</span>
 							</Show>
 						</li>

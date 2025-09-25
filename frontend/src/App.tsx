@@ -16,7 +16,11 @@ const parsePath = (value: string): string => {
 	return value.slice(-1) === "/" ? value.slice(1, -1) : value.slice(1)
 }
 
-const App: Component = (props: { children }) => {
+interface AppProps {
+	children: any
+}
+
+const App: Component<AppProps> = props => {
 	const navigate = useNavigate()
 	const location = useLocation()
 
@@ -42,7 +46,7 @@ const App: Component = (props: { children }) => {
 	})
 
 	return (
-		<Show when={logged()<undefined | boolean>} fallback={<Auth />} keyed>
+		<Show when={logged() as undefined | boolean} fallback={<Auth />} keyed>
 			<header>
 				<h1 id="pifi" onClick={() => navigate("dash")}>PiFi</h1>
 				<Menu.Root id="header-menu" positioning={{ gutter: 10, placement: "bottom-end" }}>
