@@ -1,11 +1,12 @@
 package hp
 
 import (
+	"os"
+
 	"github.com/knadh/koanf/parsers/toml"
 	"github.com/knadh/koanf/providers/file"
 	"github.com/knadh/koanf/v2"
 	"github.com/sirupsen/logrus"
-	"os"
 )
 
 var Config = koanf.New(".")

@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"github.com/czQery/PiFi/backend/hp"
 	"os"
+
+	"github.com/czQery/PiFi/backend/hp"
 )
 
 func SetDNSPortal() error {

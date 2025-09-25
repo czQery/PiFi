@@ -3,11 +3,12 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"strconv"
+	"strings"
+
 	"github.com/czQery/PiFi/backend/cmd"
 	"github.com/czQery/PiFi/backend/hp"
 	"github.com/gofiber/fiber/v2"
-	"strconv"
-	"strings"
 )
 
 type SettingsResponse struct {

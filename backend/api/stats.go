@@ -1,12 +1,13 @@
 package api
 
 import (
+	"math"
+
 	"github.com/czQery/PiFi/backend/cmd"
 	"github.com/czQery/PiFi/backend/hp"
 	"github.com/gofiber/fiber/v2"
 	"github.com/mackerelio/go-osstat/cpu"
 	"github.com/mackerelio/go-osstat/memory"
-	"math"
 )
 
 type StatsResponse struct {

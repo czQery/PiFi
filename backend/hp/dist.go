@@ -1,8 +1,9 @@
 package hp
 
 import (
-	"github.com/sirupsen/logrus"
 	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
 var Dist bool

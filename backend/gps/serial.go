@@ -2,10 +2,11 @@ package gps
 
 import (
 	"bufio"
+	"strings"
+
 	"github.com/czQery/PiFi/backend/hp"
 	"github.com/sirupsen/logrus"
 	"go.bug.st/serial"
-	"strings"
 )
 
 var COM serial.Port
@@ -65,9 +66,9 @@ func SerialListen() {
 				continue
 			}
 
-			logrus.WithFields(logrus.Fields{
+			/*logrus.WithFields(logrus.Fields{
 				"data": part,
-			}).Debug("gps - read")
+			}).Debug("gps - read")*/
 		}
 	}
 }

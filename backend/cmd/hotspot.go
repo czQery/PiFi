@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"errors"
-	"github.com/sirupsen/logrus"
 	"os/exec"
 	"strings"
+
+	"github.com/sirupsen/logrus"
 )
 
 func InitHotspot(iface string) error {

@@ -1,10 +1,11 @@
 package main
 
 import (
+	"time"
+
 	"github.com/czQery/PiFi/backend/api"
 	"github.com/mackerelio/go-osstat/cpu"
 	"github.com/sirupsen/logrus"
-	"time"
 )
 
 func ticker() {

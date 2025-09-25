@@ -1,10 +1,11 @@
 package api
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"os"
 	"sort"
 	"strings"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func Portals(c *fiber.Ctx) error {

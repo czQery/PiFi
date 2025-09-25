@@ -1,9 +1,10 @@
 package api
 
 import (
+	"os"
+
 	"github.com/czQery/PiFi/backend/hp"
 	"github.com/gofiber/fiber/v2"
-	"os"
 )
 
 func Log(c *fiber.Ctx) error {

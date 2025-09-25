@@ -3,11 +3,12 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"github.com/czQery/PiFi/backend/gps"
 	"io"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/czQery/PiFi/backend/gps"
 
 	"github.com/mitchellh/mapstructure"
 
