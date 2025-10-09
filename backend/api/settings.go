@@ -8,6 +8,7 @@ import (
 
 	"github.com/czQery/PiFi/backend/cmd"
 	"github.com/czQery/PiFi/backend/hp"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -63,6 +64,17 @@ func ApplySettings(settings SettingsResponse) error {
 			}
 		}*/
 
+		var config SettingsInterfaceResponse
+		configErr := mapstructure.Decode(hp.Config.Get("settings.iface."+ifaceName), &config)
+		if configErr != nil {
+			return errors.New("config read: " + configErr.Error())
+		}
+
+		// saved config is null when calling from nmInit for some reason, so I check the Mode if is set
+		if config.Mode != "" && config == iface {
+			continue
+		}
+
 		switch strings.ToLower(iface.Mode) {
 		case "hotspot":
 			if iface.Portal {
@@ -78,6 +90,7 @@ func ApplySettings(settings SettingsResponse) error {
 		case "client":
 			err := cmd.SetClient(ifaceName, iface.SSID, iface.Password)
 			if err != nil {
+				_ = cmd.SetClient(ifaceName, config.SSID, config.Password) // fallback to previously saved wifi
 				return &Error{Code: 400, Func: "api/settings/client", Err: err, Message: err.Error()}
 			}
 		}
