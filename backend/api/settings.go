@@ -44,20 +44,24 @@ func SettingsPost(c *fiber.Ctx) error {
 
 	err = ApplySettings(data)
 	if err != nil {
-		return &Error{Code: 500, Func: "api/settings", Err: err}
+		return err
 	}
 
 	return SettingsGet(c)
 }
 
 func ApplySettings(settings SettingsResponse) error {
-
-	var hotspot bool
-
 	for ifaceName, iface := range settings.Interface {
 		if !iface.Ready {
 			continue
 		}
+
+		/*if strings.ToLower(iface.Mode) != "hotspot" {
+			err := cmd.DisableHotspot()
+			if err != nil && err.Error() != "exit status 10" {
+				return errors.New("disable hotspot: " + err.Error())
+			}
+		}*/
 
 		switch strings.ToLower(iface.Mode) {
 		case "hotspot":
@@ -71,17 +75,11 @@ func ApplySettings(settings SettingsResponse) error {
 			if err != nil {
 				return errors.New("set hotspot: " + err.Error())
 			}
-
-			//fmt.Println(ifaceName)
-
-			hotspot = true
-		}
-	}
-
-	if !hotspot {
-		err := cmd.DisableHotspot()
-		if err != nil && err.Error() != "exit status 10" {
-			return errors.New("disable hotspot: " + err.Error())
+		case "client":
+			err := cmd.SetClient(ifaceName, iface.SSID, iface.Password)
+			if err != nil {
+				return &Error{Code: 400, Func: "api/settings/client", Err: err, Message: err.Error()}
+			}
 		}
 	}
 

@@ -21,7 +21,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 	const [portal, setPortal] = createSignal<boolean>(props.iface.portal)
 	const [portalSource, setPortalSource] = createSignal<string>(props.iface.portal_source ? props.iface.portal_source : portalsCollection.items[0])
 
-	const modesCollection: ListCollection<string> = createListCollection({ items: ["none", "hotspot", "monitor"] })
+	const modesCollection: ListCollection<string> = createListCollection({ items: ["none", "hotspot", "client", "monitor"] })
 	const [mode, setMode] = createSignal<string>(props.iface.mode ? props.iface.mode : modesCollection.items[0])
 
 	const [channel, setChannel] = createSignal<number>(props.iface.channel === 0 || props.iface.channel > 14 ? 1 : props.iface.channel)
@@ -57,7 +57,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 				<Portal>
 					<Select.Positioner>
 						<Select.Content>
-							<Select.ItemGroup id="test">
+							<Select.ItemGroup>
 								<Index each={modesCollection.items}>
 									{item => (
 										<Show
@@ -129,7 +129,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 						<Portal>
 							<Select.Positioner>
 								<Select.Content>
-									<Select.ItemGroup id="test">
+									<Select.ItemGroup>
 										<Index each={portalsCollection.items}>
 											{item => (
 												<Select.Item item={item()}>
@@ -142,6 +142,20 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 							</Select.Positioner>
 						</Portal>
 					</Select.Root>
+				</div>
+			</Show>
+			<Show when={mode() === "client"}>
+				<div class="settings-iface-client">
+					<Field.Root>
+						<Field.Label>SSID</Field.Label>
+						<Field.Input placeholder={"PiFi"} value={props.iface.ssid} onInput={e => (props.iface.ssid = e.currentTarget.value)} />
+						<Field.ErrorText>Error Info</Field.ErrorText>
+					</Field.Root>
+					<Field.Root>
+						<Field.Label>Password</Field.Label>
+						<Field.Input placeholder={"none"} value={props.iface.password} onInput={e => (props.iface.password = e.currentTarget.value)} />
+						<Field.ErrorText>Error Info</Field.ErrorText>
+					</Field.Root>
 				</div>
 			</Show>
 		</div>

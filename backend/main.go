@@ -98,7 +98,7 @@ func main() {
 			if errors.As(err, &e) {
 				log := logrus.WithFields(e.Fields())
 				switch e.Code {
-				case 401, 404, 503:
+				case 400, 401, 404, 503:
 					break
 				case 500:
 					log.Error("fiber - " + e.Func)
@@ -256,9 +256,12 @@ func nmInit() {
 
 	applyErr := api.ApplySettings(settings)
 	if applyErr != nil {
-		logrus.WithFields(logrus.Fields{
-			"err": applyErr.Error(),
-		}).Panic("main - settings apply failed")
+		var e *api.Error
+		if !errors.As(applyErr, &e) || e.Code == 500 {
+			logrus.WithFields(logrus.Fields{
+				"err": applyErr.Error(),
+			}).Panic("main - settings apply failed")
+		}
 	}
 
 	logrus.Info("main - nmcli loaded")
