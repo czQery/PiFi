@@ -9,7 +9,7 @@ import type { settingsInterfaceFieldsData } from "../lib/settings.ts"
 import "./SettingsInterface.css"
 
 import { LucideUnplug } from "lucide-solid"
-import { portals, setSettingsInterfaceHotspot, settingsInterfaceHotspot } from "../tabs/Settings.tsx"
+import { portals, setSettingsInterfaceClient, setSettingsInterfaceHotspot, settingsInterfaceClient, settingsInterfaceHotspot } from "../tabs/Settings.tsx"
 
 interface settingsInterfaceProps {
 	name: string
@@ -31,10 +31,17 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 		props.iface.portal = portal()
 		props.iface.portal_source = portalSource()
 		props.iface.channel = channel()
-		if (mode() === "hotspot") {
-			setSettingsInterfaceHotspot(props.name)
-		} else if (settingsInterfaceHotspot() === props.name) {
-			setSettingsInterfaceHotspot("")
+
+		if (mode() !== "client" && settingsInterfaceClient() == props.name) setSettingsInterfaceClient("")
+		if (mode() !== "hotspot" && settingsInterfaceHotspot() == props.name) setSettingsInterfaceHotspot("")
+
+		switch (mode()) {
+			case "hotspot":
+				setSettingsInterfaceHotspot(props.name)
+				break
+			case "client":
+				setSettingsInterfaceClient(props.name)
+				break
 		}
 	})
 
@@ -61,16 +68,20 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 								<Index each={modesCollection.items}>
 									{item => (
 										<Show
-											when={settingsInterfaceHotspot() !== props.name && settingsInterfaceHotspot() !== "" && item() === "hotspot"}
+											when={(settingsInterfaceHotspot() === props.name || settingsInterfaceHotspot() === "" || item() !== "hotspot")
+												&& (settingsInterfaceClient() === props.name || settingsInterfaceClient() === "" || item() !== "client")}
 											fallback={
-												<Select.Item item={item()}>
-													<Select.ItemText>{item()}</Select.ItemText>
-												</Select.Item>
+												/*@ts-ignore*/
+
+
+													<Select.Item item={item()} data-disabled aria-disabled disabled>
+														<Select.ItemText data-disabled aria-disabled>{item()}</Select.ItemText>
+													</Select.Item>
+
 											}
 										>
-											{/*@ts-ignore*/}
-											<Select.Item item={item()} data-disabled aria-disabled disabled>
-												<Select.ItemText data-disabled aria-disabled>{item()}</Select.ItemText>
+											<Select.Item item={item()}>
+												<Select.ItemText>{item()}</Select.ItemText>
 											</Select.Item>
 										</Show>
 									)}

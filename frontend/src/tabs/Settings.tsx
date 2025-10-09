@@ -13,6 +13,7 @@ import type { response } from "../lib/var.ts"
 export const [settings, setSettings] = createSignal<settingsData>({ iface: {} })
 export const [portals, setPortals] = createSignal<string[]>([])
 export const [settingsInterfaceHotspot, setSettingsInterfaceHotspot] = createSignal<string>("")
+export const [settingsInterfaceClient, setSettingsInterfaceClient] = createSignal<string>("")
 
 const Settings: Component = () => {
 	onMount(async () => {
