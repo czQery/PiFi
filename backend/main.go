@@ -92,7 +92,7 @@ func main() {
 		GETOnly:               false,
 		JSONEncoder:           json.Marshal,
 		JSONDecoder:           json.Unmarshal,
-		ServerHeader:          "PiFi",
+		ServerHeader:          cmd.Con,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			var e *api.Error
 			if errors.As(err, &e) {

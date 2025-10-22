@@ -37,6 +37,8 @@
   sudo reboot
   ```
 
+- (Optional) Switch from `wpa_supplicant` to `iwd` if encountering wifi issues
+
 ### 3. Install PiFi
 
 - Download [latest release](https://github.com/czQery/PiFi/releases)
