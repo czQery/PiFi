@@ -13,31 +13,27 @@
   <br>
 </p>
 
-# ⚠️ In Early development!
+### ⚠️ In Early development!
 
 # Setup
 
-### 1. Install Rasbian
+### 1. Install Raspbian
 
-- Download [Raspberry Pi OS Lite](https://www.raspberrypi.com/software/operating-systems/)
-- Flash using [balenaEtcher](https://etcher.balena.io/)
-- Create `ssh` file in boot partition
-- Create `userconf` file with data: `username:hashed-password`
-  - Use this command to generate hashed-password
-    ```bash
-    echo 'password' | openssl passwd -6 -stdin
-    ```
+- Flash using [rpi-imager](https://www.raspberrypi.com/software/)
+- Set username, password, hostname etc.
+- Enable ssh
 
-### 2. Update system
+### 2. Setup system
 
-- Edit hostname in `/etc/hosts` & `/etc/hostname`
+- Install updates
   ```bash
   sudo apt update
   sudo apt upgrade
+  sudo rpi-update
   sudo reboot
   ```
-
-- (Optional) Switch from `wpa_supplicant` to `iwd` if encountering wifi issues
+- Use `raspi-config` to set wlan country
+- (Optional) Switch from `wpa_supplicant` to `iwd`
 
 ### 3. Install PiFi
 
