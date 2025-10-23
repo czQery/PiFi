@@ -124,3 +124,26 @@
 	font-family:
 		var(--mono), monospace;
 }
+
+@media screen and (max-width: 719px) {
+	#dash-overview {
+		grid-template-columns: 50px auto 50px;
+	}
+
+	#dash-overview-icon {
+		height: 40px;
+		margin: auto 5px;
+	}
+
+	#dash-overview-settings {
+		width: 50px;
+	}
+
+	#dash-overview-settings > span {
+		display: none;
+	}
+
+	#dash-log * {
+		font-size: 12px !important;
+	}
+}

@@ -12,19 +12,16 @@ export interface logData {
 }
 
 export const getLog = async (): Promise<logData[]> => {
-	// !DEBUG REMOVE!
-	return []
-
 	const rsp: Response = await fetch(api + "api/log", { credentials: "include" })
 
 	const rspJson: response = await rsp.json()
 
 	if (rsp.status === 200 && rspJson.data) {
 		const data: logData[] = []
-		const lines = atobUnicode(rspJson.data as string).split("\n")
+		const lines = atobUnicode(rspJson.data as unknown as string).split("\n")
 
 		const getLogItem = (line: string, name: string): string => {
-			return <string> new RegExp(`${name}="(.*?)"`).exec(line)?.[1]
+			return new RegExp(`${name}="(.*?)"`).exec(line)?.[1] as string
 		}
 
 		for (const line of lines) {

@@ -19,7 +19,7 @@
 
 ### 1. Install Raspbian
 
-- Flash using [rpi-imager](https://www.raspberrypi.com/software/)
+- Flash using [rpi-imager](https://www.raspberrypi.com/software/) (note: rpi zero w has some driver issue so stick to bookworm)
 - Set username, password, hostname etc.
 - Enable ssh
 
@@ -33,7 +33,7 @@
   sudo reboot
   ```
 - Use `raspi-config` to set wlan country
-- (Optional) Switch from `wpa_supplicant` to `iwd`
+- (optional: Switch from `wpa_supplicant` to `iwd`)
 
 ### 3. Install PiFi
 

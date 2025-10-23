@@ -1,14 +1,14 @@
-import type { Component } from "solid-js"
-import { createSignal, Index, onMount, Show } from "solid-js"
+import type {Component} from "solid-js"
+import {createSignal, Index, onMount, Show} from "solid-js"
 
 import "./Dash.css"
-import { useNavigate } from "@solidjs/router"
-import { LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi, LucideWifiOff } from "lucide-solid"
-import type { logData } from "../lib/log.ts"
-import { getLog } from "../lib/log.ts"
-import { addZero } from "../lib/other.ts"
-import type { statsData } from "../lib/stats.ts"
-import { getStats } from "../lib/stats.ts"
+import {useNavigate} from "@solidjs/router"
+import {LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi, LucideWifiOff} from "lucide-solid"
+import type {logData} from "../lib/log.ts"
+import {getLog} from "../lib/log.ts"
+import {addZero} from "../lib/other.ts"
+import type {statsData} from "../lib/stats.ts"
+import {getStats} from "../lib/stats.ts"
 
 export const [stats, setStats] = createSignal<statsData>({ cpu: 0, mem_total: 0, mem_used: 0, hotspot: { ssid: "" } } as statsData)
 export const [log, setLog] = createSignal<logData[]>([])
@@ -42,7 +42,7 @@ const Dash: Component = () => {
 				</div>
 				<div class="card">
 					<LucideMemoryStick />
-					<span>{stats().mem_used + "/" + stats().mem_total + "GB"}</span>
+					<span>{(stats().mem_used / 1000000000).toFixed(2) + "/" + (stats().mem_total / 1000000000).toFixed(2) + "GB"}</span>
 				</div>
 			</div>
 			<div id="dash-log" class="card">
@@ -57,6 +57,8 @@ const Dash: Component = () => {
 												return "var(--pink)"
 											case "warn":
 												return "var(--orange)"
+											case "debu":
+												return "var(--white)"
 											default:
 												return "var(--blue)"
 										}

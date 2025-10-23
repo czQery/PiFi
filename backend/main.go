@@ -215,13 +215,19 @@ func nmInit() {
 	}
 
 	// Create hotspot con for the first time
-	initErr := errors.New("no wifi interface")
+	var (
+		initHotspot    bool
+		initHotspotErr error
+	)
+
 	for _, i := range iface {
 		if i.Type == "wifi" {
-			initErr = cmd.InitHotspot(i.Name)
-
 			if item, e := ifaceConfig[i.Name]; e {
 				item["ready"] = true
+				if item["mode"] == "hotspot" {
+					initHotspot = true
+				}
+
 			} else {
 				newItem := make(map[string]interface{})
 				newItem["ready"] = true
@@ -229,11 +235,29 @@ func nmInit() {
 
 				ifaceConfig[i.Name] = newItem
 			}
+
+			logrus.WithFields(logrus.Fields{
+				"iface": i.Name,
+				"state": i.State,
+			}).Debug("main - iface init")
+
+			if !initHotspot && i.State == "disconnected" {
+				ifaceConfig[i.Name], initHotspotErr = cmd.InitHotspot(i.Name, ifaceConfig[i.Name])
+				if initHotspotErr == nil {
+					initHotspot = true
+				}
+			}
 		}
 	}
-	if initErr != nil {
+	if !initHotspot {
 		logrus.WithFields(logrus.Fields{
-			"err": initErr.Error(),
+			"err": "no wifi interface",
+		}).Panic("main - hotspot init failed")
+	}
+
+	if initHotspotErr != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": initHotspotErr.Error(),
 		}).Panic("main - hotspot init failed")
 	}
 
