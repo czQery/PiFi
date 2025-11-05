@@ -33,16 +33,21 @@
   sudo reboot
   ```
 - Use `raspi-config` to set wlan country
+- Use `raspi-config` to enable predictable interface names
 - (Optional) Switch from `wpa_supplicant` to `iwd`
 
-### 3. Install PiFi
+### 3. Install kismet
+
+- Follow the steps from [kismet](https://www.kismetwireless.net/docs/readme/installing/linux/)
+
+### 4. Install PiFi
 
 - Download [latest release](https://github.com/czQery/PiFi/releases)
   ```bash
   curl -L https://github.com/czQery/PiFi/releases/download/v0.0.4/release-arm.tar.gz | tar -xzv
   ```
 
-### 4. Create service
+### 5. Create service
 
 - Edit the example `pifi.service` file in this repo and put it in `/etc/systemd/system/`
 - Reload systemd daemon
