@@ -18,7 +18,12 @@ channel setting:
 
 - sudo nmcli con modify PiFi 802-11-wireless.channel 5
 
-dns setting
+client setup:
+
+- sudo nmcli device wifi rescan ifname wlan0
+- sudo nmcli device wifi connect ssid password password ifname wlan0 hidden yes name PiFi-client
+
+dns setting:
 
 - /etc/NetworkManager/dnsmasq-shared.d/PiFi.conf
 - `address=/#/10.42.0.1`
@@ -26,6 +31,12 @@ dns setting
 
 - enable hotspot:
   sudo nmcli con up PiFi
+
+monitor:
+
+- sudo ifconfig wlan0 down
+- sudo iwconfig wlan0 mode monitor
+- sudo airodump-ng wlan1 --manufacturer --wps
 
 # Setup
 

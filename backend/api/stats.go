@@ -55,8 +55,8 @@ func Stats(c *fiber.Ctx) error {
 	total := float64(cpuNow.Total - StatsCPU.Total)
 	data := StatsResponse{
 		Cpu:      math.Round((float64(cpuNow.System-StatsCPU.System)/total*100)*100) / 100,
-		MemTotal: memNow.Total / 1000000000,
-		MemUsed:  memNow.Used / 1000000000,
+		MemTotal: memNow.Total,
+		MemUsed:  memNow.Used,
 		Hotspot: StatsHotspotResponse{
 			SSID:   hotspotSSID,
 			Portal: cmd.Portal != "",

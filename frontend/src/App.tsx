@@ -1,14 +1,14 @@
-import type { Component } from "solid-js"
-import { createEffect, createMemo, createSignal, onMount, Show } from "solid-js"
+import type {Component} from "solid-js"
+import {createEffect, createMemo, createSignal, onMount, Show} from "solid-js"
 
 import "./App.css"
 
-import { Menu, Tabs } from "@ark-ui/solid"
-import { useLocation, useNavigate } from "@solidjs/router"
-import { LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideSettings } from "lucide-solid"
+import {Menu, Tabs} from "@ark-ui/solid"
+import {type RouteSectionProps, useLocation, useNavigate} from "@solidjs/router"
+import {LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings} from "lucide-solid"
 import Auth from "./components/Auth.tsx"
-import { base } from "./index.tsx"
-import { auth, authSave } from "./lib/auth.ts"
+import {base} from "./index.tsx"
+import {auth, authSave} from "./lib/auth.ts"
 
 export const [logged, setLogged] = createSignal<undefined | boolean>()
 
@@ -16,11 +16,7 @@ const parsePath = (value: string): string => {
 	return value.slice(-1) === "/" ? value.slice(1, -1) : value.slice(1)
 }
 
-interface AppProps {
-	children: any
-}
-
-const App: Component<AppProps> = props => {
+const App: Component<RouteSectionProps> = props => {
 	const navigate = useNavigate()
 	const location = useLocation()
 
@@ -53,7 +49,7 @@ const App: Component<AppProps> = props => {
 					<Menu.Trigger>
 						<LucideMenu />
 					</Menu.Trigger>
-					<Menu.Positioner>
+					<Menu.Positioner style={{ "z-index": 100 }}>
 						<Menu.Content>
 							<Tabs.Root orientation="vertical" lazyMount unmountOnExit value={pathname()} onValueChange={({ value }) => navigate(value)}>
 								<Tabs.List>
@@ -64,10 +60,12 @@ const App: Component<AppProps> = props => {
 										<Tabs.Trigger value={"settings"}>
 											<LucideSettings />
 										</Tabs.Trigger>
-										{
-											/*<Tabs.Trigger value={"scan"}><LucideRadar/></Tabs.Trigger>
-                                        <Tabs.Trigger value={"portal"}><LucideFileCog/></Tabs.Trigger>*/
-										}
+										<Tabs.Trigger value={"scan"}>
+											<LucideRadar />
+										</Tabs.Trigger>
+										<Tabs.Trigger value={"portal"}>
+											<LucideFileCog />
+										</Tabs.Trigger>
 										<Tabs.Indicator />
 									</div>
 									<button

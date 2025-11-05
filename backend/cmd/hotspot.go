@@ -8,10 +8,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func InitHotspot(iface string) error {
+func InitHotspot(iface string, item map[string]interface{}) (map[string]interface{}, error) {
 	out, err := exec.Command(NM, "-t", "con").Output()
 	if err != nil {
-		return err
+		return item, err
 	}
 
 	for _, line := range strings.Split(string(out), "\n") {
@@ -21,26 +21,31 @@ func InitHotspot(iface string) error {
 		}
 
 		if c[0] == Con+"-hotspot" {
-			return nil // hotspot already initialized
+			item["mode"] = "hotspot"
+			return item, nil // hotspot already initialized
 		}
 	}
 
 	err = exec.Command(NM, "con", "add", "type", "wifi", "ifname", iface, "con-name", Con+"-hotspot", "autoconnect", "yes", "ssid", Con).Run()
 	if err != nil {
-		return err
+		return item, err
 	}
 
 	err = exec.Command(NM, "con", "modify", Con+"-hotspot", "802-11-wireless.mode", "ap", "802-11-wireless.band", "bg", "802-11-wireless.channel", "1", "ipv4.method", "shared").Run()
 	if err != nil {
-		return err
+		return item, err
 	}
 
 	err = exec.Command(NM, "con", "up", Con+"-hotspot").Run()
 	if err != nil {
-		return err
+		return item, err
 	}
 
-	return nil
+	item["mode"] = "hotspot"
+	item["ssid"] = Con
+	item["channel"] = 1
+
+	return item, nil
 }
 
 func SetHotspot(iface, ssid, channel, password string) error {
