@@ -19,7 +19,7 @@
 
 ### 1. Install Raspbian
 
-- Flash using [rpi-imager](https://www.raspberrypi.com/software/) (note: if you have driver issues on rpi zero try bookworm)
+- Flash using [rpi-imager](https://www.raspberrypi.com/software/)
 - Set username, password, hostname etc.
 - Enable ssh
 
@@ -34,7 +34,6 @@
   ```
 - Use `raspi-config` to set wlan country
 - Use `raspi-config` to enable predictable interface names
-- (Optional) Switch from `wpa_supplicant` to `iwd`
 
 ### 3. Install Dependencies
 

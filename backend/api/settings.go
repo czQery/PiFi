@@ -52,6 +52,9 @@ func SettingsPost(c *fiber.Ctx) error {
 }
 
 func ApplySettings(settings SettingsResponse) error {
+
+	var hotspot bool
+
 	for ifaceName, iface := range settings.Interface {
 		if !iface.Ready {
 			continue
@@ -77,6 +80,8 @@ func ApplySettings(settings SettingsResponse) error {
 
 		switch strings.ToLower(iface.Mode) {
 		case "hotspot":
+			hotspot = true
+
 			if iface.Portal {
 				cmd.Portal = iface.PortalSource
 			} else {
@@ -94,6 +99,10 @@ func ApplySettings(settings SettingsResponse) error {
 				return &Error{Code: 400, Func: "api/settings/client", Err: err, Message: err.Error()}
 			}
 		}
+	}
+
+	if !hotspot {
+		_ = cmd.DisableHotspot()
 	}
 
 	// very retarded approach, but it works I guess

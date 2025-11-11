@@ -11,8 +11,7 @@ hotspot setup:
 
 password setting:
 
-- sudo nmcli con modify PiFi-hotspot wifi-sec.key-mgmt wpa-psk
-- sudo nmcli con modify PiFi-hotspot wifi-sec.psk "12345678"
+- sudo nmcli con modify PiFi-hotspot wifi-sec.key-mgmt wpa-psk wifi-sec.psk "12345678" wifi-sec.pmf disable
 
 channel setting:
 

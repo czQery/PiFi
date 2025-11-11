@@ -65,7 +65,7 @@ func SetHotspot(iface, ssid, channel, password string) error {
 	if password == "" || len(password) < 8 {
 		err = exec.Command(NM, "con", "modify", Con+"-hotspot", "remove", "802-11-wireless-security").Run()
 	} else {
-		err = exec.Command(NM, "con", "modify", Con+"-hotspot", "802-11-wireless-security.key-mgmt", "wpa-psk", "802-11-wireless-security.psk", password).Run()
+		err = exec.Command(NM, "con", "modify", Con+"-hotspot", "802-11-wireless-security.key-mgmt", "wpa-psk", "802-11-wireless-security.psk", password, "802-11-wireless-security.pmf", "disable").Run()
 	}
 	if err != nil {
 		return errors.New("modify wpa: " + err.Error())
