@@ -39,6 +39,8 @@
 
 ```bash
 sudo apt install bettercap bettercap-caplets bettercap-ui
+sudo systemctl stop bettercap
+sudo systemctl disable bettercap
 ```
 
 ### 4. Install PiFi

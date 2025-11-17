@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/czQery/PiFi/backend/gps"
+	"github.com/gofiber/fiber/v2/middleware/proxy"
 
 	"github.com/mitchellh/mapstructure"
 
@@ -81,6 +82,7 @@ func main() {
 	logrus.Info("config - successfully loaded")
 	hp.DistLoad()
 
+	go cmd.InitBettercap()
 	nmInit()
 
 	go ticker()
@@ -130,6 +132,10 @@ func main() {
 	rAPI.Post("/settings", api.SettingsPost)
 	rAPI.All("/portal", api.Portal)
 	rAPI.Get("/portals", api.Portals)
+
+	// Bettercap api proxy
+	rAPI.All("/bettercap/session", proxy.Forward(cmd.BC+"/api/session"))
+	rAPI.Get("/bettercap/wifi", proxy.Forward(cmd.BC+"/api/session/wifi"))
 
 	// Pifi UI
 	rUI := r.Group("/pifi", func(c *fiber.Ctx) error {

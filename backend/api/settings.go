@@ -60,13 +60,6 @@ func ApplySettings(settings SettingsResponse) error {
 			continue
 		}
 
-		/*if strings.ToLower(iface.Mode) != "hotspot" {
-			err := cmd.DisableHotspot()
-			if err != nil && err.Error() != "exit status 10" {
-				return errors.New("disable hotspot: " + err.Error())
-			}
-		}*/
-
 		var config SettingsInterfaceResponse
 		configErr := mapstructure.Decode(hp.Config.Get("settings.iface."+ifaceName), &config)
 		if configErr != nil {
@@ -97,6 +90,11 @@ func ApplySettings(settings SettingsResponse) error {
 			if err != nil {
 				_ = cmd.SetClient(ifaceName, config.SSID, config.Password) // fallback to previously saved wifi
 				return &Error{Code: 400, Func: "api/settings/client", Err: err, Message: err.Error()}
+			}
+		case "monitor":
+			err := cmd.SetBettercap("set wifi.interface " + ifaceName + ";wifi.recon on")
+			if err != nil {
+				return errors.New("set monitor: " + err.Error())
 			}
 		}
 	}
