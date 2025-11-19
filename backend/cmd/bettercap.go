@@ -12,7 +12,7 @@ func InitBettercap() {
 	for {
 		logrus.Info("cmd - starting bettercap")
 
-		eval := "set api.rest.address 127.0.0.1;api.rest.port 8081;api.rest on"
+		eval := "set api.rest.address 127.0.0.1;set api.rest.port 8081;api.rest on;set ticker.period 60"
 		cmd := exec.Command("bettercap", "-no-history", "-eval", eval)
 
 		errStart := cmd.Start()

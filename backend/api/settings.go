@@ -92,7 +92,8 @@ func ApplySettings(settings SettingsResponse) error {
 				return &Error{Code: 400, Func: "api/settings/client", Err: err, Message: err.Error()}
 			}
 		case "monitor":
-			err := cmd.SetBettercap("set wifi.interface " + ifaceName + ";wifi.recon on")
+			_ = cmd.SetBettercap("ticker off")
+			err := cmd.SetBettercap("set wifi.interface " + ifaceName + ";wifi.recon on;set ticker.commands 'wifi.recon on';ticker on")
 			if err != nil {
 				return errors.New("set monitor: " + err.Error())
 			}

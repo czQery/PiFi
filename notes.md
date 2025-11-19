@@ -40,20 +40,20 @@ monitor:
 
 bettercap:
 
-set api.rest.port 8088
-set api.rest.address 127.0.0.1
-set api.rest.username user
-set api.rest.password pass
-api.rest on
+- set api.rest.port 8088
+- set api.rest.address 127.0.0.1
+- set api.rest.username user
+- set api.rest.password pass
+- api.rest on
 
-set http.server.port 88
-set http.server.path /usr/share/bettercap/ui
-http.server on
+- set http.server.port 88
+- set http.server.path /usr/share/bettercap/ui
+- http.server on
 
-set wifi.interface wlxe4beed4c52e7
-wifi.recon on
+- set wifi.interface wlxe4beed4c52e7
+- wifi.recon on
 
-sudo bettercap -eval "set api.rest.address 0.0.0.0;api.rest on;set wifi.interface wlxe4beed4c52e7;wifi.recon on"
+- sudo bettercap -eval "set api.rest.address 0.0.0.0;api.rest on;set wifi.interface wlxe4beed4c52e7;wifi.recon on"
 
 # Setup
 

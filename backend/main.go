@@ -134,8 +134,9 @@ func main() {
 	rAPI.Get("/portals", api.Portals)
 
 	// Bettercap api proxy
+	rAPI.All("/bettercap/events", proxy.Forward(cmd.BC+"/api/events"))
 	rAPI.All("/bettercap/session", proxy.Forward(cmd.BC+"/api/session"))
-	rAPI.Get("/bettercap/wifi", proxy.Forward(cmd.BC+"/api/session/wifi"))
+	rAPI.Get("/bettercap/session/wifi", proxy.Forward(cmd.BC+"/api/session/wifi"))
 
 	// Pifi UI
 	rUI := r.Group("/pifi", func(c *fiber.Ctx) error {
