@@ -81,8 +81,13 @@ func main() {
 	hp.ConfigLoad()
 	logrus.Info("config - successfully loaded")
 	hp.DistLoad()
+	hp.DBLoad()
 
 	go cmd.InitBettercap()
+	for !cmd.RunningBettercap {
+		time.Sleep(time.Second * 1)
+	}
+
 	nmInit()
 
 	go ticker()

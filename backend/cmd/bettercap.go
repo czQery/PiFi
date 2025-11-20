@@ -7,9 +7,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/czQery/PiFi/backend/hp"
 	"github.com/imroc/req/v3"
 	"github.com/sirupsen/logrus"
 )
+
+var RunningBettercap bool
 
 func InitBettercap() {
 	for {
@@ -21,6 +24,8 @@ func InitBettercap() {
 		stdout, _ := cmd.StdoutPipe()
 		errStart := cmd.Start()
 
+		RunningBettercap = true
+
 		scanner := bufio.NewScanner(stdout)
 		scannerRegex := regexp.MustCompile(`^\[(?P<time>[^]]+)]\s+\[(?P<module>[^]]+)]\s+(?:\[(?P<level>[^]]+)]\s+)?(?P<msg>.*)$`)
 		for scanner.Scan() {
@@ -31,14 +36,28 @@ func InitBettercap() {
 				continue
 			}
 
-			if strings.Contains(matches[2], "wifi") {
+			/*if strings.Contains(matches[2], "wifi") {
 				logrus.WithFields(logrus.Fields{
 					"module": strings.TrimSpace(matches[2]),
 					"msg":    matches[4],
 				}).Debug("cmd - bettercap out")
-			}
+			}*/
 
-			//fmt.Printf("Time: %s | Module: %-12s | Level: %-5s | Msg: %s\n", matches[1], matches[2], matches[3], matches[4])
+			switch strings.TrimSpace(matches[2]) {
+			case "wifi.ap.new":
+				bssid, ssid, rssi := hp.ParseNewAP(strings.TrimSpace(matches[4]))
+				if bssid == "" {
+					break
+				}
+
+				logrus.WithFields(logrus.Fields{
+					"bssid": bssid,
+					"ssid":  ssid,
+					"rssi":  rssi,
+				}).Debug("cmd - bettercap new ap")
+
+				hp.DBInsertAP(bssid, ssid, "wifi", time.Now().Format(time.DateTime), 1, rssi, 10, 20, 400, 5, "wifi")
+			}
 		}
 
 		errWait := cmd.Wait()

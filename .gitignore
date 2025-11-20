@@ -7,6 +7,7 @@ frontend/.env
 backend/pifi
 backend/PiFi
 backend/log.txt
+backend/data.db
 backend/config.toml
 backend/config-backup.toml
 backend/portal/test
