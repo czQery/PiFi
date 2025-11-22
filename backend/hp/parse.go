@@ -7,7 +7,7 @@ import (
 )
 
 func ParseNewAP(input string) (bssid, ssid string, rssi float64) {
-	regex := regexp.MustCompile(`^wifi access point (?P<ssid>.+) \((?P<rssi>-[0-9]+ dBm)\) detected as (?P<bssid>[0-9a-fA-F:]{17})\.$`)
+	regex := regexp.MustCompile(`wifi access point\s+(?P<ssid>.+)\s+\((?P<rssi>-[0-9]+ dBm)\)\s+detected as\s+(?P<bssid>[0-9a-fA-F:]{17})`)
 	matches := regex.FindStringSubmatch(input)
 	if matches == nil || len(matches) < 4 {
 		return

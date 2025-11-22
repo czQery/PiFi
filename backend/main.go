@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/czQery/PiFi/backend/db"
 	"github.com/czQery/PiFi/backend/gps"
 	"github.com/gofiber/fiber/v2/middleware/proxy"
 
@@ -81,7 +82,7 @@ func main() {
 	hp.ConfigLoad()
 	logrus.Info("config - successfully loaded")
 	hp.DistLoad()
-	hp.DBLoad()
+	db.Load()
 
 	go cmd.InitBettercap()
 	for !cmd.RunningBettercap {

@@ -1,5 +1,6 @@
 .idea
 dev.sh
+db.sh
 test.json
 frontend/node_modules
 frontend/dist

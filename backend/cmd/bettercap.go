@@ -2,14 +2,17 @@ package cmd
 
 import (
 	"bufio"
+	"fmt"
 	"os/exec"
 	"regexp"
 	"strings"
 	"time"
 
+	"github.com/czQery/PiFi/backend/db"
 	"github.com/czQery/PiFi/backend/hp"
 	"github.com/imroc/req/v3"
 	"github.com/sirupsen/logrus"
+	"github.com/tidwall/gjson"
 )
 
 var RunningBettercap bool
@@ -56,7 +59,28 @@ func InitBettercap() {
 					"rssi":  rssi,
 				}).Debug("cmd - bettercap new ap")
 
-				hp.DBInsertAP(bssid, ssid, "wifi", time.Now().Format(time.DateTime), 1, rssi, 10, 20, 400, 5, "wifi")
+				details, detailsErr := GetBettercapAP(bssid)
+				if detailsErr != nil {
+					logrus.WithFields(logrus.Fields{
+						"bssid": bssid,
+						"err":   detailsErr,
+					}).Warn("cmd - bettercap new ap get details failed")
+				}
+
+				auth := details.Get("authentication").Str
+				if auth == "UNK" {
+					auth = "PSK"
+				}
+
+				mode := fmt.Sprintf("[%s-%s-%s]", details.Get("encryption").Str, auth, details.Get("cipher").Str)
+
+				if details.Get("wps.State").Exists() {
+					mode += "[WPS]"
+				}
+
+				mode += "[ESS]"
+
+				db.InsertAP(bssid, ssid, mode, time.Now().Format(time.DateTime), details.Get("channel").Int(), details.Get("frequency").Int(), rssi, 0, 0, 0, 0, "WIFI")
 			}
 		}
 
@@ -78,4 +102,13 @@ func SetBettercap(cmd string) error {
 	}
 
 	return nil
+}
+
+func GetBettercapAP(bssid string) (gjson.Result, error) {
+	rsp, err := req.Get(BC + "/api/session/wifi")
+	if err != nil {
+		return gjson.Result{}, err
+	}
+
+	return gjson.Parse(rsp.String()).Get(`aps.#(mac="` + bssid + `")`), nil
 }
