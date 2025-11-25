@@ -1,6 +1,8 @@
 package db
 
 import (
+	"strings"
+
 	"github.com/sirupsen/logrus"
 	"zombiezen.com/go/sqlite/sqlitex"
 )
@@ -22,7 +24,7 @@ func InsertAP(bssid, ssid, mode, discovered string, channel, frequency int64, rs
 			device,
 		},
 	})
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "UNIQUE constraint failed") {
 		logrus.WithFields(logrus.Fields{
 			"err": err.Error(),
 		}).Error("db - insert ap exec failed")

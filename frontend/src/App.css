@@ -119,6 +119,11 @@ header {
 	display: grid;
 	padding: 10px;
 	grid-template-columns: 100px auto;
+
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1;
 }
 
 header #pifi {
@@ -205,6 +210,7 @@ header [data-scope="tabs"][data-part="indicator"] {
 main {
 	color: var(--white);
 	padding: 10px;
+	margin-top: 50px;
 }
 
 div [data-scope="field"][data-part="input"] {
