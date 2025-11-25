@@ -21,7 +21,7 @@ export const getLog = async (): Promise<logData[]> => {
 		const lines = atobUnicode(rspJson.data as unknown as string).split("\n")
 
 		const getLogItem = (line: string, name: string): string => {
-			return new RegExp(`${name}="(.*?)"`).exec(line)?.[1] as string
+			return new RegExp(`(?:^| )${name}="(.*?)"`).exec(line)?.[1] as string
 		}
 
 		for (const line of lines) {
