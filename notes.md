@@ -61,3 +61,8 @@ NetworkManager: (this isn't really needed idk why i put it here)
 
 - in /etc/NetworkManager/NetworkManager.conf
 - `[main].dns=dnsmasq`
+
+# GPS
+
+- https://www.davidpilling.com/wiki/index.php/GPS
+- https://austinsnerdythings.com/2025/02/14/revisiting-microsecond-accurate-ntp-for-raspberry-pi-with-gps-pps-in-2025/

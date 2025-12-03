@@ -1,14 +1,14 @@
-import type {Component} from "solid-js"
-import {createEffect, createMemo, createSignal, onMount, Show} from "solid-js"
+import type { Component } from "solid-js"
+import { createEffect, createMemo, createSignal, onMount, Show } from "solid-js"
 
 import "./App.css"
 
-import {Menu, Tabs} from "@ark-ui/solid"
-import {type RouteSectionProps, useLocation, useNavigate} from "@solidjs/router"
-import {LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings} from "lucide-solid"
+import { Menu, Tabs } from "@ark-ui/solid"
+import { type RouteSectionProps, useLocation, useNavigate } from "@solidjs/router"
+import { LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings } from "lucide-solid"
 import Auth from "./components/Auth.tsx"
-import {base} from "./index.tsx"
-import {auth, authSave} from "./lib/auth.ts"
+import { base } from "./index.tsx"
+import { auth, authSave } from "./lib/auth.ts"
 
 export const [logged, setLogged] = createSignal<undefined | boolean>()
 

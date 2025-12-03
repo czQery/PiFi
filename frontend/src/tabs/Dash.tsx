@@ -1,14 +1,14 @@
-import type {Component} from "solid-js"
-import {createSignal, Index, onMount, Show} from "solid-js"
+import type { Component } from "solid-js"
+import { createSignal, Index, onMount, Show } from "solid-js"
 
 import "./Dash.css"
-import {useNavigate} from "@solidjs/router"
-import {LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi, LucideWifiOff} from "lucide-solid"
-import type {logData} from "../lib/log.ts"
-import {getLog} from "../lib/log.ts"
-import {addZero} from "../lib/other.ts"
-import type {statsData} from "../lib/stats.ts"
-import {getStats} from "../lib/stats.ts"
+import { useNavigate } from "@solidjs/router"
+import { LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi, LucideWifiOff } from "lucide-solid"
+import type { logData } from "../lib/log.ts"
+import { getLog } from "../lib/log.ts"
+import { addZero } from "../lib/other.ts"
+import type { statsData } from "../lib/stats.ts"
+import { getStats } from "../lib/stats.ts"
 
 export const [stats, setStats] = createSignal<statsData>({ cpu: 0, mem_total: 0, mem_used: 0, hotspot: { ssid: "" } } as statsData)
 export const [log, setLog] = createSignal<logData[]>([])
