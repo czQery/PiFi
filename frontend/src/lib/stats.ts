@@ -6,11 +6,21 @@ export interface statsData {
 	mem_total: number
 	mem_used: number
 	hotspot: statsHotspotData
+	gps: statsGPSData
 }
 
 export interface statsHotspotData {
 	ssid: string
 	portal: boolean
+}
+
+export interface statsGPSData {
+	lat: number
+	lon: number
+	alt: number
+
+	mode: number
+	time: number
 }
 
 export const getStats = async (): Promise<statsData> => {
@@ -22,5 +32,5 @@ export const getStats = async (): Promise<statsData> => {
 		return rspJson.data as statsData
 	}
 
-	return { cpu: 0, mem_total: 0, mem_used: 0, hotspot: { ssid: "", portal: false } }
+	return { cpu: 0, mem_total: 0, mem_used: 0, hotspot: { ssid: "", portal: false }, gps: { lat: 0, lon: 0, alt: 0, mode: 0, time: 0 } }
 }

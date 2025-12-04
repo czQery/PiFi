@@ -84,6 +84,28 @@
 	margin: 0 auto;
 }
 
+#dash-gps {
+	background-color: var(--base);
+	padding: 10px;
+	gap: 10px;
+	display: flex;
+	justify-content: space-between;
+}
+
+#dash-gps span {
+	margin: auto 0;
+}
+
+#dash-gps div {
+	display: flex;
+	gap: 10px;
+}
+
+#dash-gps div svg {
+	width: 30px;
+	height: 30px;
+}
+
 #dash-stats {
 	display: flex;
 	gap: 10px;

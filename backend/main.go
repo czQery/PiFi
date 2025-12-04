@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/czQery/PiFi/backend/db"
-	"github.com/czQery/PiFi/backend/gps"
 	"github.com/gofiber/fiber/v2/middleware/proxy"
 
 	"github.com/mitchellh/mapstructure"
@@ -84,15 +83,14 @@ func main() {
 	hp.DistLoad()
 	db.Load()
 
+	go cmd.InitGPS()
 	go cmd.InitBettercap()
 	for !cmd.RunningBettercap {
 		time.Sleep(time.Second * 1)
 	}
 
 	nmInit()
-
 	go ticker()
-	go gps.SerialListen()
 
 	r := fiber.New(fiber.Config{
 		CaseSensitive:         false,

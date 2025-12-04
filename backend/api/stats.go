@@ -15,6 +15,7 @@ type StatsResponse struct {
 	MemTotal uint64               `json:"mem_total"`
 	MemUsed  uint64               `json:"mem_used"`
 	Hotspot  StatsHotspotResponse `json:"hotspot"`
+	GPS      cmd.GPSData          `json:"gps"`
 }
 
 type StatsHotspotResponse struct {
@@ -61,6 +62,7 @@ func Stats(c *fiber.Ctx) error {
 			SSID:   hotspotSSID,
 			Portal: cmd.Portal != "",
 		},
+		GPS: cmd.GPS,
 	}
 
 	return c.Status(200).JSON(Response{Message: "success", Data: data})

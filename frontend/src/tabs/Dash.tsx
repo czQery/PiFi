@@ -3,14 +3,16 @@ import { createSignal, Index, onMount, Show } from "solid-js"
 
 import "./Dash.css"
 import { useNavigate } from "@solidjs/router"
-import { LucideCpu, LucideMemoryStick, LucideSettings, LucideWifi, LucideWifiOff } from "lucide-solid"
+import { LucideCpu, LucideLocateFixed, LucideLocateOff, LucideMemoryStick, LucideSettings, LucideWifi, LucideWifiOff } from "lucide-solid"
 import type { logData } from "../lib/log.ts"
 import { getLog } from "../lib/log.ts"
 import { addZero } from "../lib/other.ts"
 import type { statsData } from "../lib/stats.ts"
 import { getStats } from "../lib/stats.ts"
 
-export const [stats, setStats] = createSignal<statsData>({ cpu: 0, mem_total: 0, mem_used: 0, hotspot: { ssid: "" } } as statsData)
+export const [stats, setStats] = createSignal<statsData>(
+	{ cpu: 0, mem_total: 0, mem_used: 0, hotspot: { ssid: "" }, gps: { lat: 0, lon: 0, alt: 0, mode: 0, time: 0 } } as statsData,
+)
 export const [log, setLog] = createSignal<logData[]>([])
 
 const Dash: Component = () => {
@@ -34,6 +36,16 @@ const Dash: Component = () => {
 					<LucideSettings />
 					<span>settings</span>
 				</button>
+			</div>
+			<div id="dash-gps" class="card">
+				<div>
+					<Show when={stats().gps.mode !== 0} fallback={<LucideLocateOff />}>
+						<LucideLocateFixed />
+					</Show>
+					<span>{stats().gps.lat.toString()}</span>
+					<span>{stats().gps.lon.toString()}</span>
+				</div>
+				<span>{stats().gps.alt.toString() + "m"}</span>
 			</div>
 			<div id="dash-stats">
 				<div class="card">
@@ -79,6 +91,9 @@ const Dash: Component = () => {
 							</Show>
 							<Show when={log().ssid as string}>
 								<span style={{ "color": "var(--green)", "margin-left": "auto" }}>{"ssid=" + log().ssid}</span>
+							</Show>
+							<Show when={log().iface as string}>
+								<span style={{ "color": "var(--blue)", "margin-left": "auto" }}>{"iface=" + log().iface}</span>
 							</Show>
 						</li>
 					)}

@@ -9,6 +9,7 @@ export interface logData {
 	err: string
 	data: string
 	ssid: string
+	iface: string
 }
 
 export const getLog = async (): Promise<logData[]> => {
@@ -38,6 +39,7 @@ export const getLog = async (): Promise<logData[]> => {
 				err: getLogItem(line, "err"),
 				data: getLogItem(line, "data"),
 				ssid: getLogItem(line, "ssid"),
+				iface: getLogItem(line, "iface"),
 			})
 		}
 
