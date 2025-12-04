@@ -1,11 +1,25 @@
 .ap {
 	background-color: var(--base);
-	gap: 10px;
+	gap: 5px;
 	padding: 10px;
 	display: grid;
 }
 
-.ap-title {
+.ap-flex {
 	display: flex;
-	gap: 10px;
+	gap: 5px;
+	overflow: hidden;
+	height: 20px;
+}
+
+.ap-flex svg {
+	height: 100%;
+}
+
+.ap-title {
+	font-weight: bold;
+}
+
+.ap-value {
+	opacity: 0.6;
 }

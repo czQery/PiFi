@@ -76,7 +76,7 @@ sudo systemctl disable bettercap
 - Select -> Serial
 - Login shell -> No
 - Hardware Serial -> Yes
-- Reboot
-  ```bash
+- ```bash
+  sudo apt install pps-tools gpsd gpsd-clients chrony
   sudo reboot
   ```

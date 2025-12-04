@@ -7,7 +7,9 @@ export interface bettercapWifiDataResponse {
 export interface bettercapWifiData {
 	mac: string
 	hostname: string
+	vendor: string
 	channel: number
+	rssi: number
 	encryption: string
 	cipher: string
 	authentication: string
