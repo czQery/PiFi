@@ -28,6 +28,7 @@ func InitGPS() {
 		stdout, _ := cmd.StdoutPipe()
 		errStart := cmd.Start()
 
+		GPS = GPSData{}
 		scanner := bufio.NewScanner(stdout)
 		for scanner.Scan() {
 			line := scanner.Text()
@@ -35,23 +36,22 @@ func InitGPS() {
 
 			switch data.Get("class").String() {
 			case "TPV":
-				if data.Get("mode").Int() == 0 { // ignore when not locked
-					break
-				}
-
-				GPS = GPSData{
-					Lat: data.Get("lat").Float(),
-					Lon: data.Get("lon").Float(),
-					Alt: data.Get("alt").Float(),
-
-					Mode: data.Get("mode").Int(),
-					Time: time.Now().Unix(),
-				}
-
 				/*logrus.WithFields(logrus.Fields{
 					"lat": data.Get("lat").Float(),
 					"lon": data.Get("lon").Float(),
 				}).Debug("cmd - gps out")*/
+
+				GPS.Mode = data.Get("mode").Int()
+				GPS.Time = data.Get("time").Int()
+
+				switch data.Get("mode").Int() {
+				case 3:
+					GPS.Alt = data.Get("alt").Float()
+					fallthrough
+				case 2:
+					GPS.Lat = data.Get("lat").Float()
+					GPS.Lon = data.Get("lon").Float()
+				}
 			}
 		}
 

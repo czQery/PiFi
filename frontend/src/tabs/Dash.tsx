@@ -39,13 +39,12 @@ const Dash: Component = () => {
 			</div>
 			<div id="dash-gps" class="card">
 				<div>
-					<Show when={stats().gps.mode !== 0} fallback={<LucideLocateOff />}>
+					<Show when={stats().gps.mode >= 2} fallback={<LucideLocateOff />}>
 						<LucideLocateFixed />
 					</Show>
-					<span>{stats().gps.lat.toString()}</span>
-					<span>{stats().gps.lon.toString()}</span>
+					<span>{"Coordinates: " + stats().gps.lat.toString() + ", " + stats().gps.lon.toString()}</span>
 				</div>
-				<span>{stats().gps.alt.toString() + "m"}</span>
+				<span>{stats().gps.mode >= 2 ? stats().gps.alt.toString() + "m" : "no location"}</span>
 			</div>
 			<div id="dash-stats">
 				<div class="card">
