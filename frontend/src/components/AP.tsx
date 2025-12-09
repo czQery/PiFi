@@ -13,21 +13,21 @@ const AP: Component<APProps> = props => {
 			<div class="ap-flex" style="justify-content: space-between;">
 				<div class="ap-flex">
 					<LucideWifi />
-					<span class="ap-title">{props.ap.hostname}</span>
+					<span class="title">{props.ap.hostname}</span>
 				</div>
 				<div class="ap-flex">
 					<span>[RSSI:</span>
-					<span class="ap-value">{props.ap.rssi}</span>
+					<span class="value">{props.ap.rssi}</span>
 					<span>]</span>
 					<span>[CH:</span>
-					<span class="ap-value">{props.ap.channel}</span>
+					<span class="value">{props.ap.channel}</span>
 					<span>]</span>
 				</div>
 			</div>
 			<div class="ap-flex" style="justify-content: space-between;">
 				<div class="ap-flex">
 					<span>BSSID:</span>
-					<span class="ap-value">{props.ap.mac}</span>
+					<span class="value">{props.ap.mac}</span>
 				</div>
 				<div class="ap-flex">
 					<span>[</span>
@@ -37,7 +37,7 @@ const AP: Component<APProps> = props => {
 			</div>
 			<div class="ap-flex">
 				<span>VENDOR:</span>
-				<span class="ap-value">{props.ap.vendor !== "" ? props.ap.vendor : "unknown"}</span>
+				<span class="value">{props.ap.vendor !== "" ? props.ap.vendor : "unknown"}</span>
 			</div>
 		</div>
 	)

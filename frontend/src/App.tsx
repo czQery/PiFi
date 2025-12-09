@@ -5,7 +5,7 @@ import "./App.css"
 
 import { Menu, Tabs } from "@ark-ui/solid"
 import { type RouteSectionProps, useLocation, useNavigate } from "@solidjs/router"
-import { LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings } from "lucide-solid"
+import {LucideDatabase, LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings } from "lucide-solid"
 import Auth from "./components/Auth.tsx"
 import { base } from "./index.tsx"
 import { auth, authSave } from "./lib/auth.ts"
@@ -62,6 +62,9 @@ const App: Component<RouteSectionProps> = props => {
 										</Tabs.Trigger>
 										<Tabs.Trigger value={"scan"}>
 											<LucideRadar />
+										</Tabs.Trigger>
+										<Tabs.Trigger value={"db"}>
+											<LucideDatabase />
 										</Tabs.Trigger>
 										<Tabs.Trigger value={"portal"}>
 											<LucideFileCog />

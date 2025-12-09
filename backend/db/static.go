@@ -13,6 +13,9 @@ const dbCreate = `
 		longitude REAL NOT NULL,
 		altitude INTEGER NOT NULL,
 		accuracy INTEGER NOT NULL,
-		device TEXT NOT NULL
+		device TEXT NOT NULL,
+		wigle BOOLEAN DEFAULT FALSE,
+		beacondb BOOLEAN DEFAULT FALSE,
+		dwpa boolean DEFAULT FALSE
 	);
 `

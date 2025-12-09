@@ -136,6 +136,7 @@ func main() {
 	rAPI.Post("/settings", api.SettingsPost)
 	rAPI.All("/portal", api.Portal)
 	rAPI.Get("/portals", api.Portals)
+	rAPI.Get("/db", api.DB)
 
 	// Bettercap api proxy
 	rAPI.All("/bettercap/events", proxy.Forward(cmd.BC+"/api/events"))

@@ -79,6 +79,8 @@ func InitBettercap() {
 				}
 
 				mode += "[ESS]"
+				mode = strings.ReplaceAll(mode, "--]", "]")
+				mode = strings.ReplaceAll(mode, "-]", "]")
 
 				db.InsertAP(bssid, ssid, mode, time.Now().Format(time.DateTime), details.Get("channel").Int(), details.Get("frequency").Int(), rssi, 0, 0, 0, 0, "WIFI")
 			}
