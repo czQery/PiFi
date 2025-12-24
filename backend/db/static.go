@@ -12,7 +12,7 @@ const dbCreate = `
 		latitude REAL NOT NULL,
 		longitude REAL NOT NULL,
 		altitude INTEGER NOT NULL,
-		accuracy INTEGER NOT NULL,
+		accuracy REAL NOT NULL,
 		device TEXT NOT NULL,
 		wigle BOOLEAN DEFAULT FALSE,
 		beacondb BOOLEAN DEFAULT FALSE,

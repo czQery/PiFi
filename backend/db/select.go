@@ -17,7 +17,7 @@ type DataAP struct {
 	Latitude   float64 `json:"latitude"`
 	Longitude  float64 `json:"longitude"`
 	Altitude   int64   `json:"altitude"`
-	Accuracy   int64   `json:"accuracy"`
+	Accuracy   float64 `json:"accuracy"`
 	Device     string  `json:"device"`
 	Wigle      bool    `json:"wigle"`
 	BeaconDB   bool    `json:"beacondb"`
@@ -39,7 +39,7 @@ func SelectAP() []DataAP {
 				Latitude:   stmt.ColumnFloat(7),
 				Longitude:  stmt.ColumnFloat(8),
 				Altitude:   stmt.ColumnInt64(9),
-				Accuracy:   stmt.ColumnInt64(10),
+				Accuracy:   stmt.ColumnFloat(10),
 				Device:     stmt.ColumnText(11),
 				Wigle:      stmt.ColumnBool(12),
 				BeaconDB:   stmt.ColumnBool(13),
