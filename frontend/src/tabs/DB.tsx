@@ -1,7 +1,7 @@
 import "./DB.css"
-import { LucideGlobe, LucideRadio, LucideRadioTower } from "lucide-solid"
-import { type Component, createSignal, onMount } from "solid-js"
-import { type dbData, getDB } from "../lib/db.ts"
+import {LucideGlobe, LucideRadio, LucideRadioTower} from "lucide-solid"
+import {type Component, createSignal, onMount} from "solid-js"
+import {type dbData, getDB} from "../lib/db.ts"
 
 export const [db, setDB] = createSignal<dbData>({ aps: 0, wigle: { new: 0, net: 0 }, beacondb: { new: 0, net: 0 }, dwpa: { new: 0, net: 0 } } as dbData)
 
@@ -32,7 +32,10 @@ const DB: Component = () => {
 					<span>Net:</span>
 					<span class="value">{db().wigle.net.toString()}</span>
 				</div>
-				<button class="card green">upload</button>
+				<div class="db-buttons">
+					<button class="card" onClick={() => window.open("/api/net/wigle", "_blank")}>raw</button>
+					<button class="card green">upload</button>
+				</div>
 			</div>
 			<div id="db-net-beacondb" class="card">
 				<div class="db-flex">
@@ -47,7 +50,10 @@ const DB: Component = () => {
 					<span>Net:</span>
 					<span class="value">{db().beacondb.net.toString()}</span>
 				</div>
-				<button class="card green">upload</button>
+				<div class="db-buttons">
+					<button class="card">raw</button>
+					<button class="card green">upload</button>
+				</div>
 			</div>
 			<div id="db-net-dwpa" class="card">
 				<div class="db-flex">
@@ -62,7 +68,10 @@ const DB: Component = () => {
 					<span>Net:</span>
 					<span class="value">{db().dwpa.net.toString()}</span>
 				</div>
-				<button class="card green">upload</button>
+				<div class="db-buttons">
+					<button class="card">raw</button>
+					<button class="card green">upload</button>
+				</div>
 			</div>
 		</div>
 	)
