@@ -139,6 +139,7 @@ func main() {
 	rAPI.Get("/db", api.DB)
 
 	rAPI.Get("/net/wigle", api.WigleGet)
+	rAPI.Post("/net/wigle", api.WiglePost)
 
 	// Bettercap api proxy
 	rAPI.All("/bettercap/events", proxy.Forward(cmd.BC+"/api/events"))
