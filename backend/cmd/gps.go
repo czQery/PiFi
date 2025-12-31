@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bufio"
+	"math"
 	"os/exec"
 	"time"
 
@@ -12,7 +13,8 @@ import (
 type GPSData struct {
 	Lat float64 `json:"lat"`
 	Lon float64 `json:"lon"`
-	Alt float64 `json:"alt"`
+	Alt int64   `json:"alt"`
+	Acc float64 `json:"acc"`
 
 	Mode int64 `json:"mode"`
 	Time int64 `json:"time"`
@@ -36,17 +38,21 @@ func InitGPS() {
 
 			switch data.Get("class").String() {
 			case "TPV":
-				/*logrus.WithFields(logrus.Fields{
-					"lat": data.Get("lat").Float(),
-					"lon": data.Get("lon").Float(),
-				}).Debug("cmd - gps out")*/
-
 				GPS.Mode = data.Get("mode").Int()
 				GPS.Time = data.Get("time").Int()
 
+				// by my findings it looks like eph, epx or eph are only returned in mode 3, so manual calculation of accuracy from SKY class will probably be needed
+				if data.Get("eph").Exists() {
+					GPS.Acc = data.Get("eph").Float()
+				} else if data.Get("epx").Exists() && data.Get("epy").Exists() {
+					epx := data.Get("epx").Float()
+					epy := data.Get("epy").Float()
+					GPS.Acc = math.Sqrt((epx * epx) + (epy * epy))
+				}
+
 				switch data.Get("mode").Int() {
 				case 3:
-					GPS.Alt = data.Get("alt").Float()
+					GPS.Alt = data.Get("alt").Int()
 					fallthrough
 				case 2:
 					GPS.Lat = data.Get("lat").Float()

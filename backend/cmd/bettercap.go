@@ -82,7 +82,22 @@ func InitBettercap() {
 				mode = strings.ReplaceAll(mode, "--]", "]")
 				mode = strings.ReplaceAll(mode, "-]", "]")
 
-				db.InsertAP(bssid, ssid, mode, time.Now().Format(time.DateTime), details.Get("channel").Int(), details.Get("frequency").Int(), rssi, 0, 0, 0, 0, "WIFI")
+				var (
+					lat float64 = 0
+					lon float64 = 0
+					alt int64   = 0
+					acc float64 = 0
+				)
+
+				/* TODO: create proper check after figuring out the time format
+				if GPS.Time {
+					lat = GPS.Lat
+					lon = GPS.Lon
+					alt = GPS.Alt
+					acc = GPS.Acc
+				}*/
+
+				db.InsertAP(bssid, ssid, mode, time.Now().Format(time.DateTime), details.Get("channel").Int(), details.Get("frequency").Int(), rssi, lat, lon, alt, acc, "WIFI")
 			}
 		}
 
