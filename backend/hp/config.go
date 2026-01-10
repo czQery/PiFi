@@ -38,3 +38,15 @@ func ConfigSave() {
 		}).Error("config - save failed")
 	}
 }
+
+func ConfigGetInterfaceList() map[string]map[string]interface{} {
+	ifaceConfig := make(map[string]map[string]interface{})
+	ifaceConfigErr := Config.Unmarshal("settings.iface", &ifaceConfig)
+	if ifaceConfigErr != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": ifaceConfigErr.Error(),
+		}).Panic("hp - iface config load failed")
+	}
+
+	return ifaceConfig
+}

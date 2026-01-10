@@ -218,13 +218,7 @@ func nmInit() {
 	}
 
 	// Get interfaces from config
-	ifaceConfig := make(map[string]map[string]interface{})
-	ifaceConfigErr := hp.Config.Unmarshal("settings.iface", &ifaceConfig)
-	if ifaceConfigErr != nil {
-		logrus.WithFields(logrus.Fields{
-			"err": ifaceConfigErr.Error(),
-		}).Panic("main - iface config load failed")
-	}
+	ifaceConfig := hp.ConfigGetInterfaceList()
 	for _, item := range ifaceConfig {
 		item["ready"] = false
 	}
@@ -277,7 +271,7 @@ func nmInit() {
 	}
 
 	// Save edited interfaces config
-	ifaceConfigErr = hp.Config.Set("settings.iface", ifaceConfig)
+	ifaceConfigErr := hp.Config.Set("settings.iface", ifaceConfig)
 	if ifaceConfigErr != nil {
 		logrus.WithFields(logrus.Fields{
 			"err": ifaceConfigErr.Error(),
@@ -293,7 +287,7 @@ func nmInit() {
 		}).Panic("main - settings load failed")
 	}
 
-	applyErr := api.ApplySettings(settings)
+	applyErr := api.ApplySettings(settings, true)
 	if applyErr != nil {
 		var e *api.Error
 		if !errors.As(applyErr, &e) || e.Code == 500 {

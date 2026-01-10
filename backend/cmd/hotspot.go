@@ -4,8 +4,6 @@ import (
 	"errors"
 	"os/exec"
 	"strings"
-
-	"github.com/sirupsen/logrus"
 )
 
 func InitHotspot(iface string, item map[string]interface{}) (map[string]interface{}, error) {
@@ -49,14 +47,6 @@ func InitHotspot(iface string, item map[string]interface{}) (map[string]interfac
 }
 
 func SetHotspot(iface, ssid, channel, password string) error {
-	logrus.WithFields(logrus.Fields{
-		"iface":    iface,
-		"ssid":     ssid,
-		"channel":  channel,
-		"password": password,
-		"portal":   Portal != "",
-	}).Info("cmd - setting up hotspot")
-
 	err := exec.Command(NM, "con", "modify", Con+"-hotspot", "connection.interface-name", iface, "802-11-wireless.ssid", ssid, "802-11-wireless.band", "bg", "802-11-wireless.channel", channel).Run()
 	if err != nil {
 		return errors.New("modify iface: " + err.Error())
@@ -89,6 +79,5 @@ func SetHotspot(iface, ssid, channel, password string) error {
 }
 
 func DisableHotspot() error {
-	logrus.Info("cmd - disabling hotspot")
 	return exec.Command(NM, "con", "down", Con+"-hotspot").Run()
 }

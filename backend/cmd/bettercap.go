@@ -18,6 +18,7 @@ import (
 var RunningBettercap bool
 
 func InitBettercap() {
+	init := true
 	for {
 		logrus.Info("cmd - starting bettercap")
 
@@ -28,6 +29,26 @@ func InitBettercap() {
 		errStart := cmd.Start()
 
 		RunningBettercap = true
+		if !init {
+			ifaceConfig := hp.ConfigGetInterfaceList()
+			for iface, item := range ifaceConfig {
+				if item["ready"] != true || item["mode"] != "monitor" {
+					continue
+				}
+
+				logrus.WithFields(logrus.Fields{
+					"iface": iface,
+				}).Info("cmd - bettercap recovering monitor")
+
+				err := SetBettercapMonitor(iface)
+				if err != nil {
+					logrus.WithFields(logrus.Fields{
+						"iface": iface,
+						"err":   err,
+					}).Error("cmd - bettercap monitor recovery failed")
+				}
+			}
+		}
 
 		scanner := bufio.NewScanner(stdout)
 		scannerRegex := regexp.MustCompile(`^\[(?P<time>[^]]+)]\s+\[(?P<module>[^]]+)]\s+(?:\[(?P<level>[^]]+)]\s+)?(?P<msg>.*)$`)
@@ -101,6 +122,7 @@ func InitBettercap() {
 			}
 		}
 
+		init = false
 		errWait := cmd.Wait()
 		logrus.WithFields(logrus.Fields{
 			"errStart": errStart,
@@ -119,6 +141,16 @@ func SetBettercap(cmd string) error {
 	}
 
 	return nil
+}
+
+func SetBettercapMonitor(iface string) error {
+	_ = SetBettercap("ticker off")
+	return SetBettercap("set wifi.interface " + iface + ";wifi.recon on;set ticker.commands 'wifi.recon on';ticker on")
+}
+
+func DisableBettercapMonitor() error {
+	_ = SetBettercap("ticker off")
+	return SetBettercap("set wifi.interface null;wifi.recon off")
 }
 
 func GetBettercapAP(bssid string) (gjson.Result, error) {
