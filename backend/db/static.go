@@ -11,7 +11,7 @@ const dbCreate = `
 		rssi REAL NOT NULL,
 		latitude REAL NOT NULL,
 		longitude REAL NOT NULL,
-		altitude INTEGER NOT NULL,
+		altitude REAL NOT NULL,
 		accuracy REAL NOT NULL,
 		device TEXT NOT NULL,
 		wigle BOOLEAN DEFAULT FALSE,

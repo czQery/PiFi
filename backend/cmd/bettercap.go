@@ -112,17 +112,17 @@ func InitBettercap() {
 				var (
 					lat float64 = 0
 					lon float64 = 0
-					alt int64   = 0
+					alt float64 = 0
 					acc float64 = 0
 				)
 
-				/* TODO: create proper check after figuring out the time format
-				if GPS.Time {
+				// use real gps data if they are less or equal 5 seconds old
+				if time.Now().Unix()-GPS.Time <= 5 {
 					lat = GPS.Lat
 					lon = GPS.Lon
 					alt = GPS.Alt
 					acc = GPS.Acc
-				}*/
+				}
 
 				db.InsertAP(bssid, ssid, mode, time.Now().Format(time.DateTime), details.Get("channel").Int(), details.Get("frequency").Int(), rssi, lat, lon, alt, acc, "WIFI")
 			}

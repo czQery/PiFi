@@ -7,7 +7,7 @@ import (
 	"zombiezen.com/go/sqlite/sqlitex"
 )
 
-func InsertAP(bssid, ssid, mode, discovered string, channel, frequency int64, rssi, latitude, longitude float64, altitude int64, accuracy float64, device string) {
+func InsertAP(bssid, ssid, mode, discovered string, channel, frequency int64, rssi, latitude, longitude, altitude, accuracy float64, device string) {
 	err := sqlitex.Execute(Conn, "INSERT INTO ap (bssid, ssid, mode, discovered, channel, frequency,  rssi, latitude, longitude, altitude, accuracy, device) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", &sqlitex.ExecOptions{
 		Args: []interface{}{
 			bssid,

@@ -2,6 +2,7 @@ package net
 
 import (
 	"errors"
+	"math"
 	"strconv"
 	"time"
 
@@ -42,7 +43,7 @@ func WigleGet() string {
 		payload += strconv.FormatFloat(ap.RSSI, 'f', -1, 64) + ","
 		payload += strconv.FormatFloat(ap.Latitude, 'f', -1, 64) + ","
 		payload += strconv.FormatFloat(ap.Longitude, 'f', -1, 64) + ","
-		payload += strconv.FormatInt(ap.Altitude, 10) + ","
+		payload += strconv.FormatInt(int64(math.Round(ap.Altitude)), 10) + "," // only gps & wigle mismatch, wigle wants int, gps gives float
 		payload += strconv.FormatFloat(ap.Accuracy, 'f', -1, 64) + ","
 		payload += "," // RCOIs
 		payload += "," // MfgrId

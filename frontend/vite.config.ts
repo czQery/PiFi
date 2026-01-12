@@ -1,9 +1,9 @@
 import browserslist from "browserslist"
-import { browserslistToTargets } from "lightningcss"
-import { resolve } from "path"
-import { defineConfig, loadEnv } from "vite"
+import {browserslistToTargets} from "lightningcss"
+import {resolve} from "path"
+import {defineConfig, loadEnv} from "vite"
 import lucidePreprocess from "vite-plugin-lucide-preprocess"
-import { ViteMinifyPlugin } from "vite-plugin-minify"
+import {ViteMinifyPlugin} from "vite-plugin-minify"
 import solid from "vite-plugin-solid"
 
 const root: string = resolve(__dirname, "src")
@@ -15,7 +15,7 @@ export default ({ mode }) => {
 		root,
 		base: "/pifi",
 		plugins: [lucidePreprocess(), solid(), ViteMinifyPlugin()],
-		css: { transformer: "lightningcss", lightningcss: { targets: browserslistToTargets(browserslist(">= 0.25%")) } },
+		css: { transformer: "lightningcss", lightningcss: { targets: browserslistToTargets(browserslist("defaults")) } },
 		server: { port: 3000 },
 		build: {
 			minify: "terser",

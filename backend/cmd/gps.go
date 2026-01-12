@@ -13,8 +13,9 @@ import (
 type GPSData struct {
 	Lat float64 `json:"lat"`
 	Lon float64 `json:"lon"`
-	Alt int64   `json:"alt"`
+	Alt float64 `json:"alt"`
 	Acc float64 `json:"acc"`
+	Spd float64 `json:"spd"`
 
 	Mode int64 `json:"mode"`
 	Time int64 `json:"time"`
@@ -39,9 +40,11 @@ func InitGPS() {
 			switch data.Get("class").String() {
 			case "TPV":
 				GPS.Mode = data.Get("mode").Int()
-				GPS.Time = data.Get("time").Int()
 
-				// by my findings it looks like eph, epx or eph are only returned in mode 3, so manual calculation of accuracy from SKY class will probably be needed
+				timeParsed, _ := time.Parse(time.RFC3339, data.Get("time").String())
+				GPS.Time = timeParsed.Unix()
+
+				// eph reported sometimes even in mode 2, should be more accurate but i added epx & epy as fallback anyways
 				if data.Get("eph").Exists() {
 					GPS.Acc = data.Get("eph").Float()
 				} else if data.Get("epx").Exists() && data.Get("epy").Exists() {
@@ -50,11 +53,15 @@ func InitGPS() {
 					GPS.Acc = math.Sqrt((epx * epx) + (epy * epy))
 				}
 
-				switch data.Get("mode").Int() {
-				case 3:
-					GPS.Alt = data.Get("alt").Int()
-					fallthrough
-				case 2:
+				if data.Get("alt").Exists() {
+					GPS.Alt = data.Get("alt").Float()
+				}
+
+				if data.Get("speed").Exists() {
+					GPS.Spd = data.Get("speed").Float()
+				}
+
+				if data.Get("lat").Exists() && data.Get("lon").Exists() {
 					GPS.Lat = data.Get("lat").Float()
 					GPS.Lon = data.Get("lon").Float()
 				}
