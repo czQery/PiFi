@@ -30,24 +30,30 @@ func InitBettercap() {
 
 		RunningBettercap = true
 		if !init {
-			ifaceConfig := hp.ConfigGetInterfaceList()
-			for iface, item := range ifaceConfig {
-				if item["ready"] != true || item["mode"] != "monitor" {
-					continue
-				}
+			go func() {
+				// wait few seconds so bettercap can start
+				time.Sleep(5 * time.Second)
 
-				logrus.WithFields(logrus.Fields{
-					"iface": iface,
-				}).Info("cmd - bettercap recovering monitor")
+				ifaceConfig := hp.ConfigGetInterfaceList()
+				for iface, item := range ifaceConfig {
+					if item["ready"] != true || item["mode"] != "monitor" {
+						continue
+					}
 
-				err := SetBettercapMonitor(iface)
-				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"iface": iface,
-						"err":   err,
-					}).Error("cmd - bettercap monitor recovery failed")
+					}).Info("cmd - bettercap recovering monitor")
+
+					err := SetBettercapMonitor(iface)
+					if err != nil {
+						logrus.WithFields(logrus.Fields{
+							"iface": iface,
+							"err":   err,
+						}).Error("cmd - bettercap monitor recovery failed")
+					}
+					return
 				}
-			}
+			}()
 		}
 
 		scanner := bufio.NewScanner(stdout)
