@@ -1,14 +1,23 @@
 import "./DB.css"
-import {LucideGlobe, LucideRadio, LucideRadioTower} from "lucide-solid"
-import {type Component, createSignal, onMount} from "solid-js"
+import { LucideGlobe, LucideRadio, LucideRadioTower } from "lucide-solid"
+import { type Component, createSignal, onMount } from "solid-js"
 import Net from "../components/Net.tsx"
-import {type dbData, getDB} from "../lib/db.ts"
+import Option, { type optionButtonData, type optionData } from "../components/Option.tsx"
+import { type dbData, getDB } from "../lib/db.ts"
 
 export const [db, setDB] = createSignal<dbData>({ aps: 0, wigle: { new: 0, net: 0 }, beacondb: { new: 0, net: 0 }, dwpa: { new: 0, net: 0 } } as dbData)
 
 const DB: Component = () => {
 	onMount(async () => {
 		setDB(await getDB())
+	})
+
+	const [option, setOption] = createSignal<optionData>({
+		open: false,
+		title: "Manual",
+		message: "You can submit the data by your self, and then mark them as uploaded.",
+		buttonFirst: { name: "mark" } as optionButtonData,
+		buttonSecond: { name: "download" } as optionButtonData,
 	})
 
 	return (
@@ -20,9 +29,10 @@ const DB: Component = () => {
 					<span class="value">{db().aps.toString()}</span>
 				</div>
 			</div>
-			<Net name="Wigle" db={db().wigle} icon={<LucideGlobe />} />
-			<Net name="BeaconDB" db={db().beacondb} icon={<LucideRadio />} />
-			<Net name="DWPA" db={db().dwpa} icon={<LucideRadioTower />} />
+			<Option data={option()} />
+			<Net name="Wigle" db={db().wigle} icon={<LucideGlobe />} option={option} setOption={setOption} />
+			<Net name="BeaconDB" db={db().beacondb} icon={<LucideRadio />} option={option} setOption={setOption} />
+			<Net name="DWPA" db={db().dwpa} icon={<LucideRadioTower />} option={option} setOption={setOption} />
 		</div>
 	)
 }
