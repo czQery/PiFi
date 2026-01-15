@@ -14,7 +14,7 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-func WigleGet() string {
+func WigleGet() (string, []string) {
 	payload := "WigleWifi-1.6"
 	payload += ",appRelease=" + hp.Build
 	payload += ",model=" + cmd.Con
@@ -29,8 +29,14 @@ func WigleGet() string {
 
 	payload += "MAC,SSID,AuthMode,FirstSeen,Channel,Frequency,RSSI,CurrentLatitude,CurrentLongitude,AltitudeMeters,AccuracyMeters,RCOIs,MfgrId,Type\n"
 
+	var list []string
+
 	for _, ap := range db.SelectAP() {
 		if ap.Wigle { // skip if already uploaded
+			continue
+		}
+
+		if ap.Accuracy == 0 && ap.Longitude == 0 && ap.Latitude == 0 { // skip data without geolocation
 			continue
 		}
 
@@ -48,9 +54,11 @@ func WigleGet() string {
 		payload += "," // RCOIs
 		payload += "," // MfgrId
 		payload += ap.Device + "\n"
+
+		list = append(list, ap.BSSID)
 	}
 
-	return payload
+	return payload, list
 }
 
 func WigleUpload() error {
@@ -62,7 +70,9 @@ func WigleUpload() error {
 		"token": token,
 	}).Debug("net - wigle upload")
 
-	up, err := req.SetHeader("Authorization", token).SetFileBytes("file", name, []byte(WigleGet())).Post("https://api.wigle.net/api/v2/file/upload")
+	payload, list := WigleGet()
+
+	up, err := req.SetHeader("Authorization", token).SetFileBytes("file", name, []byte(payload)).Post("https://api.wigle.net/api/v2/file/upload")
 	if err != nil {
 		return err
 	}
@@ -73,12 +83,11 @@ func WigleUpload() error {
 		return errors.New("upload failed: " + upData.Get("message").String())
 	}
 
+	WigleMark(true, list)
+
 	return nil
 }
 
-/*	UPDATE your_table
-		SET your_bool_column = 1
-		WHERE id IN (
-	    	SELECT value FROM json_each(?)
-		);
-*/
+func WigleMark(value bool, list []string) {
+	db.UpdateAPNet("wigle", value, list)
+}

@@ -139,6 +139,7 @@ func main() {
 	rAPI.Get("/db", api.DB)
 
 	rAPI.Get("/net/wigle", api.WigleGet)
+	rAPI.Patch("/net/wigle", api.WiglePatch)
 	rAPI.Post("/net/wigle", api.WiglePost)
 
 	// Bettercap api proxy
@@ -146,7 +147,7 @@ func main() {
 	rAPI.All("/bettercap/session", proxy.Forward(cmd.BC+"/api/session"))
 	rAPI.Get("/bettercap/session/wifi", proxy.Forward(cmd.BC+"/api/session/wifi"))
 
-	// Pifi UI
+	// PiFi UI
 	rUI := r.Group("/pifi", func(c *fiber.Ctx) error {
 
 		if strings.TrimSuffix(c.Path(), "/") == "/pifi" {
@@ -192,9 +193,9 @@ func main() {
 			return &api.Error{Code: 404, Func: "api", Message: "unknown endpoint"}
 		} else if !hp.Dist {
 			return &api.Error{Code: 503, Func: "static", Message: "front-end unavailable"}
-		} else {
-			return c.Redirect("/", 307)
 		}
+
+		return c.Redirect("/", 307)
 	})
 
 	logrus.Info("fiber - started")

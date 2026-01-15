@@ -1,13 +1,27 @@
 package api
 
 import (
+	"strconv"
+	"strings"
+
 	"github.com/czQery/PiFi/backend/net"
 	"github.com/gofiber/fiber/v2"
 )
 
 func WigleGet(c *fiber.Ctx) error {
 	c.Context().SetContentType("text/csv")
-	return c.SendString(net.WigleGet())
+	payload, _ := net.WigleGet()
+	return c.SendString(payload)
+}
+
+func WiglePatch(c *fiber.Ctx) error {
+
+	value, _ := strconv.ParseBool(c.Query("value"))
+	list := strings.Split(c.Query("list"), ",")
+
+	net.WigleMark(value, list)
+
+	return c.Status(200).JSON(Response{Message: "success"})
 }
 
 func WiglePost(c *fiber.Ctx) error {
