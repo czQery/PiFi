@@ -35,7 +35,7 @@ func WigleGet() string {
 		}
 
 		payload += ap.BSSID + ","
-		payload += ap.SSID + ","
+		payload += "\"" + ap.SSID + "\","
 		payload += ap.Mode + ","
 		payload += ap.Discovered + ","
 		payload += strconv.FormatInt(ap.Channel, 10) + ","
