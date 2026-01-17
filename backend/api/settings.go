@@ -113,7 +113,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				"portal":   cmd.Portal,
 			}).Info("cmd - setting up hotspot")
 			err := cmd.SetHotspot(ifaceName, iface.SSID, strconv.Itoa(iface.Channel), iface.Password)
-			if err != nil {
+			if err != nil && !force {
 				return errors.New("set hotspot: " + err.Error())
 			}
 		case "client":
@@ -123,7 +123,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				"password": iface.Password,
 			}).Info("cmd - connecting to wifi")
 			err := cmd.SetClient(ifaceName, iface.SSID, iface.Password)
-			if err != nil {
+			if err != nil && !force {
 				logrus.WithFields(logrus.Fields{
 					"iface":    ifaceName,
 					"ssid":     config.SSID,
@@ -137,7 +137,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				"iface": ifaceName,
 			}).Info("cmd - setting up bettercap monitor")
 			err := cmd.SetBettercapMonitor(ifaceName)
-			if err != nil {
+			if err != nil && !force {
 				return errors.New("set monitor: " + err.Error())
 			}
 		}
