@@ -76,26 +76,26 @@ sudo systemctl disable bettercap
 - Select -> Serial
 - Login shell -> No
 - Hardware Serial -> Yes
-- ```bash
+  ```bash
   sudo apt install pps-tools gpsd gpsd-clients chrony
   sudo systemctl stop gpsd
   sudo systemctl stop gpsd.socket
 
   # Edit these settings to match your gps module
   sudo ubxtool -S 460800 -s 38400 -f /dev/serial0
-  sudo ubxtool -s 460800 -e GPS -e GALILEO -e GLONASS -e BEIDOU -e SBAS -f /dev/serial0
+  sudo ubxtool -s 460800 -e GPS -e GALILEO -e GLONASS -e BEIDOU -e SBAS -e QZSS -f /dev/serial0
   sudo ubxtool -s 460800 -z CFG-RATE-MEAS,100 -f /dev/serial0
   sudo ubxtool -s 460800 -z CFG-NAVSPG-DYNMODEL,4 -f /dev/serial0
   sudo ubxtool -s 460800 -p SAVE -f /dev/serial0
   ```
 - Edit `/etc/default/gpsd`
-- ```bash
+  ```bash
   DEVICES="/dev/serial0"
   GPSD_OPTIONS="-n -s 460800"
   USBAUTO="true"
   ```
 - Apply
-- ```bash
+  ```bash
   sudo systemctl enable gpsd
   sudo reboot
   ```

@@ -1,0 +1,11 @@
+.error {
+	background-color: var(--base);
+	padding: 40px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.error * {
+	text-align: center;
+}

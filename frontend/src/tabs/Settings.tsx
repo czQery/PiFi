@@ -1,14 +1,14 @@
-import type { Component } from "solid-js"
-import { createSignal, For, onMount } from "solid-js"
+import type {Component} from "solid-js"
+import {createSignal, For, onMount} from "solid-js"
 
 import "./Settings.css"
-import type { loadingData } from "../components/Loading.tsx"
+import type {loadingData} from "../components/Loading.tsx"
 import Loading from "../components/Loading.tsx"
 import SettingsInterface from "../components/SettingsInterface.tsx"
-import { getPortals } from "../lib/portals.ts"
-import type { settingsData, settingsInterfaceFieldsData } from "../lib/settings.ts"
-import { getSettings, saveSettings } from "../lib/settings.ts"
-import type { response } from "../lib/var.ts"
+import {getPortals} from "../lib/portals.ts"
+import type {settingsData, settingsInterfaceFieldsData} from "../lib/settings.ts"
+import {getSettings, saveSettings} from "../lib/settings.ts"
+import type {response} from "../lib/var.ts"
 
 export const [settings, setSettings] = createSignal<settingsData>({ iface: {} })
 export const [portals, setPortals] = createSignal<string[]>([])
