@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/czQery/PiFi/backend/db"
+	"github.com/czQery/PiFi/backend/net"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -21,39 +22,42 @@ func DB(c *fiber.Ctx) error {
 	data := db.SelectAP()
 
 	var (
-		aps      = int64(len(data))
-		wigle    int64
-		beacondb int64
-		dwpa     int64
+		aps = int64(len(data))
+
+		netWigle    int64
+		netBeacondb int64
+		netDwpa     int64
 	)
+
+	_, dbWigle := net.WigleGet()
 
 	for _, ap := range data {
 		if ap.Wigle {
-			wigle++
+			netWigle++
 		}
 
 		if ap.BeaconDB {
-			beacondb++
+			netBeacondb++
 		}
 
 		if ap.DWPA {
-			dwpa++
+			netDwpa++
 		}
 	}
 
 	return c.Status(200).JSON(Response{Message: "success", Data: DBResponse{
 		APs: aps,
 		Wigle: DBNetResponse{
-			New: aps - wigle,
-			Net: wigle,
+			New: int64(len(dbWigle)),
+			Net: netWigle,
 		},
 		BeaconDB: DBNetResponse{
-			New: aps - beacondb,
-			Net: beacondb,
+			New: 0,
+			Net: netBeacondb,
 		},
 		DWPA: DBNetResponse{
-			New: aps - dwpa,
-			Net: dwpa,
+			New: 0,
+			Net: netDwpa,
 		},
 	}})
 }

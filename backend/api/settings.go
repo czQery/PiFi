@@ -55,6 +55,8 @@ func SettingsPost(c *fiber.Ctx) error {
 func ApplySettings(settings SettingsResponse, force bool) error {
 
 	var (
+		err error
+
 		modeHotspot bool
 		modeClient  bool
 		modeMonitor bool
@@ -98,6 +100,20 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 			continue
 		}
 
+		// set the correct interface mode
+		if strings.ToLower(iface.Mode) == "monitor" {
+			err = cmd.SetInterfaceMode(ifaceName, "monitor")
+		} else {
+			err = cmd.SetInterfaceMode(ifaceName, "managed")
+		}
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"iface": ifaceName,
+				"mode":  iface.Mode,
+				"err":   err.Error(),
+			}).Error("cmd - failed to set interface mode")
+		}
+
 		switch strings.ToLower(iface.Mode) {
 		case "hotspot":
 			if iface.Portal {
@@ -112,7 +128,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				"password": iface.Password,
 				"portal":   cmd.Portal,
 			}).Info("cmd - setting up hotspot")
-			err := cmd.SetHotspot(ifaceName, iface.SSID, strconv.Itoa(iface.Channel), iface.Password)
+			err = cmd.SetHotspot(ifaceName, iface.SSID, strconv.Itoa(iface.Channel), iface.Password)
 			if err != nil && !force {
 				return errors.New("set hotspot: " + err.Error())
 			}
@@ -122,7 +138,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				"ssid":     iface.SSID,
 				"password": iface.Password,
 			}).Info("cmd - connecting to wifi")
-			err := cmd.SetClient(ifaceName, iface.SSID, iface.Password)
+			err = cmd.SetClient(ifaceName, iface.SSID, iface.Password)
 			if err != nil && !force {
 				logrus.WithFields(logrus.Fields{
 					"iface":    ifaceName,
@@ -136,7 +152,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 			logrus.WithFields(logrus.Fields{
 				"iface": ifaceName,
 			}).Info("cmd - setting up bettercap monitor")
-			err := cmd.SetBettercapMonitor(ifaceName)
+			err = cmd.SetBettercapMonitor(ifaceName)
 			if err != nil && !force {
 				return errors.New("set monitor: " + err.Error())
 			}
@@ -165,7 +181,8 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 	// very retarded approach, but it works I guess
 	// struct -> JSON -> map (map because toml parser likes it)
 	var settingsMap map[string]interface{}
-	settingsJson, err := json.Marshal(settings)
+	var settingsJson []byte
+	settingsJson, err = json.Marshal(settings)
 	if err != nil {
 		return err
 	}

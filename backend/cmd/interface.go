@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"os/exec"
 	"strings"
 )
@@ -29,4 +30,23 @@ func GetInterfaceList() ([]Interface, error) {
 	}
 
 	return list, nil
+}
+
+func SetInterfaceMode(iface string, mode string) error {
+	out, err := exec.Command("ip", "link", "set", iface, "down").Output()
+	if err != nil {
+		return errors.New(string(out))
+	}
+
+	out, err = exec.Command("iw", "dev", iface, "set", "type", mode).Output()
+	if err != nil {
+		return errors.New(string(out))
+	}
+
+	out, err = exec.Command("ip", "link", "set", iface, "up").Output()
+	if err != nil {
+		return errors.New(string(out))
+	}
+
+	return nil
 }

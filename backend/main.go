@@ -231,34 +231,36 @@ func nmInit() {
 	)
 
 	for _, i := range iface {
-		if i.Type == "wifi" {
-			if item, e := ifaceConfig[i.Name]; e {
-				item["ready"] = true
-				if item["mode"] == "hotspot" {
-					initHotspot = true
-				}
+		if i.Type != "wifi" {
+			continue
+		}
 
-			} else {
-				newItem := make(map[string]interface{})
-				newItem["ready"] = true
-				newItem["mode"] = "none"
-
-				ifaceConfig[i.Name] = newItem
+		if item, e := ifaceConfig[i.Name]; e {
+			item["ready"] = true
+			if item["mode"] == "hotspot" {
+				initHotspot = true
 			}
+		} else {
+			newItem := make(map[string]interface{})
+			newItem["ready"] = true
+			newItem["mode"] = "none"
 
-			logrus.WithFields(logrus.Fields{
-				"iface": i.Name,
-				"state": i.State,
-			}).Debug("main - iface init")
+			ifaceConfig[i.Name] = newItem
+		}
 
-			if !initHotspot && i.State == "disconnected" {
-				ifaceConfig[i.Name], initHotspotErr = cmd.InitHotspot(i.Name, ifaceConfig[i.Name])
-				if initHotspotErr == nil {
-					initHotspot = true
-				}
+		logrus.WithFields(logrus.Fields{
+			"iface": i.Name,
+			"state": i.State,
+		}).Debug("main - iface init")
+
+		if !initHotspot && i.State == "disconnected" {
+			ifaceConfig[i.Name], initHotspotErr = cmd.InitHotspot(i.Name, ifaceConfig[i.Name])
+			if initHotspotErr == nil {
+				initHotspot = true
 			}
 		}
 	}
+
 	if !initHotspot {
 		logrus.WithFields(logrus.Fields{
 			"err": "no wifi interface",

@@ -19,7 +19,6 @@ func InitHotspot(iface string, item map[string]interface{}) (map[string]interfac
 		}
 
 		if c[0] == Con+"-hotspot" {
-			item["mode"] = "hotspot"
 			return item, nil // hotspot already initialized
 		}
 	}
