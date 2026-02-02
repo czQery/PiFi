@@ -21,3 +21,25 @@ func UpdateAPNet(net string, value bool, list []string) {
 		}).Error("db - update ap net exec failed")
 	}
 }
+
+func UpdateAP(bssid, ssid, mode string, channel, frequency int64, rssi, latitude, longitude, altitude, accuracy float64) {
+	err := sqlitex.Execute(Conn, "UPDATE ap SET ssid = ?, mode = ?, channel = ?, frequency = ?, rssi = ?, latitude = ?, longitude = ?, altitude = ?, accuracy = ? WHERE bssid = ?;", &sqlitex.ExecOptions{
+		Args: []interface{}{
+			ssid,
+			mode,
+			channel,
+			frequency,
+			rssi,
+			latitude,
+			longitude,
+			altitude,
+			accuracy,
+			bssid,
+		},
+	})
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": err.Error(),
+		}).Error("db - update ap exec failed")
+	}
+}
