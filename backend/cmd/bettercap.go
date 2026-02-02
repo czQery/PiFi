@@ -94,12 +94,12 @@ func InitBettercap() {
 					}).Warn("cmd - bettercap new ap get details failed")
 				}
 
-				auth := details.Get("authentication").Str
+				auth := details.Get("authentication").String()
 				if auth == "UNK" {
 					auth = "PSK"
 				}
 
-				mode := fmt.Sprintf("[%s-%s-%s]", details.Get("encryption").Str, auth, details.Get("cipher").Str)
+				mode := fmt.Sprintf("[%s-%s-%s]", details.Get("encryption").String(), auth, details.Get("cipher").String())
 
 				if details.Get("wps.State").Exists() {
 					mode += "[WPS]"

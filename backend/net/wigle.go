@@ -4,6 +4,7 @@ import (
 	"errors"
 	"math"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/czQery/PiFi/backend/cmd"
@@ -63,7 +64,11 @@ func WigleGet() (string, []string) {
 
 func WigleUpload() error {
 	name := "PiFi_" + time.Now().Format("20060102150405") + ".csv"
-	token := "Basic " + hp.Config.Get("net.wigle").(string)
+	token := ""
+
+	if hp.Config.Get("net.wigle") != nil {
+		token = "Basic " + hp.Config.Get("net.wigle").(string)
+	}
 
 	logrus.WithFields(logrus.Fields{
 		"name":  name,
@@ -72,7 +77,7 @@ func WigleUpload() error {
 
 	payload, list := WigleGet()
 
-	up, err := req.SetHeader("Authorization", token).SetFileBytes("file", name, []byte(payload)).Post("https://api.wigle.net/api/v2/file/upload")
+	up, err := req.SetHeader("Authorization", token).SetFormData(map[string]string{"donate": "on"}).SetFileBytes("file", name, []byte(payload)).Post("https://api.wigle.net/api/v2/file/upload")
 	if err != nil {
 		return err
 	}
@@ -82,6 +87,18 @@ func WigleUpload() error {
 	if up.StatusCode != 200 || !upData.Get("success").Bool() {
 		return errors.New("upload failed: " + upData.Get("message").String())
 	}
+
+	var transids []string
+	for _, id := range upData.Get("results.transids.#.transId").Array() {
+		transids = append(transids, id.String())
+	}
+
+	logrus.WithFields(logrus.Fields{
+		"name":     name,
+		"observer": upData.Get("observer").String(),
+		"warning":  upData.Get("warning").String(),
+		"transids": strings.Join(transids, ","),
+	}).Info("net - wigle successfully uploaded")
 
 	WigleMark(true, list)
 
