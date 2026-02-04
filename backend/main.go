@@ -85,9 +85,7 @@ func main() {
 
 	go cmd.InitGPS()
 	go cmd.InitBettercap()
-	for !cmd.RunningBettercap {
-		time.Sleep(time.Second * 1)
-	}
+	time.Sleep(time.Second * 5)
 
 	nmInit()
 	go ticker()
@@ -252,6 +250,19 @@ func nmInit() {
 			"iface": i.Name,
 			"state": i.State,
 		}).Debug("main - iface init")
+
+		connections, connectionErr := cmd.GetConnectionList()
+		if connectionErr != nil {
+			logrus.WithFields(logrus.Fields{
+				"err": connectionErr.Error(),
+			}).Error("main - connections failed")
+		}
+
+		for _, con := range connections {
+			if con.Name == cmd.Con+"-hotspot" {
+				initHotspot = true // hotspot already initialized
+			}
+		}
 
 		if !initHotspot && i.State == "disconnected" {
 			ifaceConfig[i.Name], initHotspotErr = cmd.InitHotspot(i.Name, ifaceConfig[i.Name])

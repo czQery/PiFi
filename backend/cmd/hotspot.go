@@ -3,27 +3,10 @@ package cmd
 import (
 	"errors"
 	"os/exec"
-	"strings"
 )
 
 func InitHotspot(iface string, item map[string]interface{}) (map[string]interface{}, error) {
-	out, err := exec.Command(NM, "-t", "con").Output()
-	if err != nil {
-		return item, err
-	}
-
-	for _, line := range strings.Split(string(out), "\n") {
-		c := strings.Split(line, ":")
-		if len(c) < 4 {
-			continue
-		}
-
-		if c[0] == Con+"-hotspot" {
-			return item, nil // hotspot already initialized
-		}
-	}
-
-	err = exec.Command(NM, "con", "add", "type", "wifi", "ifname", iface, "con-name", Con+"-hotspot", "autoconnect", "yes", "ssid", Con).Run()
+	err := exec.Command(NM, "con", "add", "type", "wifi", "ifname", iface, "con-name", Con+"-hotspot", "autoconnect", "yes", "ssid", Con).Run()
 	if err != nil {
 		return item, err
 	}

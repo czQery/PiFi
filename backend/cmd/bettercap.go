@@ -15,8 +15,6 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-var RunningBettercap bool
-
 func InitBettercap() {
 	init := true
 	for {
@@ -28,7 +26,6 @@ func InitBettercap() {
 		stdout, _ := cmd.StdoutPipe()
 		errStart := cmd.Start()
 
-		RunningBettercap = true
 		if !init {
 			go func() {
 				// wait few seconds so bettercap can start
