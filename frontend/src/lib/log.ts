@@ -6,10 +6,13 @@ export interface logData {
 	time: Date
 	level: string
 	msg: string
-	err: string
-	data: string
-	ssid: string
-	iface: string
+	items: logDataItem[]
+}
+
+export interface logDataItem {
+	name: string
+	value: string
+	color: string
 }
 
 export const getLog = async (): Promise<logData[]> => {
@@ -20,27 +23,43 @@ export const getLog = async (): Promise<logData[]> => {
 	if (rsp.status === 200 && rspJson.data) {
 		const data: logData[] = []
 		const lines = atobUnicode(rspJson.data as unknown as string).split("\n")
-
-		const getLogItem = (line: string, name: string): string => {
-			return new RegExp(`(?:^| )${name}="(.*?)"`).exec(line)?.[1] as string
-		}
+		const regex = /([^\s=]+)="([^"]*)"/g
 
 		for (const line of lines) {
 			if (line.length < 8) {
 				continue
 			}
 
-			const time = new Date(Date.parse(getLogItem(line, "time")))
+			let entry: logData = { items: [] as logDataItem[] } as logData
 
-			data.push({
-				time: time,
-				level: getLogItem(line, "level"),
-				msg: getLogItem(line, "msg"),
-				err: getLogItem(line, "err"),
-				data: getLogItem(line, "data"),
-				ssid: getLogItem(line, "ssid"),
-				iface: getLogItem(line, "iface"),
-			})
+			for (const match of line.matchAll(regex)) {
+				switch (match[1]) {
+					case "time":
+						entry.time = new Date(match[2])
+						break
+					case "level":
+						entry.level = match[2]
+						break
+					case "msg":
+						entry.msg = match[2]
+						break
+					case "err":
+						entry.items.push({ name: "err", value: match[2], color: "var(--red)" })
+						break
+					case "data":
+					case "ssid":
+					case "rssi":
+						entry.items.push({ name: match[1], value: match[2], color: "var(--green)" })
+						break
+					case "observer":
+					case "transids":
+					case "iface":
+						entry.items.push({ name: match[1], value: match[2], color: "var(--blue)" })
+						break
+				}
+			}
+
+			data.push(entry)
 		}
 
 		return data

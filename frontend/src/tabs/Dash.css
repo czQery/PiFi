@@ -1,5 +1,6 @@
 #dash {
 	width: 100%;
+	height: calc(100dvh - 50px - 20px);
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -135,17 +136,28 @@
 	background-color: var(--base);
 	padding: 10px;
 	display: flex;
-	flex-direction: column;
+	flex-direction: column-reverse;
+	max-height: 100%;
+	overflow-y: auto;
+}
+
+#dash-log ul {
+	margin: 0;
+	padding: 0;
 }
 
 #dash-log li {
 	display: flex;
+	overflow-x: auto;
+	overflow-y: hidden;
+	min-height: 20px;
 }
 
 #dash-log li span {
 	display: inline-block;
 	font-family:
 		var(--mono), monospace;
+	white-space: nowrap;
 }
 
 @media screen and (max-width: 719px) {
@@ -167,6 +179,10 @@
 	}
 
 	#dash-log * {
-		font-size: 12px !important;
+		font-size: 8px !important;
+	}
+
+	#dash-log li {
+		min-height: 10px;
 	}
 }

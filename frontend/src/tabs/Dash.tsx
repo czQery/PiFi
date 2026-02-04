@@ -57,46 +57,51 @@ const Dash: Component = () => {
 				</div>
 			</div>
 			<div id="dash-log" class="card">
-				<Index each={log() as logData[]}>
-					{(log, _) => (
-						<li>
-							<span
-								style={{
-									color: ((): string => {
-										switch (log().level.slice(0, 4)) {
-											case "erro":
-												return "var(--pink)"
-											case "warn":
-												return "var(--orange)"
-											case "debu":
-												return "var(--white)"
-											default:
-												return "var(--blue)"
-										}
-									})(),
-								}}
-							>
-								{log().level.slice(0, 4).toUpperCase()}
-							</span>
-							<span style={{ opacity: 0.6 }}>
-								{"[" + addZero(log().time.getHours()) + ":" + addZero(log().time.getMinutes()) + ":" + addZero(log().time.getSeconds()) + "]"}
-							</span>
-							<span>{log().msg}</span>
-							<Show when={log().err as string}>
-								<span style={{ "color": "var(--pink)", "margin-left": "auto" }}>{"err=" + log().err}</span>
-							</Show>
-							<Show when={log().data as string}>
-								<span style={{ "color": "var(--green)", "margin-left": "auto" }}>{"data=" + log().data}</span>
-							</Show>
-							<Show when={log().ssid as string}>
-								<span style={{ "color": "var(--green)", "margin-left": "auto" }}>{"ssid=" + log().ssid}</span>
-							</Show>
-							<Show when={log().iface as string}>
-								<span style={{ "color": "var(--blue)", "margin-left": "auto" }}>{"iface=" + log().iface}</span>
-							</Show>
-						</li>
-					)}
-				</Index>
+				<ul>
+					<Index each={log() as logData[]}>
+						{(entry, _) => (
+							<li>
+								<span
+									style={{
+										color: ((): string => {
+											switch (entry().level.slice(0, 4)) {
+												case "erro":
+													return "var(--pink)"
+												case "warn":
+													return "var(--orange)"
+												case "debu":
+													return "var(--white)"
+												default:
+													return "var(--blue)"
+											}
+										})(),
+									}}
+								>
+									{entry().level.slice(0, 4).toUpperCase()}
+								</span>
+								<span style={{ opacity: 0.6 }}>
+									{"[" + addZero(entry().time.getHours()) + ":" + addZero(entry().time.getMinutes()) + ":"
+										+ addZero(entry().time.getSeconds())
+										+ "]"}
+								</span>
+								<span style={{ "margin-right": "10px" }}>{entry().msg}</span>
+								<Index each={entry().items}>
+									{(item, i) => (
+										<span
+											style={{
+												"color": item().color,
+												"margin-left": (i === 0 ? "auto" : ""),
+												"margin-right": (i !== entry().items.length - 1 ? "10px" : ""),
+											}}
+										>
+											{item().name + "=" + item().value}
+										</span>
+									)}
+								</Index>
+							</li>
+						)}
+					</Index>
+				</ul>
 			</div>
 		</div>
 	)
