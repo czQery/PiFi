@@ -4,7 +4,7 @@ import type { Component } from "solid-js"
 import { createEffect, createSignal, Show } from "solid-js"
 import { Index, Portal } from "solid-js/web"
 
-import type { settingsInterfaceFieldsData } from "../lib/settings.ts"
+import type { settingsInterfaceFieldsData } from "../lib/api/settings.ts"
 
 import "./SettingsInterface.css"
 

@@ -1,5 +1,5 @@
-import type { response } from "./var.ts"
-import { api } from "./var.ts"
+import type { response } from "../var.ts"
+import { api } from "../var.ts"
 
 export interface settingsData {
 	iface: settingsInterfaceData

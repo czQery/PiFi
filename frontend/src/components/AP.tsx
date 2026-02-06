@@ -1,7 +1,7 @@
 import "./AP.css"
 import { LucideWifi } from "lucide-solid"
 import type { Component } from "solid-js"
-import type { bettercapWifiData } from "../lib/bettercap.ts"
+import type { bettercapWifiData } from "../lib/api/bettercap.ts"
 
 interface APProps {
 	ap: bettercapWifiData

@@ -2,7 +2,7 @@ import type { Component } from "solid-js"
 
 import "./Auth.css"
 import { setLogged } from "../App.tsx"
-import { authSave } from "../lib/auth.ts"
+import { authSave } from "../lib/api/auth.ts"
 
 const Auth: Component = () => {
 	let inputRef!: HTMLInputElement

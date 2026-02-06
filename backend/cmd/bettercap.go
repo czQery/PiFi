@@ -81,14 +81,14 @@ func InitBettercap() {
 					"bssid": bssid,
 					"ssid":  ssid,
 					"rssi":  rssi,
-				}).Debug("cmd - bettercap new ap")
+				}).Debug("cmd - bettercap ap detected")
 
 				details, detailsErr := GetBettercapAP(bssid)
 				if detailsErr != nil {
 					logrus.WithFields(logrus.Fields{
 						"bssid": bssid,
 						"err":   detailsErr,
-					}).Warn("cmd - bettercap new ap get details failed")
+					}).Warn("cmd - bettercap ap get details failed")
 				}
 
 				auth := details.Get("authentication").String()

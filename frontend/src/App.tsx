@@ -8,7 +8,7 @@ import { type RouteSectionProps, useLocation, useNavigate } from "@solidjs/route
 import {LucideDatabase, LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings } from "lucide-solid"
 import Auth from "./components/Auth.tsx"
 import { base } from "./index.tsx"
-import { auth, authSave } from "./lib/auth.ts"
+import { auth, authSave } from "./lib/api/auth.ts"
 
 export const [logged, setLogged] = createSignal<undefined | boolean>()
 

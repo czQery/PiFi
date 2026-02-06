@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/czQery/PiFi/backend/db"
+	"github.com/czQery/PiFi/backend/sse"
 	"github.com/gofiber/fiber/v2/middleware/proxy"
 
 	"github.com/mitchellh/mapstructure"
@@ -56,7 +57,8 @@ func init() {
 		}).Error("init - log file truncate failed")
 	}
 	logrus.AddHook(&hp.LogFormatterHook{
-		Writer: hp.LogFile,
+		Writer:    hp.LogFile,
+		Broadcast: sse.DashLog,
 		Formatter: &logrus.TextFormatter{
 			ForceColors:   false,
 			DisableColors: true,
@@ -88,7 +90,6 @@ func main() {
 	time.Sleep(time.Second * 5)
 
 	nmInit()
-	go ticker()
 
 	r := fiber.New(fiber.Config{
 		CaseSensitive:         false,
@@ -122,14 +123,12 @@ func main() {
 	// API
 	rAPI := r.Group("/api", func(c *fiber.Ctx) error {
 		if c.Path() != "/api/portal" && !api.VerifyToken(c) { // require password for all api endpoints except /api/portal
-			return &api.Error{Code: 401, Func: "api/settings", Message: "unauthorized"}
+			return &api.Error{Code: 401, Func: "api", Message: "unauthorized"}
 		}
 		return c.Next()
 	})
 
 	rAPI.Get("/auth", api.Auth)
-	rAPI.Get("/stats", api.Stats)
-	rAPI.Get("/log", api.Log)
 	rAPI.Get("/settings", api.SettingsGet)
 	rAPI.Post("/settings", api.SettingsPost)
 	rAPI.All("/portal", api.Portal)
@@ -145,13 +144,21 @@ func main() {
 	rAPI.All("/bettercap/session", proxy.Forward(cmd.BC+"/api/session"))
 	rAPI.Get("/bettercap/session/wifi", proxy.Forward(cmd.BC+"/api/session/wifi"))
 
+	// SSE
+	rSSE := r.Group("/sse", func(c *fiber.Ctx) error {
+		if !api.VerifyToken(c) {
+			return &api.Error{Code: 401, Func: "sse", Message: "unauthorized"}
+		}
+		return c.Next()
+	})
+
+	rSSE.Get("/dash", sse.Dash)
+
 	// PiFi UI
 	rUI := r.Group("/pifi", func(c *fiber.Ctx) error {
-
 		if strings.TrimSuffix(c.Path(), "/") == "/pifi" {
 			return c.Redirect("/pifi/dash", 308)
 		}
-
 		return c.Next()
 	})
 

@@ -14,6 +14,7 @@ var LogFile *os.File
 type LogFormatterHook struct {
 	Writer    io.Writer
 	Formatter logrus.Formatter
+	Broadcast func([]byte)
 }
 
 func (hook *LogFormatterHook) Fire(entry *logrus.Entry) error {
@@ -21,6 +22,11 @@ func (hook *LogFormatterHook) Fire(entry *logrus.Entry) error {
 	if err != nil {
 		return err
 	}
+
+	if hook.Broadcast != nil {
+		hook.Broadcast(line)
+	}
+
 	_, err = hook.Writer.Write(line)
 	return err
 }

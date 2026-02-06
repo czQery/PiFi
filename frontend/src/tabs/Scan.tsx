@@ -2,7 +2,7 @@ import "./Scan.css"
 import { type Component, createSignal, For, onMount, Show } from "solid-js"
 import AP from "../components/AP.tsx"
 import Error from "../components/Error.tsx"
-import { type bettercapWifiData, getBettercapWifi } from "../lib/bettercap.ts"
+import { type bettercapWifiData, getBettercapWifi } from "../lib/api/bettercap.ts"
 
 export const [bettercapWifi, setBettercapWifi] = createSignal<bettercapWifiData[]>([])
 

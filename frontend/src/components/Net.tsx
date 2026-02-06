@@ -1,5 +1,5 @@
 import { type Component, type JSXElement, Show } from "solid-js"
-import type { dbNetData } from "../lib/db.ts"
+import type { dbNetData } from "../lib/api/db.ts"
 
 interface netProps {
 	name: string

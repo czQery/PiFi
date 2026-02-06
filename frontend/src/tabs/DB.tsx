@@ -3,7 +3,7 @@ import { LucideGlobe, LucideRadio, LucideRadioTower } from "lucide-solid"
 import { type Component, createSignal, onMount } from "solid-js"
 import Net from "../components/Net.tsx"
 import Option, { type optionButtonData, type optionData } from "../components/Option.tsx"
-import { type dbData, getDB } from "../lib/db.ts"
+import { type dbData, getDB } from "../lib/api/db.ts"
 
 export const [db, setDB] = createSignal<dbData>({ aps: 0, wigle: { new: 0, net: 0 }, beacondb: { new: 0, net: 0 }, dwpa: { new: 0, net: 0 } } as dbData)
 

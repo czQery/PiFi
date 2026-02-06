@@ -5,9 +5,9 @@ import "./Settings.css"
 import type {loadingData} from "../components/Loading.tsx"
 import Loading from "../components/Loading.tsx"
 import SettingsInterface from "../components/SettingsInterface.tsx"
-import {getPortals} from "../lib/portals.ts"
-import type {settingsData, settingsInterfaceFieldsData} from "../lib/settings.ts"
-import {getSettings, saveSettings} from "../lib/settings.ts"
+import {getPortals} from "../lib/api/portals.ts"
+import type {settingsData, settingsInterfaceFieldsData} from "../lib/api/settings.ts"
+import {getSettings, saveSettings} from "../lib/api/settings.ts"
 import type {response} from "../lib/var.ts"
 
 export const [settings, setSettings] = createSignal<settingsData>({ iface: {} })

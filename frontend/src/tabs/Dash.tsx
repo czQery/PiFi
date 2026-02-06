@@ -1,14 +1,11 @@
-import type { Component } from "solid-js"
-import { createSignal, Index, onMount, Show } from "solid-js"
+import { type Component, createSignal, Index, onCleanup, onMount, Show } from "solid-js"
 
 import "./Dash.css"
 import { useNavigate } from "@solidjs/router"
 import { LucideCpu, LucideLocateFixed, LucideLocateOff, LucideMemoryStick, LucideSettings, LucideWifi, LucideWifiOff } from "lucide-solid"
-import type { logData } from "../lib/log.ts"
-import { getLog } from "../lib/log.ts"
-import { addZero } from "../lib/other.ts"
-import type { statsData } from "../lib/stats.ts"
-import { getStats } from "../lib/stats.ts"
+import { addZero, atobUnicode } from "../lib/other.ts"
+import type { logData, logDataItem, statsData } from "../lib/sse.ts"
+import { api, type raw } from "../lib/var.ts"
 
 export const [stats, setStats] = createSignal<statsData>(
 	{ cpu: 0, mem_total: 0, mem_used: 0, hotspot: { ssid: "" }, gps: { lat: 0, lon: 0, alt: 0, mode: 0, time: 0 } } as statsData,
@@ -19,8 +16,59 @@ const Dash: Component = () => {
 	const navigate = useNavigate()
 
 	onMount(async () => {
-		setStats(await getStats())
-		setLog(await getLog())
+		const sseDash = new EventSource(api + "sse/dash")
+
+		sseDash.addEventListener("stats", e => {
+			setStats(JSON.parse(e.data))
+		})
+
+		sseDash.addEventListener("log", e => {
+			const data: logData[] = []
+			const lines = atobUnicode((JSON.parse(e.data) as raw).raw).split("\n")
+			const regex = /([^\s=]+)="([^"]*)"/g
+
+			for (const line of lines) {
+				if (line.length < 8) {
+					continue
+				}
+
+				let entry: logData = { items: [] as logDataItem[] } as logData
+
+				for (const match of line.matchAll(regex)) {
+					switch (match[1]) {
+						case "time":
+							entry.time = new Date(match[2])
+							break
+						case "level":
+							entry.level = match[2]
+							break
+						case "msg":
+							entry.msg = match[2]
+							break
+						case "err":
+							entry.items.push({ name: "err", value: match[2], color: "var(--red)" })
+							break
+						case "data":
+						case "ssid":
+						case "bssid":
+							entry.items.push({ name: match[1], value: match[2], color: "var(--green)" })
+							break
+						case "observer":
+						case "transids":
+						case "iface":
+							entry.items.push({ name: match[1], value: match[2], color: "var(--blue)" })
+							break
+					}
+				}
+				data.push(entry)
+			}
+			setLog([...log(), ...data])
+		})
+
+		onCleanup(() => {
+			sseDash.close()
+			setLog([] as logData[])
+		})
 	})
 
 	return (

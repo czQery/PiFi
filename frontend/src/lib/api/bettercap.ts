@@ -1,4 +1,4 @@
-import { api } from "./var.ts"
+import { api } from "../var.ts"
 
 export interface bettercapWifiDataResponse {
 	aps: bettercapWifiData[]

@@ -4,3 +4,7 @@ export interface response {
 	message: string
 	data: object
 }
+
+export interface raw {
+	raw: string
+}
