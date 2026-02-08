@@ -5,7 +5,7 @@ import "./App.css"
 
 import { Menu, Tabs } from "@ark-ui/solid"
 import { type RouteSectionProps, useLocation, useNavigate } from "@solidjs/router"
-import {LucideDatabase, LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings } from "lucide-solid"
+import { LucideDatabase, LucideFileCog, LucideLayoutDashboard, LucideLogOut, LucideMenu, LucideRadar, LucideSettings } from "lucide-solid"
 import Auth from "./components/Auth.tsx"
 import { base } from "./index.tsx"
 import { auth, authSave } from "./lib/api/auth.ts"

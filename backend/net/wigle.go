@@ -1,6 +1,7 @@
 package net
 
 import (
+	"context"
 	"errors"
 	"math"
 	"strconv"
@@ -15,7 +16,7 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-func WigleGet() (string, []string) {
+func WigleGet(ctx context.Context, listOnly bool) (string, []string) {
 	payload := "WigleWifi-1.6"
 	payload += ",appRelease=" + hp.Build
 	payload += ",model=" + cmd.Con
@@ -32,7 +33,7 @@ func WigleGet() (string, []string) {
 
 	var list []string
 
-	for _, ap := range db.SelectAP() {
+	for _, ap := range db.SelectAP(ctx) {
 		if ap.Wigle { // skip if already uploaded
 			continue
 		}
@@ -41,28 +42,34 @@ func WigleGet() (string, []string) {
 			continue
 		}
 
-		payload += ap.BSSID + ","
-		payload += "\"" + ap.SSID + "\","
-		payload += ap.Mode + ","
-		payload += ap.Discovered + ","
-		payload += strconv.FormatInt(ap.Channel, 10) + ","
-		payload += strconv.FormatInt(ap.Frequency, 10) + ","
-		payload += strconv.FormatFloat(ap.RSSI, 'f', -1, 64) + ","
-		payload += strconv.FormatFloat(ap.Latitude, 'f', -1, 64) + ","
-		payload += strconv.FormatFloat(ap.Longitude, 'f', -1, 64) + ","
-		payload += strconv.FormatInt(int64(math.Round(ap.Altitude)), 10) + "," // only gps & wigle mismatch, wigle wants int, gps gives float
-		payload += strconv.FormatFloat(ap.Accuracy, 'f', -1, 64) + ","
-		payload += "," // RCOIs
-		payload += "," // MfgrId
-		payload += ap.Device + "\n"
+		if !listOnly {
+			payload += ap.BSSID + ","
+			payload += "\"" + ap.SSID + "\","
+			payload += ap.Mode + ","
+			payload += ap.Discovered + ","
+			payload += strconv.FormatInt(ap.Channel, 10) + ","
+			payload += strconv.FormatInt(ap.Frequency, 10) + ","
+			payload += strconv.FormatFloat(ap.RSSI, 'f', -1, 64) + ","
+			payload += strconv.FormatFloat(ap.Latitude, 'f', -1, 64) + ","
+			payload += strconv.FormatFloat(ap.Longitude, 'f', -1, 64) + ","
+			payload += strconv.FormatInt(int64(math.Round(ap.Altitude)), 10) + "," // only gps & wigle mismatch, wigle wants int, gps gives float
+			payload += strconv.FormatFloat(ap.Accuracy, 'f', -1, 64) + ","
+			payload += "," // RCOIs
+			payload += "," // MfgrId
+			payload += ap.Device + "\n"
+		}
 
 		list = append(list, ap.BSSID)
+	}
+
+	if listOnly {
+		return "", list
 	}
 
 	return payload, list
 }
 
-func WigleUpload() error {
+func WigleUpload(ctx context.Context) error {
 	name := "PiFi_" + time.Now().Format("20060102150405") + ".csv"
 	token := ""
 
@@ -75,7 +82,7 @@ func WigleUpload() error {
 		"token": token,
 	}).Debug("net - wigle upload")
 
-	payload, list := WigleGet()
+	payload, list := WigleGet(ctx, false)
 
 	up, err := req.SetHeader("Authorization", token).SetFormData(map[string]string{"donate": "on"}).SetFileBytes("file", name, []byte(payload)).Post("https://api.wigle.net/api/v2/file/upload")
 	if err != nil {
@@ -100,11 +107,11 @@ func WigleUpload() error {
 		"transids": strings.Join(transids, ","),
 	}).Info("net - wigle successfully uploaded")
 
-	WigleMark(true, list)
+	WigleMark(ctx, true, list)
 
 	return nil
 }
 
-func WigleMark(value bool, list []string) {
-	db.UpdateAPNet("wigle", value, list)
+func WigleMark(ctx context.Context, value bool, list []string) {
+	db.UpdateAPNet(ctx, "wigle", value, list)
 }

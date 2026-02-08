@@ -17,7 +17,6 @@ export interface bettercapWifiData {
 
 export const getBettercapWifi = async (): Promise<bettercapWifiData[]> => {
 	const rsp: Response = await fetch(api + "api/bettercap/session/wifi", { credentials: "include" })
-
 	const rspJson: bettercapWifiDataResponse = await rsp.json()
 
 	if (rsp.status === 200 && rspJson.aps) {

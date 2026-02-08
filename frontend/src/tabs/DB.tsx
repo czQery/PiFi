@@ -1,6 +1,7 @@
 import "./DB.css"
 import { LucideGlobe, LucideRadio, LucideRadioTower } from "lucide-solid"
-import { type Component, createSignal, onMount } from "solid-js"
+import { type Component, createEffect, createSignal } from "solid-js"
+import Loading, { type loadingData } from "../components/Loading.tsx"
 import Net from "../components/Net.tsx"
 import Option, { type optionButtonData, type optionData } from "../components/Option.tsx"
 import { type dbData, getDB } from "../lib/api/db.ts"
@@ -8,16 +9,19 @@ import { type dbData, getDB } from "../lib/api/db.ts"
 export const [db, setDB] = createSignal<dbData>({ aps: 0, wigle: { new: 0, net: 0 }, beacondb: { new: 0, net: 0 }, dwpa: { new: 0, net: 0 } } as dbData)
 
 const DB: Component = () => {
-	onMount(async () => {
-		setDB(await getDB())
-	})
-
+	const [loading, setLoading] = createSignal<loadingData>({ title: "loading", pending: false, msg: "" })
 	const [option, setOption] = createSignal<optionData>({
 		open: false,
 		title: "Manual",
 		message: "You can submit the data by your self, and then mark them as uploaded.",
 		buttonFirst: { name: "mark" } as optionButtonData,
 		buttonSecond: { name: "download" } as optionButtonData,
+	})
+
+	createEffect(async () => {
+		if (!loading().pending) {
+			setDB(await getDB())
+		}
 	})
 
 	return (
@@ -30,9 +34,10 @@ const DB: Component = () => {
 				</div>
 			</div>
 			<Option data={option()} />
-			<Net name="Wigle" db={db().wigle} icon={<LucideGlobe />} option={option} setOption={setOption} />
-			<Net name="BeaconDB" db={db().beacondb} icon={<LucideRadio />} option={option} setOption={setOption} />
-			<Net name="DWPA" db={db().dwpa} icon={<LucideRadioTower />} option={option} setOption={setOption} />
+			<Net name="Wigle" db={db().wigle} icon={<LucideGlobe />} option={option} setOption={setOption} setLoading={setLoading} />
+			<Net name="BeaconDB" db={db().beacondb} icon={<LucideRadio />} option={option} setOption={setOption} setLoading={setLoading} />
+			<Net name="DWPA" db={db().dwpa} icon={<LucideRadioTower />} option={option} setOption={setOption} setLoading={setLoading} />
+			<Loading data={loading()} />
 		</div>
 	)
 }

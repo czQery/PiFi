@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"strings"
 
 	"github.com/sirupsen/logrus"
@@ -8,24 +9,30 @@ import (
 	"zombiezen.com/go/sqlite/sqlitex"
 )
 
-var Conn *sqlite.Conn
+var Pool *sqlitex.Pool
 
 func Load() {
 	var err error
-	Conn, err = sqlite.OpenConn("./data.db", sqlite.OpenReadWrite|sqlite.OpenCreate)
+
+	Pool, err = sqlitex.NewPool("./data.db", sqlitex.PoolOptions{
+		PoolSize: 10,
+		Flags:    sqlite.OpenReadWrite | sqlite.OpenCreate,
+	})
+
+	conn, err := Pool.Take(context.Background())
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"err": err.Error(),
-		}).Panic("db - open failed")
+		}).Panic("db - connection failed")
 	}
+	defer Pool.Put(conn)
 
-	err = sqlitex.Execute(Conn, strings.TrimSpace(dbCreate), &sqlitex.ExecOptions{})
+	err = sqlitex.Execute(conn, strings.TrimSpace(dbCreate), &sqlitex.ExecOptions{})
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"err": err.Error(),
 		}).Panic("db - exec failed")
 	}
 
-	// TEST
-	// DBInsertAP("a8:80:55:42:e8:e2", "ap", "wifi", "now", 1, 5, 10, 20, 400, 5, "wifi")
+	logrus.Info("db - successfully loaded")
 }

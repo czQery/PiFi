@@ -138,8 +138,8 @@ const Dash: Component = () => {
 										<span
 											style={{
 												"color": item().color,
-												"margin-left": (i === 0 ? "auto" : ""),
-												"margin-right": (i !== entry().items.length - 1 ? "10px" : ""),
+												"margin-left": i === 0 ? "auto" : "",
+												"margin-right": i !== entry().items.length - 1 ? "10px" : "",
 											}}
 										>
 											{item().name + "=" + item().value}

@@ -19,7 +19,7 @@ type DBNetResponse struct {
 }
 
 func DB(c *fiber.Ctx) error {
-	data := db.SelectAP()
+	data := db.SelectAP(c.Context())
 
 	var (
 		aps = int64(len(data))
@@ -29,7 +29,7 @@ func DB(c *fiber.Ctx) error {
 		netDwpa     int64
 	)
 
-	_, dbWigle := net.WigleGet()
+	_, dbWigle := net.WigleGet(c.Context(), true)
 
 	for _, ap := range data {
 		if ap.Wigle {

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"os/exec"
 	"regexp"
@@ -16,6 +17,7 @@ import (
 )
 
 func InitBettercap() {
+	ctx := context.Background()
 	init := true
 	for {
 		logrus.Info("cmd - starting bettercap")
@@ -121,7 +123,7 @@ func InitBettercap() {
 					acc = GPS.Acc
 				}
 
-				db.InsertAP(bssid, ssid, mode, time.Now().Format(time.DateTime), details.Get("channel").Int(), details.Get("frequency").Int(), rssi, lat, lon, alt, acc, "WIFI")
+				db.InsertAP(ctx, bssid, ssid, mode, time.Now().Format(time.DateTime), details.Get("channel").Int(), details.Get("frequency").Int(), rssi, lat, lon, alt, acc, "WIFI")
 			}
 		}
 

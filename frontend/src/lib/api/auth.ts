@@ -4,7 +4,6 @@ import sha256 from "fast-sha256"
 
 export const auth = async (): Promise<boolean> => {
 	const rsp: Response = await fetch(api + "api/auth", { credentials: "include" })
-
 	return rsp.status === 200
 }
 

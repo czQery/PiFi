@@ -31,7 +31,7 @@ const AP: Component<APProps> = props => {
 				</div>
 				<div class="ap-flex">
 					<span>[</span>
-					<span style={{ color: (props.ap.encryption === "OPEN" ? "var(--green)" : "var(--pink)") }}>{props.ap.encryption}</span>
+					<span style={{ color: props.ap.encryption === "OPEN" ? "var(--green)" : "var(--pink)" }}>{props.ap.encryption}</span>
 					<span>]</span>
 				</div>
 			</div>

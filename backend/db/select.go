@@ -1,6 +1,8 @@
 package db
 
 import (
+	"context"
+
 	"github.com/sirupsen/logrus"
 	"zombiezen.com/go/sqlite"
 	"zombiezen.com/go/sqlite/sqlitex"
@@ -24,9 +26,18 @@ type DataAP struct {
 	DWPA       bool    `json:"dwpa"`
 }
 
-func SelectAP() []DataAP {
+func SelectAP(ctx context.Context) []DataAP {
+	conn, err := Pool.Take(ctx)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": err.Error(),
+		}).Error("db - select ap connection failed")
+		return nil
+	}
+	defer Pool.Put(conn)
+
 	var data []DataAP
-	err := sqlitex.ExecuteTransient(Conn, "SELECT * FROM ap", &sqlitex.ExecOptions{
+	err = sqlitex.ExecuteTransient(conn, "SELECT * FROM ap", &sqlitex.ExecOptions{
 		ResultFunc: func(stmt *sqlite.Stmt) error {
 			data = append(data, DataAP{
 				BSSID:      stmt.ColumnText(0),

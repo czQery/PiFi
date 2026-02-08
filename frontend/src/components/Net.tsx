@@ -1,5 +1,7 @@
 import { type Component, type JSXElement, Show } from "solid-js"
 import type { dbNetData } from "../lib/api/db.ts"
+import { getNet, markNet, upNet } from "../lib/api/net.ts"
+import type { response } from "../lib/var.ts"
 
 interface netProps {
 	name: string
@@ -7,6 +9,7 @@ interface netProps {
 	icon: JSXElement
 	option: Function
 	setOption: Function
+	setLoading: Function
 }
 
 const Net: Component<netProps> = props => {
@@ -24,7 +27,7 @@ const Net: Component<netProps> = props => {
 				<span>Net:</span>
 				<span class="value">{props.db.net.toString()}</span>
 			</div>
-			{/*TODO: remove this after implementing other nets*/}
+			{/*TODO: remove this Show wrapper after implementing other nets*/}
 			<Show when={props.name.toLowerCase() === "wigle"}>
 				<div class="db-buttons">
 					<button
@@ -33,12 +36,42 @@ const Net: Component<netProps> = props => {
 							props.setOption({
 								...props.option(),
 								open: true,
-								buttonSecond: { name: "download", action: () => window.open("/api/net/" + props.name.toLowerCase(), "_blank") },
+								buttonFirst: {
+									name: "mark",
+									action: async () => {
+										props.setOption({ ...props.option(), open: false })
+										props.setLoading({ title: "Marking", pending: true, msg: "" })
+										const rsp: response = await markNet(props.name.toLowerCase(), true)
+
+										if (rsp.message != "") {
+											props.setLoading({ title: "Marking", pending: true, msg: rsp.message })
+											return
+										}
+
+										props.setLoading({ title: "Marking", pending: false, msg: "" })
+									},
+								},
+								buttonSecond: { name: "download", action: () => getNet(props.name.toLowerCase()) },
 							})}
 					>
 						manual
 					</button>
-					<button class="card green">upload</button>
+					<button
+						class="card green"
+						onClick={async () => {
+							props.setLoading({ title: "Uploading", pending: true, msg: "" })
+							const rsp: response = await upNet(props.name.toLowerCase())
+
+							if (rsp.message != "") {
+								props.setLoading({ title: "Uploading", pending: true, msg: rsp.message })
+								return
+							}
+
+							props.setLoading({ title: "Uploading", pending: false, msg: "" })
+						}}
+					>
+						upload
+					</button>
 				</div>
 			</Show>
 		</div>

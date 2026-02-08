@@ -15,7 +15,6 @@ export interface dbNetData {
 
 export const getDB = async (): Promise<dbData> => {
 	const rsp: Response = await fetch(api + "api/db", { credentials: "include" })
-
 	const rspJson: response = await rsp.json()
 
 	if (rsp.status === 200 && rspJson.data) {
