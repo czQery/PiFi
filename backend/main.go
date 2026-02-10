@@ -215,6 +215,11 @@ func main() {
 }
 
 func nmInit() {
+	var (
+		initHotspot    bool
+		initHotspotErr error
+	)
+
 	// Get interfaces
 	iface, ifaceErr := cmd.GetInterfaceList()
 	if ifaceErr != nil {
@@ -223,17 +228,24 @@ func nmInit() {
 		}).Panic("main - nmcli failed")
 	}
 
-	// Get interfaces from config
+	// Get interfaces from config & set them all as not ready before verifying if they are
 	ifaceConfig := hp.ConfigGetInterfaceList()
 	for _, item := range ifaceConfig {
 		item["ready"] = false
 	}
 
-	// Create hotspot con for the first time
-	var (
-		initHotspot    bool
-		initHotspotErr error
-	)
+	connections, connectionErr := cmd.GetConnectionList()
+	if connectionErr != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": connectionErr.Error(),
+		}).Error("main - connections failed")
+	}
+
+	for _, con := range connections {
+		if con.Name == cmd.Con+"-hotspot" {
+			initHotspot = true
+		}
+	}
 
 	for _, i := range iface {
 		if i.Type != "wifi" {
@@ -258,19 +270,7 @@ func nmInit() {
 			"state": i.State,
 		}).Debug("main - iface init")
 
-		connections, connectionErr := cmd.GetConnectionList()
-		if connectionErr != nil {
-			logrus.WithFields(logrus.Fields{
-				"err": connectionErr.Error(),
-			}).Error("main - connections failed")
-		}
-
-		for _, con := range connections {
-			if con.Name == cmd.Con+"-hotspot" {
-				initHotspot = true // hotspot already initialized
-			}
-		}
-
+		// Create hotspot con for the first time
 		if !initHotspot && i.State == "disconnected" {
 			ifaceConfig[i.Name], initHotspotErr = cmd.InitHotspot(i.Name, ifaceConfig[i.Name])
 			if initHotspotErr == nil {
