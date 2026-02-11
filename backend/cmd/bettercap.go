@@ -73,8 +73,19 @@ func InitBettercap() {
 			}*/
 
 			switch strings.TrimSpace(matches[2]) {
+			case "wifi.client.probe":
+				bssid, ssid, rssi := hp.ParseProbe(strings.TrimSpace(matches[4]))
+				if bssid == "" {
+					break
+				}
+
+				logrus.WithFields(logrus.Fields{
+					"bssid": bssid,
+					"ssid":  ssid,
+					"rssi":  rssi,
+				}).Debug("cmd - bettercap probe detected")
 			case "wifi.ap.new":
-				bssid, ssid, rssi := hp.ParseNewAP(strings.TrimSpace(matches[4]))
+				bssid, ssid, rssi := hp.ParseAP(strings.TrimSpace(matches[4]))
 				if bssid == "" {
 					break
 				}
