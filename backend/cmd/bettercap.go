@@ -22,7 +22,7 @@ func InitBettercap() {
 	for {
 		logrus.Info("cmd - starting bettercap")
 
-		eval := "set api.rest.address 127.0.0.1;set api.rest.port 8081;api.rest on;set ticker.period 60"
+		eval := "set api.rest.address 127.0.0.1;set api.rest.port 8081;set wifi.handshakes.aggregate false;set wifi.handshakes.file ./cap;set ticker.period 60;api.rest on"
 		cmd := exec.Command("bettercap", "-no-history", "-no-colors", "-eval", eval)
 
 		stdout, _ := cmd.StdoutPipe()
@@ -72,9 +72,23 @@ func InitBettercap() {
 				}).Debug("cmd - bettercap out")
 			}*/
 
-			switch strings.TrimSpace(matches[2]) {
+			event := strings.TrimSpace(matches[2])
+			data := strings.TrimSpace(matches[4])
+
+			switch event {
+			case "wifi.client.deauthentication":
+				logrus.WithFields(logrus.Fields{
+					"data": data,
+				}).Debug("cmd - bettercap deauth detected")
+			case "wifi.client.handshake":
+				// captured a2:82:ca:e3:ed:1c -> Muad'Dib (9c:05:d6:0e:da:a5) WPA2 handshake (half) to /home/czqery/pifi/cap/MuadDib_10bbf39d2199.pcap
+				// captured a2:82:ca:e3:ed:1c -> Muad'Dib (9c:05:d6:0e:da:a5) WPA2 handshake (half) to /home/czqery/pifi/cap/MuadDib_10bbf39d2199.pcap
+
+				logrus.WithFields(logrus.Fields{
+					"data": data,
+				}).Debug("cmd - bettercap handshake captured")
 			case "wifi.client.probe":
-				bssid, ssid, rssi := hp.ParseProbe(strings.TrimSpace(matches[4]))
+				bssid, ssid, rssi := hp.ParseProbe(data)
 				if bssid == "" {
 					break
 				}
@@ -85,7 +99,7 @@ func InitBettercap() {
 					"rssi":  rssi,
 				}).Debug("cmd - bettercap probe detected")
 			case "wifi.ap.new":
-				bssid, ssid, rssi := hp.ParseAP(strings.TrimSpace(matches[4]))
+				bssid, ssid, rssi := hp.ParseAP(data)
 				if bssid == "" {
 					break
 				}

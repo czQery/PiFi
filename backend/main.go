@@ -135,9 +135,15 @@ func main() {
 	rAPI.Get("/portals", api.Portals)
 	rAPI.Get("/db", api.DB)
 
+	rAPI.Patch("/net/:net<regex(\\b(wigle|beacondb|dwpa)\\b)>", api.NetPatch)
+	rAPI.Post("/net/:net<regex(\\b(wigle|beacondb|dwpa)\\b)>", api.NetPost)
+
 	rAPI.Get("/net/wigle", api.WigleGet)
-	rAPI.Patch("/net/wigle", api.WiglePatch)
-	rAPI.Post("/net/wigle", api.WiglePost)
+	rAPI.Get("/net/dwpa", api.DWPAGet)
+
+	rAPI.Get("/cap/:file", func(c *fiber.Ctx) error {
+		return c.SendFile("./cap/" + c.Params("file"))
+	})
 
 	// Bettercap api proxy
 	rAPI.All("/bettercap/events", proxy.Forward(cmd.BC+"/api/events"))
