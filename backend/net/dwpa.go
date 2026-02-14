@@ -19,7 +19,7 @@ func DWPAGet() []string {
 		}
 
 		info, err := entry.Info()
-		if err != nil || info.Size() <= 24 { // skip empty files
+		if err != nil || info.Size() <= 128 { // skip empty files
 			continue
 		}
 

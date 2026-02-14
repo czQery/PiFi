@@ -77,16 +77,22 @@ func InitBettercap() {
 
 			switch event {
 			case "wifi.client.deauthentication":
+
+				// TODO: Create parser for this event
 				logrus.WithFields(logrus.Fields{
 					"data": data,
 				}).Debug("cmd - bettercap deauth detected")
 			case "wifi.client.handshake":
-				// captured a2:82:ca:e3:ed:1c -> Muad'Dib (9c:05:d6:0e:da:a5) WPA2 handshake (half) to /home/czqery/pifi/cap/MuadDib_10bbf39d2199.pcap
-				// captured a2:82:ca:e3:ed:1c -> Muad'Dib (9c:05:d6:0e:da:a5) WPA2 handshake (half) to /home/czqery/pifi/cap/MuadDib_10bbf39d2199.pcap
+				bssid, ssid, capType := hp.ParseHandshake(data)
+				if bssid == "" {
+					break
+				}
 
 				logrus.WithFields(logrus.Fields{
-					"data": data,
-				}).Debug("cmd - bettercap handshake captured")
+					"bssid": bssid,
+					"ssid":  ssid,
+					"type":  capType,
+				}).Info("cmd - bettercap handshake captured")
 			case "wifi.client.probe":
 				bssid, ssid, rssi := hp.ParseProbe(data)
 				if bssid == "" {
