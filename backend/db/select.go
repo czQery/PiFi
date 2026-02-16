@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/sirupsen/logrus"
 	"zombiezen.com/go/sqlite"
@@ -26,6 +27,27 @@ type DataAP struct {
 	DWPA       bool    `json:"dwpa"`
 }
 
+func resultAP(data *[]DataAP, stmt *sqlite.Stmt) error {
+	*data = append(*data, DataAP{
+		BSSID:      stmt.ColumnText(0),
+		SSID:       stmt.ColumnText(1),
+		Mode:       stmt.ColumnText(2),
+		Discovered: stmt.ColumnText(3),
+		Channel:    stmt.ColumnInt64(4),
+		Frequency:  stmt.ColumnInt64(5),
+		RSSI:       stmt.ColumnFloat(6),
+		Latitude:   stmt.ColumnFloat(7),
+		Longitude:  stmt.ColumnFloat(8),
+		Altitude:   stmt.ColumnFloat(9),
+		Accuracy:   stmt.ColumnFloat(10),
+		Device:     stmt.ColumnText(11),
+		Wigle:      stmt.ColumnBool(12),
+		BeaconDB:   stmt.ColumnBool(13),
+		DWPA:       stmt.ColumnBool(14),
+	})
+	return nil
+}
+
 func SelectAP(ctx context.Context) []DataAP {
 	conn, err := Pool.Take(ctx)
 	if err != nil {
@@ -39,24 +61,7 @@ func SelectAP(ctx context.Context) []DataAP {
 	var data []DataAP
 	err = sqlitex.ExecuteTransient(conn, "SELECT * FROM ap", &sqlitex.ExecOptions{
 		ResultFunc: func(stmt *sqlite.Stmt) error {
-			data = append(data, DataAP{
-				BSSID:      stmt.ColumnText(0),
-				SSID:       stmt.ColumnText(1),
-				Mode:       stmt.ColumnText(2),
-				Discovered: stmt.ColumnText(3),
-				Channel:    stmt.ColumnInt64(4),
-				Frequency:  stmt.ColumnInt64(5),
-				RSSI:       stmt.ColumnFloat(6),
-				Latitude:   stmt.ColumnFloat(7),
-				Longitude:  stmt.ColumnFloat(8),
-				Altitude:   stmt.ColumnFloat(9),
-				Accuracy:   stmt.ColumnFloat(10),
-				Device:     stmt.ColumnText(11),
-				Wigle:      stmt.ColumnBool(12),
-				BeaconDB:   stmt.ColumnBool(13),
-				DWPA:       stmt.ColumnBool(14),
-			})
-			return nil
+			return resultAP(&data, stmt)
 		},
 	})
 
@@ -64,6 +69,35 @@ func SelectAP(ctx context.Context) []DataAP {
 		logrus.WithFields(logrus.Fields{
 			"err": err.Error(),
 		}).Error("db - select ap exec failed")
+	}
+
+	return data
+}
+
+func SelectAPInList(ctx context.Context, id string, list []string) []DataAP {
+	conn, err := Pool.Take(ctx)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": err.Error(),
+		}).Error("db - update ap net connection failed")
+		return nil
+	}
+	defer Pool.Put(conn)
+
+	listJson, _ := json.Marshal(list)
+	var data []DataAP
+	err = sqlitex.Execute(conn, "SELECT ap WHERE "+id+" IN (SELECT value FROM json_each(?));", &sqlitex.ExecOptions{
+		Args: []interface{}{
+			listJson,
+		},
+		ResultFunc: func(stmt *sqlite.Stmt) error {
+			return resultAP(&data, stmt)
+		},
+	})
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": err.Error(),
+		}).Error("db - update ap net exec failed")
 	}
 
 	return data
