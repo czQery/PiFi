@@ -1,5 +1,5 @@
 import { Dialog } from "@ark-ui/solid"
-import { type Component, createEffect, createSignal } from "solid-js"
+import { type Component, createEffect, createSignal, Show } from "solid-js"
 import { Portal } from "solid-js/web"
 
 export interface optionButtonData {
@@ -11,8 +11,9 @@ export interface optionData {
 	open: boolean
 	title: string
 	message: string
-	buttonFirst: optionButtonData
-	buttonSecond: optionButtonData
+	children: Element | null
+	buttonFirst: optionButtonData | null
+	buttonSecond: optionButtonData | null
 }
 
 interface optionProps {
@@ -37,31 +38,35 @@ const Option: Component<optionProps> = props => {
 
 	return (
 		// @ts-ignore
-		<Dialog.Root
-			className={"card"}
-			oepn
-			open={open()}
-			onFocusOutside={close}
-			onEscapeKeyDown={close}
-			onInteractOutside={close}
-			onPointerDownOutside={close}
-		>
+		<Dialog.Root className={"card"} open={open()} onFocusOutside={close} onEscapeKeyDown={close} onInteractOutside={close} onPointerDownOutside={close}>
 			<Portal>
 				<Dialog.Backdrop />
 				<Dialog.Positioner>
 					<Dialog.Content>
-						<label style={{ "display": "block", "margin-bottom": "5px", "color": "var(--white)" }}>{props.data.title}</label>
-						<Dialog.Description style={{ "width": "300px", "margin-bottom": "10px", "color": "var(--white-hover)" }}>
-							{props.data.message}
-						</Dialog.Description>
-						<div style={{ "display": "flex", "gap": "10px", "width": "100%", "justify-content": "right" }}>
-							<button class="card" style={{ width: "100px", height: "30px" }} onClick={() => props.data.buttonFirst.action()}>
-								{props.data.buttonFirst.name}
-							</button>
-							<button class="card" style={{ width: "100px", height: "30px" }} onClick={() => props.data.buttonSecond.action()}>
-								{props.data.buttonSecond.name}
-							</button>
-						</div>
+						{/*this is not needed  but the text blinks for time when closing without it*/}
+						<Show when={open()}>
+							<label style={{ "display": "block", "margin-bottom": "5px", "color": "var(--white)" }}>{props.data.title}</label>
+							<Dialog.Description style={{ "width": "300px", "margin-bottom": "10px", "color": "var(--white-hover)" }}>
+								{props.data.message}
+							</Dialog.Description>
+							<Show when={props.data.children}>
+								<div style={{ "display": "flex", "flex-direction": "column", "gap": "5px", "margin-bottom": "10px" }}>
+									{props.data.children}
+								</div>
+							</Show>
+							<div style={{ "display": "flex", "gap": "10px", "width": "100%", "justify-content": "right" }}>
+								<Show when={props.data.buttonFirst}>
+									<button class="card" style={{ width: "100px", height: "30px" }} onClick={() => props.data.buttonFirst!.action()}>
+										{props.data.buttonFirst!.name}
+									</button>
+								</Show>
+								<Show when={props.data.buttonSecond}>
+									<button class="card" style={{ width: "100px", height: "30px" }} onClick={() => props.data.buttonSecond!.action()}>
+										{props.data.buttonSecond!.name}
+									</button>
+								</Show>
+							</div>
+						</Show>
 					</Dialog.Content>
 				</Dialog.Positioner>
 			</Portal>

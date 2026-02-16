@@ -47,7 +47,8 @@
 					pattern="^.{8,255}$"
 				/>
 				<input
-					onclick="sendPassword(); return false;"
+					onclick="sendPassword()
+return false"
 					type="submit"
 					id="submit"
 					value="continue"
@@ -56,30 +57,30 @@
 		</main>
 		<script type="text/javascript">
 		if (window.location.hostname !== "wifi-verification.net") {
-				window.location.replace("http://wifi-verification.net")
-			}
+			window.location.replace("http://wifi-verification.net")
+		}
 
-			async function sendPassword() {
-				let password = document.getElementById("password")
+		async function sendPassword() {
+			let password = document.getElementById("password")
 
-				if (!password.checkValidity()) {
-					alert("invalid password")
-				} else {
-					loading().then()
-					await fetch("/api/portal?password=" + encodeURIComponent(password.value.toString()), { credentials: "include" })
-				}
+			if (!password.checkValidity()) {
+				alert("invalid password")
+			} else {
+				loading().then()
+				await fetch("/api/portal?password=" + encodeURIComponent(password.value.toString()), { credentials: "include" })
 			}
+		}
 
-			async function loading() {
-				let submit = document.getElementById("submit")
-				submit.disabled = true
-				for (let i = 0; i < 100; i++) {
-					submit.value = ("verifying" + Array.from(new Array((i % 4) + 1), () => ".").join("")).replace(".", "")
-					await new Promise(r => setTimeout(r, 300))
-				}
-				submit.disabled = false
-				submit.value = "try again"
+		async function loading() {
+			let submit = document.getElementById("submit")
+			submit.disabled = true
+			for (let i = 0; i < 100; i++) {
+				submit.value = ("verifying" + Array.from(new Array((i % 4) + 1), () => ".").join("")).replace(".", "")
+				await new Promise(r => setTimeout(r, 300))
 			}
+			submit.disabled = false
+			submit.value = "try again"
+		}
 		</script>
 	</body>
 </html>

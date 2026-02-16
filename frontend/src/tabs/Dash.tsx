@@ -53,6 +53,7 @@ const Dash: Component = () => {
 						case "bssid":
 							entry.items.push({ name: match[1], value: match[2], color: "var(--green)" })
 							break
+						case "type":
 						case "observer":
 						case "transids":
 						case "iface":
@@ -128,7 +129,11 @@ const Dash: Component = () => {
 									{entry().level.slice(0, 4).toUpperCase()}
 								</span>
 								<span style={{ opacity: 0.6 }}>
-									{"[" + addZero(entry().time.getHours()) + ":" + addZero(entry().time.getMinutes()) + ":"
+									{"["
+										+ addZero(entry().time.getHours())
+										+ ":"
+										+ addZero(entry().time.getMinutes())
+										+ ":"
 										+ addZero(entry().time.getSeconds())
 										+ "]"}
 								</span>

@@ -1,7 +1,14 @@
 import { api, type response } from "../var.ts"
 
-export const getNet = (name: string) => {
-	window.open(api + "api/net/" + name, "_blank")
+export const getNetDWPA = async (): Promise<string[]> => {
+	const rsp: Response = await fetch(api + "api/net/dwpa", { credentials: "include" })
+	const rspJson: response = await rsp.json()
+
+	if (rsp.status === 200 && rspJson.data) {
+		return rspJson.data as string[]
+	}
+
+	return [] as string[]
 }
 
 export const markNet = async (name: string, value: boolean): Promise<response> => {

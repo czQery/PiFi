@@ -14,11 +14,5 @@ render(() => (
 		<Route path={"settings"} component={Settings} />
 		<Route path={"scan"} component={Scan} />
 		<Route path={"db"} component={DB} />
-		<Route
-			path={"portal"}
-			component={() => {
-				return <div>portal</div>
-			}}
-		/>
 	</Router>
 ), document.getElementById("root")!)

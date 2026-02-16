@@ -1,0 +1,16 @@
+.file {
+	width: 100%;
+	display: flex;
+	gap: 10px;
+	justify-content: space-between;
+}
+
+.file span {
+	margin: auto 0;
+	height: min-content;
+}
+
+.file button {
+	width: 100px;
+	height: 30px;
+}

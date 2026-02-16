@@ -14,6 +14,7 @@ const DB: Component = () => {
 		open: false,
 		title: "Manual",
 		message: "You can submit the data by your self, and then mark them as uploaded.",
+		children: null,
 		buttonFirst: { name: "mark" } as optionButtonData,
 		buttonSecond: { name: "download" } as optionButtonData,
 	})

@@ -11,7 +11,7 @@
         "browserslist": "^4.28.1",
         "fast-sha256": "^1.3.0",
         "lightningcss": "^1.31.1",
-        "lucide-solid": "^0.563.0",
+        "lucide-solid": "^0.564.0",
         "solid-js": "^1.9.11",
       },
       "devDependencies": {
@@ -434,7 +434,7 @@
 
     "lru-cache": ["lru-cache@5.1.1", "", { "dependencies": { "yallist": "^3.0.2" } }, "sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w=="],
 
-    "lucide-solid": ["lucide-solid@0.563.0", "", { "peerDependencies": { "solid-js": "^1.4.7" } }, "sha512-Ort9I6BaKdarM/e0VwWddcd9tuven/y0wHqfXIPNzPPe3zwXtIZJDjR2UcAj2XBCfx1aHw/SWiLHPvn9O1Fniw=="],
+    "lucide-solid": ["lucide-solid@0.564.0", "", { "peerDependencies": { "solid-js": "^1.4.7" } }, "sha512-gZdibdRlnooRdKek2zhNGnep/N5TSlOSMWgUXiVtglys728zLLRupyaI7IfZ3USS/p6MG5eu2RKM2CARRYiXVg=="],
 
     "magic-string": ["magic-string@0.30.21", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.5" } }, "sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ=="],
 
