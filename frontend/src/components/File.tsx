@@ -1,16 +1,22 @@
 import "./File.css"
-import type { Component } from "solid-js"
+import { type Component, Show } from "solid-js"
 
 interface fileProps {
 	name: string
+	detail?: string
+	icon: Element | null
 	link: string
 }
 
 const File: Component<fileProps> = props => {
 	return (
 		<div class="file">
+			<Show when={props.icon} children={props.icon} />
 			<span>{props.name}</span>
-			<button class="file-button card green" onclick={() => window.open(props.link, "_blank")}>download</button>
+			<Show when={props.detail}>
+				<span style={{ color: "var(--white-hover)" }}>{props.detail}</span>
+			</Show>
+			<button class="file-button card" onclick={() => window.open(props.link, "_blank")}>download</button>
 		</div>
 	)
 }

@@ -1,9 +1,10 @@
-import {type Component, createSignal, For, type JSXElement, onMount, Show} from "solid-js"
-import type {dbNetData} from "../lib/api/db.ts"
-import {getNetDWPA, markNet, upNet} from "../lib/api/net.ts"
-import {api, type response} from "../lib/var.ts"
+import { LucideFile, LucideFileCheck } from "lucide-solid"
+import { type Component, createSignal, For, type JSXElement, onMount, Show } from "solid-js"
+import type { dbNetData } from "../lib/api/db.ts"
+import { getNetDWPA, markNet, type netDWPAData, upNet } from "../lib/api/net.ts"
+import { api, type response } from "../lib/var.ts"
 import File from "./File.tsx"
-import type {optionButtonData} from "./Option.tsx"
+import type { optionButtonData } from "./Option.tsx"
 
 interface netProps {
 	name: string
@@ -15,7 +16,7 @@ interface netProps {
 }
 
 const Net: Component<netProps> = props => {
-	const [dataDWPA, setDataDWPA] = createSignal<string[]>([])
+	const [dataDWPA, setDataDWPA] = createSignal<netDWPAData[]>([] as netDWPAData[])
 
 	onMount(async () => {
 		setDataDWPA(await getNetDWPA())
@@ -47,7 +48,18 @@ const Net: Component<netProps> = props => {
 								children: ((): Element | null => {
 									switch (props.name.toLowerCase()) {
 										case "dwpa":
-											return <For each={dataDWPA()}>{(file, _) => <File name={file} link={api + "api/cap/" + file} />}</For> as Element
+											return (
+												<For each={dataDWPA() as netDWPAData[]}>
+													{(ap, _) => (
+														<File
+															icon={(ap.net ? <LucideFileCheck /> : <LucideFile />) as Element}
+															name={ap.ssid}
+															detail={"[" + ap.bssid + "]"}
+															link={api + "api/cap/" + ap.file}
+														/>
+													)}
+												</For>
+											) as Element
 										default:
 											return null
 									}
@@ -62,6 +74,12 @@ const Net: Component<netProps> = props => {
 										if (rsp.message != "") {
 											props.setLoading({ title: "Marking", pending: true, msg: rsp.message })
 											return
+										}
+
+										switch (props.name.toLowerCase()) {
+											case "dwpa":
+												setDataDWPA(await getNetDWPA())
+												break
 										}
 
 										props.setLoading({ title: "Marking", pending: false, msg: "" })

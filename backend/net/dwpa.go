@@ -2,12 +2,20 @@ package net
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"strings"
+
+	"github.com/czQery/PiFi/backend/db"
 )
 
-func DWPAGet() []string {
+type Handshake struct {
+	File  string `json:"file"`
+	BSSID string `json:"bssid"`
+	SSID  string `json:"ssid"`
+	Net   bool   `json:"net"`
+}
+
+func DWPAGet(ctx context.Context) []Handshake {
 	dir, dirErr := os.ReadDir("./cap")
 	if dirErr != nil {
 		return nil
@@ -45,9 +53,17 @@ func DWPAGet() []string {
 		bssids = append(bssids, strings.Join(octets, ":"))
 	}
 
-	fmt.Println(bssids)
+	list := db.SelectAPInList(ctx, "bssid", bssids)
+	var handshakes []Handshake
+	for _, ap := range list {
+		for i, bssid := range bssids {
+			if bssid == ap.BSSID {
+				handshakes = append(handshakes, Handshake{File: files[i], BSSID: ap.BSSID, SSID: ap.SSID, Net: ap.DWPA})
+			}
+		}
+	}
 
-	return files
+	return handshakes
 }
 
 func DWPAUpload(ctx context.Context) error {

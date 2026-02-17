@@ -1,16 +1,22 @@
 .file {
 	width: 100%;
 	display: flex;
-	gap: 10px;
-	justify-content: space-between;
+	gap: 5px;
+}
+
+.file svg {
+	margin-block: auto;
+	height: 20px;
+	width: 20px;
 }
 
 .file span {
-	margin: auto 0;
+	margin-block: auto;
 	height: min-content;
 }
 
 .file button {
+	margin-left: auto;
 	width: 100px;
 	height: 30px;
 }

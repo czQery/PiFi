@@ -21,10 +21,18 @@ func NetPatch(c *fiber.Ctx) error {
 			_, list = net.WigleGet(c.Context(), true)
 		case "beacondb":
 		case "dwpa":
+			list = []string{}
+			for _, ap := range net.DWPAGet(c.Context()) {
+				list = append(list, ap.BSSID)
+			}
 		}
 	}
 
-	db.UpdateAPNet(c.Context(), c.Query("net"), value, list)
+	if len(list) == 0 || list[0] == "" {
+		return c.Status(200).JSON(Response{Message: "success"})
+	}
+
+	db.UpdateAPNet(c.Context(), netParam, value, list)
 	return c.Status(200).JSON(Response{Message: "success"})
 }
 
@@ -53,5 +61,5 @@ func WigleGet(c *fiber.Ctx) error {
 }
 
 func DWPAGet(c *fiber.Ctx) error {
-	return c.Status(200).JSON(Response{Message: "success", Data: net.DWPAGet()})
+	return c.Status(200).JSON(Response{Message: "success", Data: net.DWPAGet(c.Context())})
 }

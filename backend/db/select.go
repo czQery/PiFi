@@ -86,7 +86,7 @@ func SelectAPInList(ctx context.Context, id string, list []string) []DataAP {
 
 	listJson, _ := json.Marshal(list)
 	var data []DataAP
-	err = sqlitex.Execute(conn, "SELECT ap WHERE "+id+" IN (SELECT value FROM json_each(?));", &sqlitex.ExecOptions{
+	err = sqlitex.Execute(conn, "SELECT * FROM ap  WHERE "+id+" IN (SELECT value FROM json_each(?));", &sqlitex.ExecOptions{
 		Args: []interface{}{
 			listJson,
 		},

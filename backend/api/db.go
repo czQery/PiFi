@@ -24,12 +24,19 @@ func DB(c *fiber.Ctx) error {
 	var (
 		aps = int64(len(data))
 
+		newDWPA int64
+
 		netWigle    int64
 		netBeacondb int64
 		netDwpa     int64
 	)
 
-	_, dbWigle := net.WigleGet(c.Context(), true)
+	_, newWigle := net.WigleGet(c.Context(), true)
+	for _, ap := range net.DWPAGet(c.Context()) {
+		if !ap.Net {
+			newDWPA++
+		}
+	}
 
 	for _, ap := range data {
 		if ap.Wigle {
@@ -48,7 +55,7 @@ func DB(c *fiber.Ctx) error {
 	return c.Status(200).JSON(Response{Message: "success", Data: DBResponse{
 		APs: aps,
 		Wigle: DBNetResponse{
-			New: int64(len(dbWigle)),
+			New: int64(len(newWigle)),
 			Net: netWigle,
 		},
 		BeaconDB: DBNetResponse{
@@ -56,7 +63,7 @@ func DB(c *fiber.Ctx) error {
 			Net: netBeacondb,
 		},
 		DWPA: DBNetResponse{
-			New: 0,
+			New: newDWPA,
 			Net: netDwpa,
 		},
 	}})
