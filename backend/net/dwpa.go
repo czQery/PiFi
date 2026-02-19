@@ -2,10 +2,15 @@ package net
 
 import (
 	"context"
+	"errors"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/czQery/PiFi/backend/db"
+	"github.com/czQery/PiFi/backend/hp"
+	"github.com/imroc/req/v3"
+	"github.com/sirupsen/logrus"
 )
 
 type Handshake struct {
@@ -67,5 +72,39 @@ func DWPAGet(ctx context.Context) []Handshake {
 }
 
 func DWPAUpload(ctx context.Context) error {
+	if hp.Config.Get("net.dwpa") == nil {
+		return errors.New("upload failed: missing dwpa key")
+	}
+
+	key := hp.Config.Get("net.dwpa").(string)
+
+	logrus.WithFields(logrus.Fields{
+		"key": key,
+	}).Debug("net - dwpa upload")
+
+	list := DWPAGet(ctx)
+	var bssids []string
+	for _, ap := range list {
+		if ap.Net {
+			continue
+		}
+
+		up, upErr := req.SetHeader("Cookie", "key="+key).SetFile("file", "./cap/"+ap.File).Post("https://wpa-sec.stanev.org/?submit=")
+		if upErr != nil {
+			return upErr
+		}
+
+		if up.StatusCode != 200 {
+			return errors.New("upload failed: code " + strconv.Itoa(up.StatusCode))
+		}
+
+		bssids = append(bssids, ap.BSSID)
+
+		logrus.WithFields(logrus.Fields{
+			"file": ap.File,
+		}).Info("net - dwpa successfully uploaded")
+	}
+
+	db.UpdateAPNet(ctx, "dwpa", true, bssids)
 	return nil
 }

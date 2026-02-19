@@ -107,11 +107,7 @@ func WigleUpload(ctx context.Context) error {
 		"transids": strings.Join(transids, ","),
 	}).Info("net - wigle successfully uploaded")
 
-	WigleMark(ctx, true, list)
+	db.UpdateAPNet(ctx, "wigle", true, list)
 
 	return nil
-}
-
-func WigleMark(ctx context.Context, value bool, list []string) {
-	db.UpdateAPNet(ctx, "wigle", value, list)
 }

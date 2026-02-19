@@ -56,6 +56,7 @@ const Dash: Component = () => {
 						case "type":
 						case "observer":
 						case "transids":
+						case "file":
 						case "iface":
 							entry.items.push({ name: match[1], value: match[2], color: "var(--blue)" })
 							break

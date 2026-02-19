@@ -19,7 +19,11 @@ const Net: Component<netProps> = props => {
 	const [dataDWPA, setDataDWPA] = createSignal<netDWPAData[]>([] as netDWPAData[])
 
 	onMount(async () => {
-		setDataDWPA(await getNetDWPA())
+		switch (props.name.toLowerCase()) {
+			case "dwpa":
+				setDataDWPA(await getNetDWPA())
+				break
+		}
 	})
 
 	return (
@@ -106,6 +110,12 @@ const Net: Component<netProps> = props => {
 							if (rsp.message != "") {
 								props.setLoading({ title: "Uploading", pending: true, msg: rsp.message })
 								return
+							}
+
+							switch (props.name.toLowerCase()) {
+								case "dwpa":
+									setDataDWPA(await getNetDWPA())
+									break
 							}
 
 							props.setLoading({ title: "Uploading", pending: false, msg: "" })
