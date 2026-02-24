@@ -90,6 +90,7 @@ func main() {
 	time.Sleep(time.Second * 5)
 
 	nmInit()
+	go Timer()
 
 	r := fiber.New(fiber.Config{
 		CaseSensitive:         false,
@@ -140,6 +141,10 @@ func main() {
 
 	rAPI.Get("/net/wigle", api.WigleGet)
 	rAPI.Get("/net/dwpa", api.DWPAGet)
+
+	rAPI.Get("/attack/deauth", api.DeauthGet)
+	rAPI.Post("/attack/deauth", api.DeauthPost)
+	rAPI.Delete("/attack/deauth", api.DeauthDelete)
 
 	rAPI.Get("/cap/:file", func(c *fiber.Ctx) error {
 		return c.SendFile("./cap/" + c.Params("file"))

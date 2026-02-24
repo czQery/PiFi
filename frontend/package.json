@@ -9,13 +9,13 @@
 		"serve": "vite preview"
 	},
 	"dependencies": {
-		"@ark-ui/solid": "^5.31.0",
+		"@ark-ui/solid": "^5.32.0",
 		"@solidjs/router": "^0.15.4",
-		"@types/node": "^25.2.3",
+		"@types/node": "^25.3.0",
 		"browserslist": "^4.28.1",
 		"fast-sha256": "^1.3.0",
 		"lightningcss": "^1.31.1",
-		"lucide-solid": "^0.564.0",
+		"lucide-solid": "^0.575.0",
 		"solid-js": "^1.9.11"
 	},
 	"devDependencies": {

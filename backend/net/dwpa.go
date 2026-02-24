@@ -83,13 +83,14 @@ func DWPAUpload(ctx context.Context) error {
 	}).Debug("net - dwpa upload")
 
 	list := DWPAGet(ctx)
+	cl := req.NewClient()
 	var bssids []string
 	for _, ap := range list {
 		if ap.Net {
 			continue
 		}
 
-		up, upErr := req.SetHeader("Cookie", "key="+key).SetFile("file", "./cap/"+ap.File).Post("https://wpa-sec.stanev.org/?submit=")
+		up, upErr := cl.R().SetHeader("Cookie", "key="+key).SetFile("file", "./cap/"+ap.File).Post("https://wpa-sec.stanev.org/?submit=")
 		if upErr != nil {
 			return upErr
 		}

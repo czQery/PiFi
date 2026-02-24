@@ -66,3 +66,7 @@ NetworkManager: (this isn't really needed idk why i put it here)
 
 - https://www.davidpilling.com/wiki/index.php/GPS
 - https://austinsnerdythings.com/2025/02/14/revisiting-microsecond-accurate-ntp-for-raspberry-pi-with-gps-pps-in-2025/
+
+```bash
+git ls-files '*.go' '*.js' '*.jsx' '*.ts' '*.tsx' '*.md' '*.css' '*.html' | xargs wc -l
+```

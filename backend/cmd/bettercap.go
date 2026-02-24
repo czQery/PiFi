@@ -41,7 +41,7 @@ func InitBettercap() {
 
 					logrus.WithFields(logrus.Fields{
 						"iface": iface,
-					}).Info("cmd - bettercap recovering monitor")
+					}).Info("cmd - recovering bettercap monitor")
 
 					err := SetBettercapMonitor(iface)
 					if err != nil {
@@ -81,7 +81,7 @@ func InitBettercap() {
 				// TODO: Create parser for this event
 				logrus.WithFields(logrus.Fields{
 					"data": data,
-				}).Debug("cmd - bettercap deauth detected")
+				}).Debug("cmd - deauth detected")
 			case "wifi.client.handshake":
 				bssid, ssid, capType := hp.ParseHandshake(data)
 				if bssid == "" {
@@ -92,7 +92,7 @@ func InitBettercap() {
 					"bssid": bssid,
 					"ssid":  ssid,
 					"type":  capType,
-				}).Info("cmd - bettercap handshake captured")
+				}).Info("cmd - handshake captured")
 			case "wifi.client.probe":
 				bssid, ssid, rssi := hp.ParseProbe(data)
 				if bssid == "" {
@@ -103,7 +103,7 @@ func InitBettercap() {
 					"bssid": bssid,
 					"ssid":  ssid,
 					"rssi":  rssi,
-				}).Debug("cmd - bettercap probe detected")
+				}).Debug("cmd - probe detected")
 			case "wifi.ap.new":
 				bssid, ssid, rssi := hp.ParseAP(data)
 				if bssid == "" {
@@ -114,14 +114,14 @@ func InitBettercap() {
 					"bssid": bssid,
 					"ssid":  ssid,
 					"rssi":  rssi,
-				}).Debug("cmd - bettercap ap detected")
+				}).Debug("cmd - ap detected")
 
 				details, detailsErr := GetBettercapAP(bssid)
 				if detailsErr != nil {
 					logrus.WithFields(logrus.Fields{
 						"bssid": bssid,
 						"err":   detailsErr,
-					}).Warn("cmd - bettercap ap get details failed")
+					}).Warn("cmd - ap get details failed")
 				}
 
 				auth := details.Get("authentication").String()
@@ -171,7 +171,7 @@ func InitBettercap() {
 
 func SetBettercap(cmd string) error {
 	body := "{\"cmd\":\"" + cmd + "\"}"
-	_, err := req.SetBodyJsonString(body).Post(BC + "/api/session")
+	_, err := req.NewClient().R().SetBodyJsonString(body).Post(BC + "/api/session")
 	if err != nil {
 		return err
 	}
@@ -190,7 +190,7 @@ func DisableBettercapMonitor() error {
 }
 
 func GetBettercapAP(bssid string) (gjson.Result, error) {
-	rsp, err := req.Get(BC + "/api/session/wifi")
+	rsp, err := req.NewClient().R().Get(BC + "/api/session/wifi")
 	if err != nil {
 		return gjson.Result{}, err
 	}

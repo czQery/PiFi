@@ -84,7 +84,7 @@ func WigleUpload(ctx context.Context) error {
 
 	payload, list := WigleGet(ctx, false)
 
-	up, err := req.SetHeader("Authorization", token).SetFormData(map[string]string{"donate": "on"}).SetFileBytes("file", name, []byte(payload)).Post("https://api.wigle.net/api/v2/file/upload")
+	up, err := req.NewClient().R().SetHeader("Authorization", token).SetFormData(map[string]string{"donate": "on"}).SetFileBytes("file", name, []byte(payload)).Post("https://api.wigle.net/api/v2/file/upload")
 	if err != nil {
 		return err
 	}
