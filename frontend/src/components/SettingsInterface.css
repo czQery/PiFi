@@ -22,7 +22,7 @@
 	width: 30px;
 }
 
-.settings-iface-hotspot, .settings-iface-client {
+.settings-iface-hotspot, .settings-iface-client, .settings-iface-monitor {
 	display: flex;
 	gap: 10px;
 	flex-wrap: wrap;

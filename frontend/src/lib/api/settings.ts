@@ -3,6 +3,9 @@ import { api } from "../var.ts"
 
 export interface settingsData {
 	iface: settingsInterfaceData
+	hotspot: settingsHotspotData
+	client: settingsClientData
+	monitor: settingsMonitorData
 }
 
 export interface settingsInterfaceData {
@@ -12,11 +15,24 @@ export interface settingsInterfaceData {
 export interface settingsInterfaceFieldsData {
 	mode: string
 	ready: boolean
+}
+
+export interface settingsHotspotData {
 	ssid: string
 	password: string
 	channel: number
 	portal: boolean
 	portal_source: string
+}
+
+export interface settingsClientData {
+	ssid: string
+	password: string
+}
+
+export interface settingsMonitorData {
+	deauth: boolean
+	assoc: boolean
 }
 
 export const getSettings = async (): Promise<settingsData> => {
@@ -27,7 +43,7 @@ export const getSettings = async (): Promise<settingsData> => {
 		return rspJson.data as settingsData
 	}
 
-	return { iface: {} }
+	return { iface: {} } as settingsData
 }
 
 export const saveSettings = async (data: settingsData): Promise<response> => {
@@ -40,5 +56,5 @@ export const saveSettings = async (data: settingsData): Promise<response> => {
 		return { message: "", data: rspJson.data as settingsData }
 	}
 
-	return { message: rspJson.message, data: { iface: {} } }
+	return { message: rspJson.message, data: { iface: {} } as settingsData }
 }

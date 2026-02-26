@@ -1,59 +1,46 @@
 import type { ListCollection } from "@ark-ui/solid"
 import { Checkbox, createListCollection, Field, NumberInput, Select } from "@ark-ui/solid"
-import type { Component } from "solid-js"
-import { createEffect, createSignal, Show } from "solid-js"
+import { type Accessor, type Component, Show } from "solid-js"
 import { Index, Portal } from "solid-js/web"
 
-import type { settingsInterfaceFieldsData } from "../lib/api/settings.ts"
+import type { settingsData } from "../lib/api/settings.ts"
 
 import "./SettingsInterface.css"
 
 import { LucideUnplug } from "lucide-solid"
-import { portals, setSettingsInterfaceClient, setSettingsInterfaceHotspot, settingsInterfaceClient, settingsInterfaceHotspot } from "../tabs/Settings.tsx"
+import { produce, type SetStoreFunction } from "solid-js/store"
+import { portals, settingsModes } from "../tabs/Settings.tsx"
 
 interface settingsInterfaceProps {
 	name: string
-	iface: settingsInterfaceFieldsData
+	settings: settingsData
+	setSettings: SetStoreFunction<settingsData>
+	settingsModes: Accessor<string[]>
 }
 
 const SettingsInterface: Component<settingsInterfaceProps> = props => {
 	const portalsCollection: ListCollection<string> = createListCollection({ items: portals() })
-	const [portal, setPortal] = createSignal<boolean>(props.iface.portal)
-	const [portalSource, setPortalSource] = createSignal<string>(props.iface.portal_source ? props.iface.portal_source : portalsCollection.items[0])
-
 	const modesCollection: ListCollection<string> = createListCollection({ items: ["none", "hotspot", "client", "monitor"] })
-	const [mode, setMode] = createSignal<string>(props.iface.mode ? props.iface.mode : modesCollection.items[0])
-
-	const [channel, setChannel] = createSignal<number>(props.iface.channel === 0 || props.iface.channel > 14 ? 1 : props.iface.channel)
-
-	createEffect(() => {
-		props.iface.mode = mode()
-		props.iface.portal = portal()
-		props.iface.portal_source = portalSource()
-		props.iface.channel = channel()
-
-		if (mode() !== "client" && settingsInterfaceClient() == props.name) setSettingsInterfaceClient("")
-		if (mode() !== "hotspot" && settingsInterfaceHotspot() == props.name) setSettingsInterfaceHotspot("")
-
-		switch (mode()) {
-			case "hotspot":
-				setSettingsInterfaceHotspot(props.name)
-				break
-			case "client":
-				setSettingsInterfaceClient(props.name)
-				break
-		}
-	})
 
 	return (
 		<div class="settings-iface card">
 			<div class="settings-iface-title">
 				<h2>{props.name}</h2>
-				<Show when={!props.iface.ready}>
+				<Show when={!props.settings.iface[props.name].ready}>
 					<LucideUnplug class="card" />
 				</Show>
 			</div>
-			<Select.Root required={true} immediate={true} value={[mode()]} onValueChange={e => setMode(e.value[0])} collection={modesCollection}>
+			<Select.Root
+				required={true}
+				immediate={true}
+				value={[props.settings.iface[props.name].mode]}
+				onValueChange={e => {
+					props.setSettings(produce(state => {
+						state.iface[props.name].mode = e.value[0]
+					}))
+				}}
+				collection={modesCollection}
+			>
 				<Select.Label>Mode</Select.Label>
 				<Select.Control>
 					<Select.Trigger>
@@ -68,8 +55,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 								<Index each={modesCollection.items}>
 									{item => (
 										<Show
-											when={(settingsInterfaceHotspot() === props.name || settingsInterfaceHotspot() === "" || item() !== "hotspot")
-												&& (settingsInterfaceClient() === props.name || settingsInterfaceClient() === "" || item() !== "client")}
+											when={!settingsModes().includes(item()) || props.settings.iface[props.name].mode === item()}
 											fallback={
 												/*@ts-ignore*/
 
@@ -91,19 +77,44 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 					</Select.Positioner>
 				</Portal>
 			</Select.Root>
-			<Show when={mode() === "hotspot"}>
+			<Show when={props.settings.iface[props.name].mode === "hotspot"}>
 				<div class="settings-iface-hotspot">
 					<Field.Root>
 						<Field.Label>SSID</Field.Label>
-						<Field.Input placeholder={"PiFi"} value={props.iface.ssid} onInput={e => (props.iface.ssid = e.currentTarget.value)} />
+						<Field.Input
+							placeholder={"PiFi"}
+							value={props.settings.hotspot.ssid}
+							onInput={e => {
+								props.setSettings(produce(state => {
+									state.hotspot.ssid = e.currentTarget.value
+								}))
+							}}
+						/>
 						<Field.ErrorText>Error Info</Field.ErrorText>
 					</Field.Root>
 					<Field.Root>
 						<Field.Label>Password</Field.Label>
-						<Field.Input placeholder={"none"} value={props.iface.password} onInput={e => (props.iface.password = e.currentTarget.value)} />
+						<Field.Input
+							placeholder={"none"}
+							value={props.settings.hotspot.password}
+							onInput={e => {
+								props.setSettings(produce(state => {
+									state.hotspot.password = e.currentTarget.value
+								}))
+							}}
+						/>
 						<Field.ErrorText>Error Info</Field.ErrorText>
 					</Field.Root>
-					<NumberInput.Root value={channel().toString()} min={1} max={14} onValueChange={e => (setChannel(e.valueAsNumber))}>
+					<NumberInput.Root
+						value={props.settings.hotspot.channel.toString()}
+						min={1}
+						max={14}
+						onValueChange={e => {
+							props.setSettings(produce(state => {
+								state.hotspot.channel = e.valueAsNumber
+							}))
+						}}
+					>
 						<NumberInput.Label>Channel</NumberInput.Label>
 						<NumberInput.Input />
 						<NumberInput.Control>
@@ -113,7 +124,14 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 					</NumberInput.Root>
 				</div>
 				<div class="settings-iface-hotspot">
-					<Checkbox.Root checked={portal()} onCheckedChange={e => (setPortal(e.checked as boolean))}>
+					<Checkbox.Root
+						checked={props.settings.hotspot.portal}
+						onCheckedChange={e => {
+							props.setSettings(produce(state => {
+								state.hotspot.portal = e.checked as boolean
+							}))
+						}}
+					>
 						<Checkbox.Label>Portal</Checkbox.Label>
 						<Checkbox.Control>
 							<div>
@@ -126,8 +144,12 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 					<Select.Root
 						required={true}
 						immediate={true}
-						value={[portalSource()]}
-						onValueChange={e => setPortalSource(e.value[0])}
+						value={[props.settings.hotspot.portal_source]}
+						onValueChange={e => {
+							props.setSettings(produce(state => {
+								state.hotspot.portal_source = e.value[0]
+							}))
+						}}
 						collection={portalsCollection}
 					>
 						<Select.Label>Portal source</Select.Label>
@@ -155,18 +177,73 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 					</Select.Root>
 				</div>
 			</Show>
-			<Show when={mode() === "client"}>
+			<Show when={props.settings.iface[props.name].mode === "client"}>
 				<div class="settings-iface-client">
 					<Field.Root>
 						<Field.Label>SSID</Field.Label>
-						<Field.Input placeholder={"PiFi"} value={props.iface.ssid} onInput={e => (props.iface.ssid = e.currentTarget.value)} />
+						<Field.Input
+							placeholder={"PiFi"}
+							value={props.settings.client.ssid}
+							onInput={e => {
+								props.setSettings(produce(state => {
+									state.client.ssid = e.currentTarget.value
+								}))
+							}}
+						/>
 						<Field.ErrorText>Error Info</Field.ErrorText>
 					</Field.Root>
 					<Field.Root>
 						<Field.Label>Password</Field.Label>
-						<Field.Input placeholder={"none"} value={props.iface.password} onInput={e => (props.iface.password = e.currentTarget.value)} />
+						<Field.Input
+							placeholder={"none"}
+							value={props.settings.client.password}
+							onInput={e => {
+								props.setSettings(produce(state => {
+									state.client.password = e.currentTarget.value
+								}))
+							}}
+						/>
 						<Field.ErrorText>Error Info</Field.ErrorText>
 					</Field.Root>
+				</div>
+			</Show>
+
+			<Show when={props.settings.iface[props.name].mode === "monitor"}>
+				<div class="settings-iface-monitor">
+					<Checkbox.Root
+						checked={props.settings.monitor.deauth}
+						onCheckedChange={e => {
+							props.setSettings(produce(state => {
+								state.monitor.deauth = e.checked as boolean
+							}))
+						}}
+					>
+						<Checkbox.Label>Deauth</Checkbox.Label>
+						<Checkbox.Control>
+							<div>
+								<span></span>
+								<div></div>
+							</div>
+						</Checkbox.Control>
+						<Checkbox.HiddenInput />
+					</Checkbox.Root>
+					<Checkbox.Root
+						checked={props.settings.monitor.assoc}
+						onCheckedChange={e => {
+							props.setSettings(produce(state => {
+								state.monitor.assoc = e.checked as boolean
+							}))
+						}}
+					>
+						<Checkbox.Label>Assoc</Checkbox.Label>
+						<Checkbox.Control>
+							<div>
+								<span></span>
+								<div></div>
+							</div>
+						</Checkbox.Control>
+						<Checkbox.HiddenInput />
+					</Checkbox.Root>
 				</div>
 			</Show>
 		</div>
