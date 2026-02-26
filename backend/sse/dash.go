@@ -7,7 +7,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/czQery/PiFi/backend/api"
 	"github.com/czQery/PiFi/backend/cmd"
 	"github.com/czQery/PiFi/backend/hp"
 	"github.com/gofiber/fiber/v2"
@@ -90,19 +89,6 @@ func DashLog(line []byte) {
 func getStats(cpuLast *cpu.Stats) (responseStats, *cpu.Stats) {
 	var data responseStats
 
-	iface := make(map[string]api.SettingsInterfaceResponse)
-	err := hp.Config.Unmarshal("settings.iface", &iface)
-	if err != nil {
-		return data, nil
-	}
-
-	var hotspotSSID string
-	for _, i := range iface {
-		if i.Mode == "hotspot" {
-			hotspotSSID = i.SSID
-		}
-	}
-
 	memNow, err := memory.Get()
 	if err != nil {
 		return data, nil
@@ -117,7 +103,7 @@ func getStats(cpuLast *cpu.Stats) (responseStats, *cpu.Stats) {
 		MemTotal: memNow.Total,
 		MemUsed:  memNow.Used,
 		Hotspot: responseStatsHotspot{
-			SSID:   hotspotSSID,
+			SSID:   cmd.Hotspot,
 			Portal: cmd.Portal != "",
 		},
 		GPS: cmd.GPS,

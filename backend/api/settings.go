@@ -14,12 +14,13 @@ import (
 )
 
 type SettingsResponse struct {
+	Hotspot   SettingsHotspotResponse              `json:"hotspot"`
+	Client    SettingsClientResponse               `json:"client"`
+	Monitor   SettingsMonitorResponse              `json:"monitor"`
 	Interface map[string]SettingsInterfaceResponse `json:"iface" mapstructure:"iface" koanf:"iface"`
 }
 
-type SettingsInterfaceResponse struct {
-	Mode         string `json:"mode"`
-	Ready        bool   `json:"ready"`
+type SettingsHotspotResponse struct {
 	SSID         string `json:"ssid"`
 	Password     string `json:"password"`
 	Channel      int    `json:"channel"`
@@ -27,14 +28,29 @@ type SettingsInterfaceResponse struct {
 	PortalSource string `json:"portal_source" mapstructure:"portal_source" koanf:"portal_source"`
 }
 
+type SettingsClientResponse struct {
+	SSID     string `json:"ssid"`
+	Password string `json:"password"`
+}
+
+type SettingsMonitorResponse struct {
+	Deauth bool `json:"deauth"`
+	Assoc  bool `json:"assoc"`
+}
+
+type SettingsInterfaceResponse struct {
+	Mode  string `json:"mode"`
+	Ready bool   `json:"ready"`
+}
+
 func SettingsGet(c *fiber.Ctx) error {
-	iface := make(map[string]SettingsInterfaceResponse)
-	err := hp.Config.Unmarshal("settings.iface", &iface)
+	var settings SettingsResponse
+	err := hp.Config.Unmarshal("settings", &settings)
 	if err != nil {
 		return &Error{Code: 500, Func: "api/settings", Err: err}
 	}
 
-	return c.Status(200).JSON(Response{Message: "success", Data: SettingsResponse{Interface: iface}})
+	return c.Status(200).JSON(Response{Message: "success", Data: settings})
 }
 
 func SettingsPost(c *fiber.Ctx) error {
@@ -57,46 +73,30 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 	var (
 		err error
 
-		modeHotspot bool
-		modeClient  bool
-		modeMonitor bool
-
-		modeHotspotLast bool
-		modeClientLast  bool
-		modeMonitorLast bool
+		modes     = make(map[string]struct{})
+		modesLast = make(map[string]struct{})
 	)
+
+	var settingsSaved SettingsResponse
+	configErr := mapstructure.Decode(hp.Config.Get("settings"), &settingsSaved)
+	if configErr != nil {
+		return errors.New("config read: " + configErr.Error())
+	}
+
+	for _, iface := range settingsSaved.Interface {
+		modesLast[iface.Mode] = struct{}{}
+	}
+
+	for _, iface := range settings.Interface {
+		if _, ok := modes[iface.Mode]; ok {
+			return &Error{Code: 400, Func: "api/settings", Message: "duplicit mode"}
+		}
+
+		modes[iface.Mode] = struct{}{}
+	}
 
 	for ifaceName, iface := range settings.Interface {
 		if !iface.Ready {
-			continue
-		}
-
-		var config SettingsInterfaceResponse
-		configErr := mapstructure.Decode(hp.Config.Get("settings.iface."+ifaceName), &config)
-		if configErr != nil {
-			return errors.New("config read: " + configErr.Error())
-		}
-
-		switch strings.ToLower(config.Mode) {
-		case "hotspot":
-			modeHotspotLast = true
-		case "client":
-			modeClientLast = true
-		case "monitor":
-			modeMonitorLast = true
-		}
-
-		switch strings.ToLower(iface.Mode) {
-		case "hotspot":
-			modeHotspot = true
-		case "client":
-			modeClient = true
-		case "monitor":
-			modeMonitor = true
-		}
-
-		// skip if the interface is unchanged
-		if !force && config == iface {
 			continue
 		}
 
@@ -116,39 +116,61 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 
 		switch strings.ToLower(iface.Mode) {
 		case "hotspot":
-			if iface.Portal {
-				cmd.Portal = iface.PortalSource
+			if !force && settingsSaved.Hotspot == settingsSaved.Hotspot {
+				continue
+			}
+
+			if settings.Hotspot.Portal {
+				cmd.Portal = settings.Hotspot.PortalSource
 			} else {
 				cmd.Portal = ""
 			}
+
+			if settings.Hotspot.SSID == "" {
+				settings.Hotspot.SSID = cmd.Con
+			}
+			if settings.Hotspot.Channel == 0 {
+				settings.Hotspot.Channel = 1
+			}
+
+			cmd.Hotspot = settings.Hotspot.SSID
+
 			logrus.WithFields(logrus.Fields{
 				"iface":    ifaceName,
-				"ssid":     iface.SSID,
-				"channel":  iface.Channel,
-				"password": iface.Password,
+				"ssid":     settings.Hotspot.SSID,
+				"channel":  settings.Hotspot.Channel,
+				"password": settings.Hotspot.Password,
 				"portal":   cmd.Portal,
 			}).Info("cmd - setting up hotspot")
-			err = cmd.SetHotspot(ifaceName, iface.SSID, strconv.Itoa(iface.Channel), iface.Password)
+			err = cmd.SetHotspot(ifaceName, settings.Hotspot.SSID, strconv.Itoa(settings.Hotspot.Channel), settings.Hotspot.Password)
 			if err != nil && !force {
 				return errors.New("set hotspot: " + err.Error())
 			}
 		case "client":
+			if !force && settingsSaved.Client == settingsSaved.Client {
+				continue
+			}
+
 			logrus.WithFields(logrus.Fields{
 				"iface":    ifaceName,
-				"ssid":     iface.SSID,
-				"password": iface.Password,
+				"ssid":     settings.Client.SSID,
+				"password": settings.Client.Password,
 			}).Info("cmd - connecting to wifi")
-			err = cmd.SetClient(ifaceName, iface.SSID, iface.Password)
+			err = cmd.SetClient(ifaceName, settings.Client.SSID, settings.Client.Password)
 			if err != nil && !force {
 				logrus.WithFields(logrus.Fields{
 					"iface":    ifaceName,
-					"ssid":     config.SSID,
-					"password": config.Password,
+					"ssid":     settings.Client.SSID,
+					"password": settings.Client.Password,
 				}).Info("cmd - connecting to fallback wifi")
-				_ = cmd.SetClient(ifaceName, config.SSID, config.Password) // fallback to previously saved wifi
+				_ = cmd.SetClient(ifaceName, settings.Client.SSID, settings.Client.Password) // fallback to previously saved wifi
 				return &Error{Code: 400, Func: "api/settings/client", Err: err, Message: err.Error()}
 			}
 		case "monitor":
+			if !force && settingsSaved.Monitor == settingsSaved.Monitor {
+				continue
+			}
+
 			logrus.WithFields(logrus.Fields{
 				"iface": ifaceName,
 			}).Info("cmd - setting up bettercap monitor")
@@ -159,20 +181,22 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 		}
 	}
 
-	if !modeHotspot {
-		if modeHotspotLast {
+	if _, ok := modes["hotspot"]; !ok {
+		if _, ok = modesLast["hotspot"]; ok {
 			logrus.Info("cmd - disabling hotspot")
 		}
+		cmd.Hotspot = ""
+		cmd.Portal = ""
 		_ = cmd.DisableHotspot()
 	}
-	if !modeClient {
-		if modeClientLast {
+	if _, ok := modes["client"]; !ok {
+		if _, ok = modesLast["client"]; ok {
 			logrus.Info("cmd - disabling client")
 		}
 		_ = cmd.DisableClient()
 	}
-	if !modeMonitor {
-		if modeMonitorLast {
+	if _, ok := modes["monitor"]; !ok {
+		if _, ok = modesLast["monitor"]; ok {
 			logrus.Info("cmd - disabling bettercap monitor")
 		}
 		_ = cmd.DisableBettercapMonitor()

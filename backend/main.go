@@ -227,8 +227,9 @@ func main() {
 
 func nmInit() {
 	var (
-		initHotspot    bool
-		initHotspotErr error
+		initHotspot         bool
+		initHotspotSettings map[string]interface{}
+		initHotspotErr      error
 	)
 
 	// Get interfaces
@@ -279,12 +280,21 @@ func nmInit() {
 		logrus.WithFields(logrus.Fields{
 			"iface": i.Name,
 			"state": i.State,
-		}).Debug("main - iface init")
+		}).Info("main - iface init")
 
 		// Create hotspot con for the first time
 		if !initHotspot && i.State == "disconnected" {
-			ifaceConfig[i.Name], initHotspotErr = cmd.InitHotspot(i.Name, ifaceConfig[i.Name])
+			ifaceConfig[i.Name], initHotspotSettings, initHotspotErr = cmd.InitHotspot(i.Name, ifaceConfig[i.Name])
 			if initHotspotErr == nil {
+
+				// Save new hotspot config
+				initHotspotErr = hp.Config.Set("settings.hotspot", initHotspotSettings)
+				if initHotspotErr != nil {
+					logrus.WithFields(logrus.Fields{
+						"err": initHotspotErr.Error(),
+					}).Panic("main - hotspot config save failed")
+				}
+
 				initHotspot = true
 			}
 		}
@@ -309,6 +319,9 @@ func nmInit() {
 			"err": ifaceConfigErr.Error(),
 		}).Panic("main - iface config save failed")
 	}
+
+	hp.ConfigSave()
+	hp.ConfigLoad()
 
 	// Apply saved settings
 	var settings api.SettingsResponse
