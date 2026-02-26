@@ -116,7 +116,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 
 		switch strings.ToLower(iface.Mode) {
 		case "hotspot":
-			if !force && settingsSaved.Hotspot == settingsSaved.Hotspot {
+			if !force && settingsSaved.Interface[ifaceName] == iface && settingsSaved.Hotspot == settingsSaved.Hotspot {
 				continue
 			}
 
@@ -147,7 +147,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				return errors.New("set hotspot: " + err.Error())
 			}
 		case "client":
-			if !force && settingsSaved.Client == settingsSaved.Client {
+			if !force && settingsSaved.Interface[ifaceName] == iface && settingsSaved.Client == settingsSaved.Client {
 				continue
 			}
 
@@ -167,7 +167,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				return &Error{Code: 400, Func: "api/settings/client", Err: err, Message: err.Error()}
 			}
 		case "monitor":
-			if !force && settingsSaved.Monitor == settingsSaved.Monitor {
+			if !force && settingsSaved.Interface[ifaceName] == iface && settingsSaved.Monitor == settingsSaved.Monitor {
 				continue
 			}
 

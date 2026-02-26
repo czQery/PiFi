@@ -36,6 +36,7 @@ div [data-scope="checkbox"][data-part="control"] {
 	padding: 0 10px;
 	color: var(--white);
 	background-color: var(--dark);
+	z-index: 0;
 }
 
 input::placeholder,
