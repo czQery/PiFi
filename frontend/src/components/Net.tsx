@@ -1,18 +1,19 @@
 import { LucideFile, LucideFileCheck } from "lucide-solid"
-import { type Component, createSignal, For, type JSXElement, onMount, Show } from "solid-js"
+import { type Accessor, type Component, createSignal, For, type JSXElement, onMount, type Setter, Show } from "solid-js"
 import type { dbNetData } from "../lib/api/db.ts"
 import { getNetDWPA, markNet, type netDWPAData, upNet } from "../lib/api/net.ts"
 import { api, type response } from "../lib/var.ts"
 import File from "./File.tsx"
-import type { optionButtonData } from "./Option.tsx"
+import type { loadingData } from "./Loading.tsx"
+import type { optionButtonData, optionData } from "./Option.tsx"
 
 interface netProps {
 	name: string
 	db: dbNetData
 	icon: JSXElement
-	option: Function
-	setOption: Function
-	setLoading: Function
+	option: Accessor<optionData>
+	setOption: Setter<optionData>
+	setLoading: Setter<loadingData>
 }
 
 const Net: Component<netProps> = props => {
@@ -56,7 +57,7 @@ const Net: Component<netProps> = props => {
 												<For each={dataDWPA() as netDWPAData[]}>
 													{(ap, _) => (
 														<File
-															icon={(ap.net ? <LucideFileCheck /> : <LucideFile />) as Element}
+															icon={ap.net ? <LucideFileCheck /> : <LucideFile />}
 															name={ap.ssid}
 															detail={"[" + ap.bssid + "]"}
 															link={api + "api/cap/" + ap.file}

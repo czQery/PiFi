@@ -1,10 +1,10 @@
 import "./File.css"
-import { type Component, Show } from "solid-js"
+import { type Component, type JSXElement, Show } from "solid-js"
 
 interface fileProps {
 	name: string
 	detail?: string
-	icon: Element | null
+	icon?: JSXElement
 	link: string
 }
 

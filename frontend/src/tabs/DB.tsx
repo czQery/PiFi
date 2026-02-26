@@ -9,7 +9,7 @@ import { type dbData, getDB } from "../lib/api/db.ts"
 export const [db, setDB] = createSignal<dbData>({ aps: 0, wigle: { new: 0, net: 0 }, beacondb: { new: 0, net: 0 }, dwpa: { new: 0, net: 0 } } as dbData)
 
 const DB: Component = () => {
-	const [loading, setLoading] = createSignal<loadingData>({ title: "loading", pending: false, msg: "" })
+	const [loading, setLoading] = createSignal<loadingData>({ title: "Loading", pending: false, msg: "" })
 	const [option, setOption] = createSignal<optionData>({
 		open: false,
 		title: "Manual",
@@ -38,7 +38,7 @@ const DB: Component = () => {
 			<Net name="Wigle" db={db().wigle} icon={<LucideGlobe />} option={option} setOption={setOption} setLoading={setLoading} />
 			<Net name="BeaconDB" db={db().beacondb} icon={<LucideRadio />} option={option} setOption={setOption} setLoading={setLoading} />
 			<Net name="DWPA" db={db().dwpa} icon={<LucideRadioTower />} option={option} setOption={setOption} setLoading={setLoading} />
-			<Loading data={loading()} />
+			<Loading data={loading} setData={setLoading} />
 		</div>
 	)
 }

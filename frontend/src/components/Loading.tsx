@@ -1,5 +1,5 @@
 import { Dialog, Progress } from "@ark-ui/solid"
-import type { Component } from "solid-js"
+import type { Accessor, Component, Setter } from "solid-js"
 import { createEffect, createSignal, Show } from "solid-js"
 import { Portal } from "solid-js/web"
 
@@ -10,20 +10,18 @@ export interface loadingData {
 }
 
 interface loadingProps {
-	data: loadingData
+	data: Accessor<loadingData>
+	setData: Setter<loadingData>
 }
 
 const Loading: Component<loadingProps> = props => {
-	const [pending, setPending] = createSignal(false)
-	const [name, setName] = createSignal("loading")
-	const [message, setMessage] = createSignal("")
 	const [progress, setProgress] = createSignal(0)
 
-	const fakePending = async (pending: () => boolean) => {
+	const fakeProgress = async () => {
 		for (let i = 0; i < 80; i++) {
-			if (!pending()) return
+			if (!props.data().pending) return
 
-			if (message() != "") {
+			if (props.data().msg != "") {
 				setProgress(100)
 				return
 			}
@@ -38,39 +36,32 @@ const Loading: Component<loadingProps> = props => {
 	}
 
 	createEffect(async () => {
-		if (props.data.pending) {
-			setName(props.data.title)
-			setMessage(props.data.msg)
-			setPending(true)
-			fakePending(pending).then()
-		} else {
-			await sleep(100)
-			setPending(false)
+		if (props.data().pending) {
+			fakeProgress().then()
 		}
 	})
 
 	return (
 		// @ts-ignore
-		<Dialog.Root className={"card"} open={pending()} closeOnEscape={false} closeOnInteractOutside={false}>
+		<Dialog.Root className={"card"} open={props.data().pending} closeOnEscape={false} closeOnInteractOutside={false}>
 			<Portal>
 				<Dialog.Backdrop />
 				<Dialog.Positioner>
 					<Dialog.Content>
-						<Show when={message() == ""}>
+						<Show when={props.data().msg == ""}>
 							<Progress.Root value={progress()}>
-								<Progress.Label>{name()}</Progress.Label>
+								<Progress.Label>{props.data().title}</Progress.Label>
 								<Progress.Track>
 									<Progress.Range />
 								</Progress.Track>
 							</Progress.Root>
 						</Show>
-						<Show when={message() != ""}>
+						<Show when={props.data().msg != ""}>
 							<label style={{ "display": "block", "margin-bottom": "5px", "color": "var(--white)" }}>Error</label>
-							<Dialog.Description style={{ width: "300px", color: "var(--pink)" }}>{message()}</Dialog.Description>
+							<Dialog.Description style={{ width: "300px", color: "var(--pink)" }}>{props.data().msg}</Dialog.Description>
 							<Dialog.CloseTrigger
 								onClick={() => {
-									props.data.pending = false
-									setPending(false)
+									props.setData({ ...props.data(), pending: false })
 								}}
 							>
 								close

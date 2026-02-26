@@ -1,5 +1,5 @@
 import { Dialog } from "@ark-ui/solid"
-import { type Component, createEffect, createSignal, Show } from "solid-js"
+import { type Component, createEffect, createSignal, type JSXElement, Show } from "solid-js"
 import { Portal } from "solid-js/web"
 
 export interface optionButtonData {
@@ -11,7 +11,7 @@ export interface optionData {
 	open: boolean
 	title: string
 	message: string
-	children: Element | null
+	children?: JSXElement
 	buttonFirst: optionButtonData | null
 	buttonSecond: optionButtonData | null
 }
