@@ -19,11 +19,23 @@ import (
 func InitBettercap() {
 	ctx := context.Background()
 	init := true
+
+	eval := []string{
+		"set api.rest.address 127.0.0.1",
+		"set api.rest.port 8081",
+		"set wifi.handshakes.aggregate false",
+		"set wifi.handshakes.file ./cap",
+		"set wifi.assoc.acquired true",
+		"set wifi.assoc.open false",
+		"set wifi.deauth.acquired true",
+		"set wifi.assoc.open false",
+		"set ticker.period 60",
+		"api.rest on",
+	}
+
 	for {
 		logrus.Info("cmd - starting bettercap")
-
-		eval := "set api.rest.address 127.0.0.1;set api.rest.port 8081;set wifi.handshakes.aggregate false;set wifi.handshakes.file ./cap;set ticker.period 60;api.rest on"
-		cmd := exec.Command("bettercap", "-no-history", "-no-colors", "-eval", eval)
+		cmd := exec.Command("bettercap", "-no-history", "-no-colors", "-eval", strings.Join(eval, ";"))
 
 		stdout, _ := cmd.StdoutPipe()
 		errStart := cmd.Start()
@@ -47,7 +59,7 @@ func InitBettercap() {
 					if err != nil {
 						logrus.WithFields(logrus.Fields{
 							"iface": iface,
-							"err":   err,
+							"err":   err.Error(),
 						}).Error("cmd - bettercap monitor recovery failed")
 					}
 					return
@@ -120,7 +132,7 @@ func InitBettercap() {
 				if detailsErr != nil {
 					logrus.WithFields(logrus.Fields{
 						"bssid": bssid,
-						"err":   detailsErr,
+						"err":   detailsErr.Error(),
 					}).Warn("cmd - ap get details failed")
 				}
 

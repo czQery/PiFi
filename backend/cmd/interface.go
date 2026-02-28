@@ -4,6 +4,8 @@ import (
 	"errors"
 	"os/exec"
 	"strings"
+
+	"github.com/tidwall/gjson"
 )
 
 type Interface struct {
@@ -30,6 +32,15 @@ func GetInterfaceList() ([]Interface, error) {
 	}
 
 	return list, nil
+}
+
+func GetInterfaceBSSID(iface string) (string, error) {
+	out, err := exec.Command("ip", "-j", "link", "show", iface).Output()
+	if err != nil {
+		return "", err
+	}
+
+	return gjson.Parse(string(out)).Get(`0.address`).String(), nil
 }
 
 func SetInterfaceMode(iface string, mode string) error {

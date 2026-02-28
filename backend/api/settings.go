@@ -123,9 +123,9 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 			}
 
 			if settings.Hotspot.Portal {
-				cmd.Portal = settings.Hotspot.PortalSource
+				cmd.HotspotPortal = settings.Hotspot.PortalSource
 			} else {
-				cmd.Portal = ""
+				cmd.HotspotPortal = ""
 			}
 
 			if settings.Hotspot.SSID == "" {
@@ -136,13 +136,20 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 			}
 
 			cmd.Hotspot = settings.Hotspot.SSID
+			cmd.HotspotBSSID, err = cmd.GetInterfaceBSSID(ifaceName)
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"iface": ifaceName,
+					"err":   err.Error(),
+				}).Warn("cmd - failed to get BSSID of hotspot")
+			}
 
 			logrus.WithFields(logrus.Fields{
 				"iface":    ifaceName,
 				"ssid":     settings.Hotspot.SSID,
 				"channel":  settings.Hotspot.Channel,
 				"password": settings.Hotspot.Password,
-				"portal":   cmd.Portal,
+				"portal":   cmd.HotspotPortal,
 			}).Info("cmd - setting up hotspot")
 			err = cmd.SetHotspot(ifaceName, settings.Hotspot.SSID, strconv.Itoa(settings.Hotspot.Channel), settings.Hotspot.Password, settings.Hotspot.Portal)
 			if err != nil && !force {
@@ -173,6 +180,9 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				continue
 			}
 
+			cmd.MonitorDeauth = settings.Monitor.Deauth
+			cmd.MonitorAssoc = settings.Monitor.Assoc
+
 			logrus.WithFields(logrus.Fields{
 				"iface": ifaceName,
 			}).Info("cmd - setting up bettercap monitor")
@@ -188,7 +198,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 			logrus.Info("cmd - disabling hotspot")
 		}
 		cmd.Hotspot = ""
-		cmd.Portal = ""
+		cmd.HotspotPortal = ""
 		_ = cmd.DisableHotspot()
 	}
 	if _, ok := modes["client"]; !ok {

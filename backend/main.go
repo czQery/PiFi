@@ -188,19 +188,19 @@ func main() {
 		c.Set("Cache-Control", "no-store")
 
 		if c.Path() == "/" {
-			if cmd.Portal == "" {
+			if cmd.HotspotPortal == "" {
 				return c.Redirect("/pifi/dash", 307)
 			}
-			return c.SendFile("./portal/" + cmd.Portal + "/index.html")
+			return c.SendFile("./portal/" + cmd.HotspotPortal + "/index.html")
 		}
 
 		return c.Next()
 	})
 	rPortal.All("favicon.ico", func(c *fiber.Ctx) error {
-		return c.SendFile("./portal/" + cmd.Portal + "/favicon.ico")
+		return c.SendFile("./portal/" + cmd.HotspotPortal + "/favicon.ico")
 	})
 	rPortal.All(":dir/:file", func(c *fiber.Ctx) error {
-		return c.SendFile("./portal/" + cmd.Portal + "/" + c.Params("dir") + "/" + c.Params("file"))
+		return c.SendFile("./portal/" + cmd.HotspotPortal + "/" + c.Params("dir") + "/" + c.Params("file"))
 	})
 
 	// Default

@@ -104,7 +104,7 @@ func getStats(cpuLast *cpu.Stats) (responseStats, *cpu.Stats) {
 		MemUsed:  memNow.Used,
 		Hotspot: responseStatsHotspot{
 			SSID:   cmd.Hotspot,
-			Portal: cmd.Portal != "",
+			Portal: cmd.HotspotPortal != "",
 		},
 		GPS: cmd.GPS,
 	}
