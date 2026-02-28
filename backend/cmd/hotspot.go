@@ -31,7 +31,7 @@ func InitHotspot(iface string, item map[string]interface{}) (map[string]interfac
 	return item, hotspot, nil
 }
 
-func SetHotspot(iface, ssid, channel, password string) error {
+func SetHotspot(iface, ssid, channel, password string, portal bool) error {
 	err := exec.Command(NM, "con", "modify", Con+"-hotspot", "connection.interface-name", iface, "802-11-wireless.ssid", ssid, "802-11-wireless.band", "bg", "802-11-wireless.channel", channel).Run()
 	if err != nil {
 		return errors.New("modify iface: " + err.Error())
@@ -46,10 +46,10 @@ func SetHotspot(iface, ssid, channel, password string) error {
 		return errors.New("modify wpa: " + err.Error())
 	}
 
-	if Portal == "" {
-		err = DisableDNSPortal()
-	} else {
+	if portal {
 		err = SetDNSPortal()
+	} else {
+		err = DisableDNSPortal()
 	}
 	if err != nil {
 		return errors.New("portal dns: " + err.Error())

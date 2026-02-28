@@ -33,6 +33,8 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 			<Select.Root
 				required={true}
 				immediate={true}
+				deselectable={false}
+				multiple={false}
 				value={[props.settings.iface[props.name].mode]}
 				onValueChange={e => {
 					props.setSettings(produce(state => {
@@ -144,10 +146,12 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 					<Select.Root
 						required={true}
 						immediate={true}
+						deselectable={true}
+						multiple={false}
 						value={[props.settings.hotspot.portal_source]}
 						onValueChange={e => {
 							props.setSettings(produce(state => {
-								state.hotspot.portal_source = e.value[0]
+								state.hotspot.portal_source = e.value[0] ?? ""
 							}))
 						}}
 						collection={portalsCollection}

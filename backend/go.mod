@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/go-viper/mapstructure/v2 v2.5.0
-	github.com/gofiber/fiber/v2 v2.52.11
+	github.com/gofiber/fiber/v2 v2.52.12
 	github.com/imroc/req/v3 v3.57.0
 	github.com/knadh/koanf/parsers/toml v0.1.0
 	github.com/knadh/koanf/providers/file v1.2.1
@@ -43,7 +43,7 @@ require (
 	github.com/valyala/fasthttp v1.69.0 // indirect
 	golang.org/x/crypto v0.48.0 // indirect
 	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa // indirect
-	golang.org/x/net v0.50.0 // indirect
+	golang.org/x/net v0.51.0 // indirect
 	golang.org/x/sys v0.41.0 // indirect
 	golang.org/x/text v0.34.0 // indirect
 	modernc.org/libc v1.68.0 // indirect

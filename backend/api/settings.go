@@ -114,9 +114,11 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 			}).Error("cmd - failed to set interface mode")
 		}
 
+		canSkip := !force && settingsSaved.Interface[ifaceName] == iface
+
 		switch strings.ToLower(iface.Mode) {
 		case "hotspot":
-			if !force && settingsSaved.Interface[ifaceName] == iface && settingsSaved.Hotspot == settingsSaved.Hotspot {
+			if canSkip && settings.Hotspot == settingsSaved.Hotspot {
 				continue
 			}
 
@@ -142,12 +144,12 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				"password": settings.Hotspot.Password,
 				"portal":   cmd.Portal,
 			}).Info("cmd - setting up hotspot")
-			err = cmd.SetHotspot(ifaceName, settings.Hotspot.SSID, strconv.Itoa(settings.Hotspot.Channel), settings.Hotspot.Password)
+			err = cmd.SetHotspot(ifaceName, settings.Hotspot.SSID, strconv.Itoa(settings.Hotspot.Channel), settings.Hotspot.Password, settings.Hotspot.Portal)
 			if err != nil && !force {
 				return errors.New("set hotspot: " + err.Error())
 			}
 		case "client":
-			if !force && settingsSaved.Interface[ifaceName] == iface && settingsSaved.Client == settingsSaved.Client {
+			if canSkip && settings.Client == settingsSaved.Client {
 				continue
 			}
 
@@ -167,7 +169,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				return &Error{Code: 400, Func: "api/settings/client", Err: err, Message: err.Error()}
 			}
 		case "monitor":
-			if !force && settingsSaved.Interface[ifaceName] == iface && settingsSaved.Monitor == settingsSaved.Monitor {
+			if canSkip && settings.Monitor == settingsSaved.Monitor {
 				continue
 			}
 
