@@ -28,7 +28,7 @@ func InitBettercap() {
 		"set wifi.assoc.acquired true",
 		"set wifi.assoc.open false",
 		"set wifi.deauth.acquired true",
-		"set wifi.assoc.open false",
+		"set wifi.deauth.open true",
 		"set ticker.period 60",
 		"api.rest on",
 	}
@@ -208,4 +208,13 @@ func GetBettercapAP(bssid string) (gjson.Result, error) {
 	}
 
 	return gjson.Parse(rsp.String()).Get(`aps.#(mac="` + bssid + `")`), nil
+}
+
+func GetBettercapAPs() ([]gjson.Result, error) {
+	rsp, err := req.NewClient().R().Get(BC + "/api/session/wifi")
+	if err != nil {
+		return []gjson.Result{}, err
+	}
+
+	return gjson.Parse(rsp.String()).Get(`aps`).Array(), nil
 }
