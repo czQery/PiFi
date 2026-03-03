@@ -44,7 +44,15 @@ func GetInterfaceBSSID(iface string) (string, error) {
 }
 
 func SetInterfaceMode(iface string, mode string) error {
-	out, err := exec.Command("ip", "link", "set", iface, "down").Output()
+	out, err := exec.Command("bash", "-c", "iw dev "+iface+" info | grep type").Output()
+	modeOld := strings.TrimSpace(string(out))
+	modeOld = strings.ReplaceAll(modeOld, " ", "")
+	modeOld = strings.ReplaceAll(modeOld, "type", "")
+	if modeOld == mode || mode == "managed" && modeOld == "AP" {
+		return nil
+	}
+
+	out, err = exec.Command("ip", "link", "set", iface, "down").Output()
 	if err != nil {
 		return errors.New(string(out))
 	}
