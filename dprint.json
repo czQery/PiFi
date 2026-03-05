@@ -14,43 +14,31 @@
 		"binaryExpression.spaceSurroundingBitwiseAndArithmeticOperator": true,
 		"semiColons": "asi"
 	},
-	"json": {
-	},
-	"markdown": {
-	},
-	"toml": {
-	},
+	"json": {},
+	"markdown": {},
+	"toml": {},
 	"biome": {
 		"css.enabled": false,
 		"graphql.enabled": false,
 		"semicolons": "asNeeded",
 		"bracketSameLine": true
 	},
-	"malva": {
-	},
-	"markup": {
-	},
-	"yaml": {
-	},
+	"malva": {},
+	"markup": {},
+	"yaml": {},
 	"exec": {
 		"cwd": "${configDir}",
 		"commands": [
 			{
 				"command": "gofmt {{file_path}}",
-				"exts": [
-					"go"
-				]
+				"exts": ["go"]
 			}
 		]
 	},
 	"lineWidth": 160,
 	"indentWidth": 4,
 	"useTabs": true,
-	"excludes": [
-		"*.svg",
-		"**/node_modules",
-		"**/*-lock.json"
-	],
+	"excludes": ["*.svg", "**/node_modules", "**/*-lock.json"],
 	"plugins": [
 		"https://plugins.dprint.dev/typescript-0.95.15.wasm",
 		"https://plugins.dprint.dev/json-0.21.1.wasm",
