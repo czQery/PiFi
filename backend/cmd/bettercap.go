@@ -122,12 +122,6 @@ func InitBettercap() {
 					break
 				}
 
-				logrus.WithFields(logrus.Fields{
-					"bssid": bssid,
-					"ssid":  ssid,
-					"rssi":  rssi,
-				}).Debug("cmd - ap detected")
-
 				details, detailsErr := GetBettercapAP(bssid)
 				if detailsErr != nil {
 					logrus.WithFields(logrus.Fields{

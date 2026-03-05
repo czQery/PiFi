@@ -92,6 +92,10 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 			return &Error{Code: 400, Func: "api/settings", Message: "duplicit mode"}
 		}
 
+		if iface.Mode == "none" {
+			continue
+		}
+
 		modes[iface.Mode] = struct{}{}
 	}
 
@@ -100,26 +104,21 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 			continue
 		}
 
-		// set the correct interface mode
-		if strings.ToLower(iface.Mode) == "monitor" {
-			err = cmd.SetInterfaceMode(ifaceName, "monitor")
-		} else {
-			err = cmd.SetInterfaceMode(ifaceName, "managed")
-		}
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"iface": ifaceName,
-				"mode":  iface.Mode,
-				"err":   err.Error(),
-			}).Error("cmd - failed to set interface mode")
-		}
-
 		canSkip := !force && settingsSaved.Interface[ifaceName] == iface
 
 		switch strings.ToLower(iface.Mode) {
 		case "hotspot":
 			if canSkip && settings.Hotspot == settingsSaved.Hotspot {
 				continue
+			}
+
+			err = cmd.SetInterfaceMode(ifaceName, "managed")
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"iface": ifaceName,
+					"mode":  iface.Mode,
+					"err":   err.Error(),
+				}).Error("cmd - failed to set interface mode")
 			}
 
 			if settings.Hotspot.Portal {
@@ -160,6 +159,15 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				continue
 			}
 
+			err = cmd.SetInterfaceMode(ifaceName, "managed")
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"iface": ifaceName,
+					"mode":  iface.Mode,
+					"err":   err.Error(),
+				}).Error("cmd - failed to set interface mode")
+			}
+
 			logrus.WithFields(logrus.Fields{
 				"iface":    ifaceName,
 				"ssid":     settings.Client.SSID,
@@ -178,6 +186,15 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 		case "monitor":
 			if canSkip && settings.Monitor == settingsSaved.Monitor {
 				continue
+			}
+
+			err = cmd.SetInterfaceMode(ifaceName, "monitor")
+			if err != nil {
+				logrus.WithFields(logrus.Fields{
+					"iface": ifaceName,
+					"mode":  iface.Mode,
+					"err":   err.Error(),
+				}).Error("cmd - failed to set interface mode")
 			}
 
 			cmd.MonitorDeauth = settings.Monitor.Deauth

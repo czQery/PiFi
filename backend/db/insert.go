@@ -45,5 +45,12 @@ func InsertAP(ctx context.Context, bssid, ssid, mode, discovered string, channel
 		logrus.WithFields(logrus.Fields{
 			"err": err.Error(),
 		}).Error("db - insert ap exec failed")
+		return
 	}
+
+	logrus.WithFields(logrus.Fields{
+		"bssid": bssid,
+		"ssid":  ssid,
+		"rssi":  rssi,
+	}).Info("db - new ap")
 }

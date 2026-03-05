@@ -1,6 +1,7 @@
 package api
 
 import (
+	"strings"
 	"sync"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,11 +19,17 @@ func DeauthGet(c *fiber.Ctx) error {
 }
 
 func DeauthPost(c *fiber.Ctx) error {
-	DeauthTargets.Store(c.Query("target", "ff:ff:ff:ff:ff:ff"), struct{}{})
+	target := strings.ToLower(c.Query("target"))
+
+	if target == "ff:ff:ff:ff:ff:ff" || target == "" || target == "*" {
+		return c.Status(400).JSON(Response{Message: "ff:ff:ff:ff:ff:ff not allowed"})
+	}
+
+	DeauthTargets.Store(c.Query("target"), struct{}{})
 	return c.Status(200).JSON(Response{Message: "success"})
 }
 
 func DeauthDelete(c *fiber.Ctx) error {
-	DeauthTargets.Delete(c.Query("target", "ff:ff:ff:ff:ff:ff"))
+	DeauthTargets.Delete(c.Query("target"))
 	return c.Status(200).JSON(Response{Message: "success"})
 }
