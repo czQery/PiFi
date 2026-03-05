@@ -22,6 +22,7 @@ type DataAP struct {
 	Altitude   float64 `json:"altitude"`
 	Accuracy   float64 `json:"accuracy"`
 	Device     string  `json:"device"`
+	Handshake  bool    `json:"handshake"`
 	Wigle      bool    `json:"wigle"`
 	BeaconDB   bool    `json:"beacondb"`
 	DWPA       bool    `json:"dwpa"`
@@ -41,9 +42,10 @@ func resultAP(data *[]DataAP, stmt *sqlite.Stmt) error {
 		Altitude:   stmt.ColumnFloat(9),
 		Accuracy:   stmt.ColumnFloat(10),
 		Device:     stmt.ColumnText(11),
-		Wigle:      stmt.ColumnBool(12),
-		BeaconDB:   stmt.ColumnBool(13),
-		DWPA:       stmt.ColumnBool(14),
+		Handshake:  stmt.ColumnBool(12),
+		Wigle:      stmt.ColumnBool(13),
+		BeaconDB:   stmt.ColumnBool(14),
+		DWPA:       stmt.ColumnBool(15),
 	})
 	return nil
 }

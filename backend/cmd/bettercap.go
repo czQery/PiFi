@@ -100,6 +100,8 @@ func InitBettercap() {
 					break
 				}
 
+				db.UpdateAPHandshake(ctx, bssid, true)
+
 				logrus.WithFields(logrus.Fields{
 					"bssid": bssid,
 					"ssid":  ssid,

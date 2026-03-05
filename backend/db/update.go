@@ -32,6 +32,29 @@ func UpdateAPNet(ctx context.Context, net string, value bool, list []string) {
 	}
 }
 
+func UpdateAPHandshake(ctx context.Context, bssid string, value bool) {
+	conn, err := Pool.Take(ctx)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": err.Error(),
+		}).Error("db - update ap handshake connection failed")
+		return
+	}
+	defer Pool.Put(conn)
+
+	err = sqlitex.Execute(conn, "UPDATE ap SET handshake = ? WHERE bssid = ?;", &sqlitex.ExecOptions{
+		Args: []interface{}{
+			value,
+			bssid,
+		},
+	})
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": err.Error(),
+		}).Error("db - update ap handshake exec failed")
+	}
+}
+
 func UpdateAP(ctx context.Context, bssid, ssid, mode string, channel, frequency int64, rssi, latitude, longitude, altitude, accuracy float64) {
 	conn, err := Pool.Take(ctx)
 	if err != nil {

@@ -14,6 +14,7 @@ const dbCreate = `
 		altitude REAL NOT NULL,
 		accuracy REAL NOT NULL,
 		device TEXT NOT NULL,
+		handshake BOOLEAN DEFAULT FALSE,
 		wigle BOOLEAN DEFAULT FALSE,
 		beacondb BOOLEAN DEFAULT FALSE,
 		dwpa boolean DEFAULT FALSE

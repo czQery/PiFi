@@ -35,7 +35,7 @@ func DWPAGet(ctx context.Context) []Handshake {
 		}
 
 		info, err := entry.Info()
-		if err != nil || info.Size() <= 128 { // skip empty files
+		if err != nil || info.Size() <= 64 { // skip empty files
 			continue
 		}
 
@@ -62,7 +62,7 @@ func DWPAGet(ctx context.Context) []Handshake {
 	var handshakes []Handshake
 	for _, ap := range list {
 		for i, bssid := range bssids {
-			if bssid == ap.BSSID {
+			if bssid == ap.BSSID && ap.Handshake {
 				handshakes = append(handshakes, Handshake{File: files[i], BSSID: ap.BSSID, SSID: ap.SSID, Net: ap.DWPA})
 			}
 		}
