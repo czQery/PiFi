@@ -228,7 +228,7 @@ func main() {
 func nmInit() {
 	var (
 		initHotspot         bool
-		initHotspotSettings map[string]interface{}
+		initHotspotSettings map[string]any
 		initHotspotErr      error
 	)
 
@@ -270,7 +270,7 @@ func nmInit() {
 				initHotspot = true
 			}
 		} else {
-			newItem := make(map[string]interface{})
+			newItem := make(map[string]any)
 			newItem["ready"] = true
 			newItem["mode"] = "none"
 
@@ -334,8 +334,7 @@ func nmInit() {
 
 	applyErr := api.ApplySettings(settings, true)
 	if applyErr != nil {
-		var e *api.Error
-		if !errors.As(applyErr, &e) || e.Code == 500 {
+		if e, ok := errors.AsType[*api.Error](applyErr); !ok || e.Code == 500 {
 			logrus.WithFields(logrus.Fields{
 				"err": applyErr.Error(),
 			}).Panic("main - settings apply failed")

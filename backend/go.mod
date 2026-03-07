@@ -1,6 +1,6 @@
 module github.com/czQery/PiFi/backend
 
-go 1.25.0
+go 1.26
 
 require (
 	github.com/go-viper/mapstructure/v2 v2.5.0
@@ -8,7 +8,7 @@ require (
 	github.com/imroc/req/v3 v3.57.0
 	github.com/knadh/koanf/parsers/toml v0.1.0
 	github.com/knadh/koanf/providers/file v1.2.1
-	github.com/knadh/koanf/v2 v2.3.2
+	github.com/knadh/koanf/v2 v2.3.3
 	github.com/mackerelio/go-osstat v0.2.6
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/sirupsen/logrus v1.9.4
@@ -42,11 +42,11 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.69.0 // indirect
 	golang.org/x/crypto v0.48.0 // indirect
-	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa // indirect
 	golang.org/x/net v0.51.0 // indirect
 	golang.org/x/sys v0.41.0 // indirect
 	golang.org/x/text v0.34.0 // indirect
-	modernc.org/libc v1.68.0 // indirect
+	golang.org/x/tools v0.42.0 // indirect
+	modernc.org/libc v1.69.0 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
 	modernc.org/sqlite v1.46.1 // indirect

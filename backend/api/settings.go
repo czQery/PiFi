@@ -34,8 +34,7 @@ type SettingsClientResponse struct {
 }
 
 type SettingsMonitorResponse struct {
-	Deauth bool `json:"deauth"`
-	Assoc  bool `json:"assoc"`
+	Auto bool `json:"auto"`
 }
 
 type SettingsInterfaceResponse struct {
@@ -197,8 +196,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				}).Error("cmd - failed to set interface mode")
 			}
 
-			cmd.MonitorDeauth = settings.Monitor.Deauth
-			cmd.MonitorAssoc = settings.Monitor.Assoc
+			cmd.MonitorAuto = settings.Monitor.Auto
 
 			logrus.WithFields(logrus.Fields{
 				"iface": ifaceName,

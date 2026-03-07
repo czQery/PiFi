@@ -31,8 +31,7 @@ export interface settingsClientData {
 }
 
 export interface settingsMonitorData {
-	deauth: boolean
-	assoc: boolean
+	auto: boolean
 }
 
 export const getSettings = async (): Promise<settingsData> => {

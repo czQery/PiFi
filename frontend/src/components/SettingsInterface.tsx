@@ -215,31 +215,14 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 			<Show when={props.settings.iface[props.name].mode === "monitor"}>
 				<div class="settings-iface-monitor">
 					<Checkbox.Root
-						checked={props.settings.monitor.deauth}
+						checked={props.settings.monitor.auto}
 						onCheckedChange={e => {
 							props.setSettings(produce(state => {
-								state.monitor.deauth = e.checked as boolean
+								state.monitor.auto = e.checked as boolean
 							}))
 						}}
 					>
-						<Checkbox.Label>Deauth</Checkbox.Label>
-						<Checkbox.Control>
-							<div>
-								<span></span>
-								<div></div>
-							</div>
-						</Checkbox.Control>
-						<Checkbox.HiddenInput />
-					</Checkbox.Root>
-					<Checkbox.Root
-						checked={props.settings.monitor.assoc}
-						onCheckedChange={e => {
-							props.setSettings(produce(state => {
-								state.monitor.assoc = e.checked as boolean
-							}))
-						}}
-					>
-						<Checkbox.Label>Assoc</Checkbox.Label>
+						<Checkbox.Label>Auto</Checkbox.Label>
 						<Checkbox.Control>
 							<div>
 								<span></span>
