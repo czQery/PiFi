@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"strconv"
@@ -59,7 +60,7 @@ func SettingsPost(c *fiber.Ctx) error {
 		return &Error{Code: 500, Func: "api/settings", Err: err, Message: "invalid body"}
 	}
 
-	err = ApplySettings(data, false)
+	err = ApplySettings(c.Context(), data, false)
 	if err != nil {
 		return err
 	}
@@ -67,7 +68,7 @@ func SettingsPost(c *fiber.Ctx) error {
 	return SettingsGet(c)
 }
 
-func ApplySettings(settings SettingsResponse, force bool) error {
+func ApplySettings(ctx context.Context, settings SettingsResponse, force bool) error {
 
 	var (
 		err error
@@ -111,7 +112,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				continue
 			}
 
-			err = cmd.SetInterfaceMode(ifaceName, "managed")
+			err = cmd.SetInterfaceMode(ctx, ifaceName, "managed")
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"iface": ifaceName,
@@ -134,7 +135,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 			}
 
 			cmd.Hotspot = settings.Hotspot.SSID
-			cmd.HotspotBSSID, err = cmd.GetInterfaceBSSID(ifaceName)
+			cmd.HotspotBSSID, err = cmd.GetInterfaceBSSID(ctx, ifaceName)
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"iface": ifaceName,
@@ -149,7 +150,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				"password": settings.Hotspot.Password,
 				"portal":   cmd.HotspotPortal,
 			}).Info("cmd - setting up hotspot")
-			err = cmd.SetHotspot(ifaceName, settings.Hotspot.SSID, strconv.Itoa(settings.Hotspot.Channel), settings.Hotspot.Password, settings.Hotspot.Portal)
+			err = cmd.SetHotspot(ctx, ifaceName, settings.Hotspot.SSID, strconv.Itoa(settings.Hotspot.Channel), settings.Hotspot.Password, settings.Hotspot.Portal)
 			if err != nil && !force {
 				return errors.New("set hotspot: " + err.Error())
 			}
@@ -158,7 +159,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				continue
 			}
 
-			err = cmd.SetInterfaceMode(ifaceName, "managed")
+			err = cmd.SetInterfaceMode(ctx, ifaceName, "managed")
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"iface": ifaceName,
@@ -172,14 +173,14 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				"ssid":     settings.Client.SSID,
 				"password": settings.Client.Password,
 			}).Info("cmd - connecting to wifi")
-			err = cmd.SetClient(ifaceName, settings.Client.SSID, settings.Client.Password)
+			err = cmd.SetClient(ctx, ifaceName, settings.Client.SSID, settings.Client.Password)
 			if err != nil && !force {
 				logrus.WithFields(logrus.Fields{
 					"iface":    ifaceName,
 					"ssid":     settings.Client.SSID,
 					"password": settings.Client.Password,
 				}).Info("cmd - connecting to fallback wifi")
-				_ = cmd.SetClient(ifaceName, settings.Client.SSID, settings.Client.Password) // fallback to previously saved wifi
+				_ = cmd.SetClient(ctx, ifaceName, settings.Client.SSID, settings.Client.Password) // fallback to previously saved wifi
 				return &Error{Code: 400, Func: "api/settings/client", Err: err, Message: err.Error()}
 			}
 		case "monitor":
@@ -187,7 +188,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 				continue
 			}
 
-			err = cmd.SetInterfaceMode(ifaceName, "monitor")
+			err = cmd.SetInterfaceMode(ctx, ifaceName, "monitor")
 			if err != nil {
 				logrus.WithFields(logrus.Fields{
 					"iface": ifaceName,
@@ -201,7 +202,7 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 			logrus.WithFields(logrus.Fields{
 				"iface": ifaceName,
 			}).Info("cmd - setting up bettercap monitor")
-			err = cmd.SetBettercapMonitor(ifaceName)
+			err = cmd.SetBettercapMonitor(ctx, ifaceName)
 			if err != nil && !force {
 				return errors.New("set monitor: " + err.Error())
 			}
@@ -214,19 +215,19 @@ func ApplySettings(settings SettingsResponse, force bool) error {
 		}
 		cmd.Hotspot = ""
 		cmd.HotspotPortal = ""
-		_ = cmd.DisableHotspot()
+		_ = cmd.DisableHotspot(ctx)
 	}
 	if _, ok := modes["client"]; !ok {
 		if _, ok = modesLast["client"]; ok {
 			logrus.Info("cmd - disabling client")
 		}
-		_ = cmd.DisableClient()
+		_ = cmd.DisableClient(ctx)
 	}
 	if _, ok := modes["monitor"]; !ok {
 		if _, ok = modesLast["monitor"]; ok {
 			logrus.Info("cmd - disabling bettercap monitor")
 		}
-		_ = cmd.DisableBettercapMonitor()
+		_ = cmd.DisableBettercapMonitor(ctx)
 	}
 
 	// very retarded approach, but it works I guess

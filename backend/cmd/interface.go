@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"errors"
 	"os/exec"
 	"strings"
@@ -15,9 +16,9 @@ type Interface struct {
 	Description string
 }
 
-func GetInterfaceList() ([]Interface, error) {
+func GetInterfaceList(ctx context.Context) ([]Interface, error) {
 	var list []Interface
-	out, err := exec.Command(NM, "-t", "device").Output()
+	out, err := exec.CommandContext(ctx, NM, "-t", "device").Output()
 	if err != nil {
 		return list, err
 	}
@@ -34,8 +35,8 @@ func GetInterfaceList() ([]Interface, error) {
 	return list, nil
 }
 
-func GetInterfaceBSSID(iface string) (string, error) {
-	out, err := exec.Command("ip", "-j", "link", "show", iface).Output()
+func GetInterfaceBSSID(ctx context.Context, iface string) (string, error) {
+	out, err := exec.CommandContext(ctx, "ip", "-j", "link", "show", iface).Output()
 	if err != nil {
 		return "", err
 	}
@@ -43,8 +44,8 @@ func GetInterfaceBSSID(iface string) (string, error) {
 	return strings.ToLower(gjson.Parse(string(out)).Get(`0.address`).String()), nil
 }
 
-func SetInterfaceMode(iface string, mode string) error {
-	out, err := exec.Command("bash", "-c", "iw dev "+iface+" info | grep type").Output()
+func SetInterfaceMode(ctx context.Context, iface string, mode string) error {
+	out, err := exec.CommandContext(ctx, "bash", "-c", "iw dev "+iface+" info | grep type").Output()
 	modeOld := strings.TrimSpace(string(out))
 	modeOld = strings.ReplaceAll(modeOld, " ", "")
 	modeOld = strings.ReplaceAll(modeOld, "type", "")
@@ -52,17 +53,17 @@ func SetInterfaceMode(iface string, mode string) error {
 		return nil
 	}
 
-	out, err = exec.Command("ip", "link", "set", iface, "down").Output()
+	out, err = exec.CommandContext(ctx, "ip", "link", "set", iface, "down").Output()
 	if err != nil {
 		return errors.New(string(out))
 	}
 
-	out, err = exec.Command("iw", "dev", iface, "set", "type", mode).Output()
+	out, err = exec.CommandContext(ctx, "iw", "dev", iface, "set", "type", mode).Output()
 	if err != nil {
 		return errors.New(string(out))
 	}
 
-	out, err = exec.Command("ip", "link", "set", iface, "up").Output()
+	out, err = exec.CommandContext(ctx, "ip", "link", "set", iface, "up").Output()
 	if err != nil {
 		return errors.New(string(out))
 	}

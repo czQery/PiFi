@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"os/exec"
 	"strings"
 )
@@ -12,10 +13,10 @@ type Connection struct {
 	Interface string
 }
 
-func GetConnectionList() ([]Connection, error) {
+func GetConnectionList(ctx context.Context) ([]Connection, error) {
 	var list []Connection
 
-	out, err := exec.Command(NM, "-t", "con").Output()
+	out, err := exec.CommandContext(ctx, NM, "-t", "con").Output()
 	if err != nil {
 		return list, err
 	}

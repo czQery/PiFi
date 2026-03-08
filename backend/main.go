@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"io"
@@ -227,13 +228,15 @@ func main() {
 
 func nmInit() {
 	var (
+		ctx = context.Background()
+
 		initHotspot         bool
 		initHotspotSettings map[string]any
 		initHotspotErr      error
 	)
 
 	// Get interfaces
-	iface, ifaceErr := cmd.GetInterfaceList()
+	iface, ifaceErr := cmd.GetInterfaceList(ctx)
 	if ifaceErr != nil {
 		logrus.WithFields(logrus.Fields{
 			"err": ifaceErr.Error(),
@@ -246,7 +249,7 @@ func nmInit() {
 		item["ready"] = false
 	}
 
-	connections, connectionErr := cmd.GetConnectionList()
+	connections, connectionErr := cmd.GetConnectionList(ctx)
 	if connectionErr != nil {
 		logrus.WithFields(logrus.Fields{
 			"err": connectionErr.Error(),
@@ -284,7 +287,7 @@ func nmInit() {
 
 		// Create hotspot con for the first time
 		if !initHotspot && i.State == "disconnected" {
-			ifaceConfig[i.Name], initHotspotSettings, initHotspotErr = cmd.InitHotspot(i.Name, ifaceConfig[i.Name])
+			ifaceConfig[i.Name], initHotspotSettings, initHotspotErr = cmd.InitHotspot(ctx, i.Name, ifaceConfig[i.Name])
 			if initHotspotErr == nil {
 
 				// Save new hotspot config
@@ -332,7 +335,7 @@ func nmInit() {
 		}).Panic("main - settings load failed")
 	}
 
-	applyErr := api.ApplySettings(settings, true)
+	applyErr := api.ApplySettings(ctx, settings, true)
 	if applyErr != nil {
 		if e, ok := errors.AsType[*api.Error](applyErr); !ok || e.Code == 500 {
 			logrus.WithFields(logrus.Fields{

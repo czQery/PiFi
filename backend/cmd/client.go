@@ -1,19 +1,20 @@
 package cmd
 
 import (
+	"context"
 	"errors"
 	"os/exec"
 )
 
-func SetClient(iface, ssid, password string) error {
-	err := exec.Command(NM, "device", "wifi", "rescan", "ifname", iface).Run()
+func SetClient(ctx context.Context, iface, ssid, password string) error {
+	err := exec.CommandContext(ctx, "device", "wifi", "rescan", "ifname", iface).Run()
 	if err != nil {
 		return errors.New("wifi rescan: " + err.Error())
 	}
 
-	_ = exec.Command(NM, "con", "delete", Con+"-client").Run()
+	_ = exec.CommandContext(ctx, NM, "con", "delete", Con+"-client").Run()
 
-	err = exec.Command(NM, "device", "wifi", "connect", ssid, "password", password, "ifname", iface, "hidden", "yes", "name", Con+"-client").Run()
+	err = exec.CommandContext(ctx, NM, "device", "wifi", "connect", ssid, "password", password, "ifname", iface, "hidden", "yes", "name", Con+"-client").Run()
 	if err != nil {
 		switch err.Error() {
 		case "exit status 4":
@@ -28,6 +29,6 @@ func SetClient(iface, ssid, password string) error {
 	return nil
 }
 
-func DisableClient() error {
-	return exec.Command(NM, "con", "delete", Con+"-client").Run()
+func DisableClient(ctx context.Context) error {
+	return exec.CommandContext(ctx, NM, "con", "delete", Con+"-client").Run()
 }

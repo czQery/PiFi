@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bufio"
+	"context"
 	"math"
 	"os/exec"
 	"time"
@@ -24,9 +25,11 @@ type GPSData struct {
 var GPS GPSData
 
 func InitGPS() {
+	ctx := context.Background()
+
 	for {
 		logrus.Info("cmd - starting gps")
-		cmd := exec.Command("gpspipe", "-w")
+		cmd := exec.CommandContext(ctx, "gpspipe", "-w")
 
 		stdout, _ := cmd.StdoutPipe()
 		errStart := cmd.Start()

@@ -35,7 +35,7 @@ func InitBettercap() {
 
 	for {
 		logrus.Info("cmd - starting bettercap")
-		cmd := exec.Command("bettercap", "-no-history", "-no-colors", "-eval", strings.Join(eval, ";"))
+		cmd := exec.CommandContext(ctx, "bettercap", "-no-history", "-no-colors", "-eval", strings.Join(eval, ";"))
 
 		stdout, _ := cmd.StdoutPipe()
 		errStart := cmd.Start()
@@ -55,7 +55,7 @@ func InitBettercap() {
 						"iface": iface,
 					}).Info("cmd - recovering bettercap monitor")
 
-					err := SetBettercapMonitor(iface)
+					err := SetBettercapMonitor(ctx, iface)
 					if err != nil {
 						logrus.WithFields(logrus.Fields{
 							"iface": iface,
@@ -124,7 +124,7 @@ func InitBettercap() {
 					break
 				}
 
-				details, detailsErr := GetBettercapAP(bssid)
+				details, detailsErr := GetBettercapAP(ctx, bssid)
 				if detailsErr != nil {
 					logrus.WithFields(logrus.Fields{
 						"bssid": bssid,
@@ -177,9 +177,9 @@ func InitBettercap() {
 	}
 }
 
-func SetBettercap(cmd string) error {
+func SetBettercap(ctx context.Context, cmd string) error {
 	body := "{\"cmd\":\"" + cmd + "\"}"
-	_, err := req.NewClient().R().SetBodyJsonString(body).Post(BC + "/api/session")
+	_, err := req.NewClient().R().SetContext(ctx).SetBodyJsonString(body).Post(BC + "/api/session")
 	if err != nil {
 		return err
 	}
@@ -187,18 +187,18 @@ func SetBettercap(cmd string) error {
 	return nil
 }
 
-func SetBettercapMonitor(iface string) error {
-	_ = SetBettercap("ticker off")
-	return SetBettercap("set wifi.interface " + iface + ";wifi.recon on;set ticker.commands 'wifi.recon on';ticker on")
+func SetBettercapMonitor(ctx context.Context, iface string) error {
+	_ = SetBettercap(ctx, "ticker off")
+	return SetBettercap(ctx, "set wifi.interface "+iface+";wifi.recon on;set ticker.commands 'wifi.recon on';ticker on")
 }
 
-func DisableBettercapMonitor() error {
-	_ = SetBettercap("ticker off")
-	return SetBettercap("set wifi.interface null;wifi.recon off")
+func DisableBettercapMonitor(ctx context.Context) error {
+	_ = SetBettercap(ctx, "ticker off")
+	return SetBettercap(ctx, "set wifi.interface null;wifi.recon off")
 }
 
-func GetBettercapAP(bssid string) (gjson.Result, error) {
-	rsp, err := req.NewClient().R().Get(BC + "/api/session/wifi")
+func GetBettercapAP(ctx context.Context, bssid string) (gjson.Result, error) {
+	rsp, err := req.NewClient().R().SetContext(ctx).Get(BC + "/api/session/wifi")
 	if err != nil {
 		return gjson.Result{}, err
 	}
@@ -206,8 +206,8 @@ func GetBettercapAP(bssid string) (gjson.Result, error) {
 	return gjson.Parse(rsp.String()).Get(`aps.#(mac="` + bssid + `")`), nil
 }
 
-func GetBettercapAPs() ([]gjson.Result, error) {
-	rsp, err := req.NewClient().R().Get(BC + "/api/session/wifi")
+func GetBettercapAPs(ctx context.Context) ([]gjson.Result, error) {
+	rsp, err := req.NewClient().R().SetContext(ctx).Get(BC + "/api/session/wifi")
 	if err != nil {
 		return []gjson.Result{}, err
 	}
