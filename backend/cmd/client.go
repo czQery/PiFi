@@ -7,14 +7,13 @@ import (
 )
 
 func SetClient(ctx context.Context, iface, ssid, password string) error {
-	err := exec.CommandContext(ctx, "device", "wifi", "rescan", "ifname", iface).Run()
+	_ = exec.CommandContext(ctx, NM, "con", "delete", Con+"-client").Run()
+	err := exec.CommandContext(ctx, NM, "device", "wifi", "list", "ifname", iface, "--rescan", "yes").Run()
 	if err != nil {
 		return errors.New("wifi rescan: " + err.Error())
 	}
 
-	_ = exec.CommandContext(ctx, NM, "con", "delete", Con+"-client").Run()
-
-	err = exec.CommandContext(ctx, NM, "device", "wifi", "connect", ssid, "password", password, "ifname", iface, "hidden", "yes", "name", Con+"-client").Run()
+	err = exec.CommandContext(ctx, NM, "device", "wifi", "connect", ssid, "password", password, "ifname", iface, "name", Con+"-client").Run()
 	if err != nil {
 		switch err.Error() {
 		case "exit status 4":

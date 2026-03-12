@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"bufio"
+	"cmp"
 	"context"
 	"fmt"
 	"os/exec"
 	"regexp"
+	"slices"
 	"strings"
 	"time"
 
@@ -217,5 +219,11 @@ func GetBettercapAPs(ctx context.Context) ([]gjson.Result, error) {
 		return []gjson.Result{}, err
 	}
 
-	return gjson.Parse(rsp.String()).Get(`aps`).Array(), nil
+	result := gjson.Parse(rsp.String()).Get(`aps`).Array()
+
+	slices.SortFunc(result, func(a, b gjson.Result) int {
+		return cmp.Compare(a.Get("channel").Int(), b.Get("channel").Int())
+	})
+
+	return result, nil
 }
