@@ -118,7 +118,7 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 						}}
 					>
 						<NumberInput.Label>Channel</NumberInput.Label>
-						<NumberInput.Input />
+						<NumberInput.Input class="mono" />
 						<NumberInput.Control>
 							<NumberInput.DecrementTrigger>-</NumberInput.DecrementTrigger>
 							<NumberInput.IncrementTrigger>+</NumberInput.IncrementTrigger>

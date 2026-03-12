@@ -35,11 +35,11 @@ const Net: Component<netProps> = props => {
 			</div>
 			<div class="db-flex">
 				<span>New:</span>
-				<span class="value">{props.db.new.toString()}</span>
+				<span class="value mono">{props.db.new.toString()}</span>
 			</div>
 			<div class="db-flex">
 				<span>Net:</span>
-				<span class="value">{props.db.net.toString()}</span>
+				<span class="value mono">{props.db.net.toString()}</span>
 			</div>
 			{/*TODO: remove this Show wrapper after implementing all nets*/}
 			<Show when={props.name.toLowerCase() !== "beacondb"}>

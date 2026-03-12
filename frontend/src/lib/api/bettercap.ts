@@ -1,10 +1,10 @@
 import { api } from "../var.ts"
 
-export interface bettercapWifiDataResponse {
-	aps: bettercapWifiData[]
+export interface bettercapWifiData {
+	aps: bettercapWifiAPData[]
 }
 
-export interface bettercapWifiData {
+export interface bettercapWifiAPData {
 	mac: string
 	hostname: string
 	vendor: string
@@ -13,14 +13,22 @@ export interface bettercapWifiData {
 	encryption: string
 	cipher: string
 	authentication: string
+	clients: bettercapWifiClientData[]
 }
 
-export const getBettercapWifi = async (): Promise<bettercapWifiData[]> => {
+export interface bettercapWifiClientData {
+	mac: string
+	vendor: string
+	sent: number
+	received: number
+}
+
+export const getBettercapWifi = async (): Promise<bettercapWifiAPData[]> => {
 	const rsp: Response = await fetch(api + "api/bettercap/session/wifi", { credentials: "include" })
-	const rspJson: bettercapWifiDataResponse = await rsp.json()
+	const rspJson: bettercapWifiData = await rsp.json()
 
 	if (rsp.status === 200 && rspJson.aps) {
-		return rspJson.aps as bettercapWifiData[]
+		return rspJson.aps as bettercapWifiAPData[]
 	}
 
 	return []

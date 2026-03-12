@@ -92,18 +92,18 @@ const Dash: Component = () => {
 					<Show when={stats().gps.mode >= 2} fallback={<LucideLocateOff />}>
 						<LucideLocateFixed />
 					</Show>
-					<span>{"Coordinates: " + stats().gps.lat.toString() + ", " + stats().gps.lon.toString()}</span>
+					<span class="mono">{stats().gps.lat.toString() + ", " + stats().gps.lon.toString()}</span>
 				</div>
-				<span>{stats().gps.mode >= 2 ? stats().gps.alt.toString() + "m" : "no location"}</span>
+				<span class="value mono">{stats().gps.mode >= 2 ? stats().gps.alt.toString() + "m" : "no location"}</span>
 			</div>
 			<div id="dash-stats">
 				<div class="card">
 					<LucideCpu />
-					<span>{stats().cpu + "%"}</span>
+					<span class="mono">{stats().cpu + "%"}</span>
 				</div>
 				<div class="card">
 					<LucideMemoryStick />
-					<span>{(stats().mem_used / 1000000000).toFixed(2) + "/" + (stats().mem_total / 1000000000).toFixed(2) + "GB"}</span>
+					<span class="mono">{(stats().mem_used / 1000000000).toFixed(2) + "/" + (stats().mem_total / 1000000000).toFixed(2) + "GB"}</span>
 				</div>
 			</div>
 			<div id="dash-log" class="card">

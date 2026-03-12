@@ -75,9 +75,9 @@
 		@font-face {
 			font-family: "Jetbrains";
 			src:
-				local("JetBrains Mono Medium"),
-				local("JetBrainsMono-Medium"),
-				url("/font/jetbrains-medium.woff2") format("woff2");
+				local("JetBrainsMono-Regular"),
+				local("JetBrainsMono-Regular"),
+				url("/font/jetbrains-regular.woff2") format("woff2");
 			font-weight: normal;
 			font-style: normal;
 			font-display: block;
@@ -102,6 +102,11 @@
 			--outline-active-colorless: 1px var(--white-hover) solid;
 			--hover: brightness(0.7);
 			--mono: "Jetbrains";
+		}
+
+		.mono {
+			font-family:
+				var(--mono), monospace;
 		}
 
 		* {
