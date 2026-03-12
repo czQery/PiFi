@@ -28,6 +28,8 @@ export const getBettercapWifi = async (): Promise<bettercapWifiAPData[]> => {
 	const rspJson: bettercapWifiData = await rsp.json()
 
 	if (rsp.status === 200 && rspJson.aps) {
+		rspJson.aps.sort((a, b) => b.rssi - a.rssi)
+
 		return rspJson.aps as bettercapWifiAPData[]
 	}
 

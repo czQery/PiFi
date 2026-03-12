@@ -41,8 +41,7 @@ const AP: Component<APProps> = props => {
 				<span class="value">{props.ap.vendor !== "" ? props.ap.vendor : "unknown"}</span>
 			</div>
 			<div class="ap-clients">
-				<hr class="h" />
-
+				<hr class="h" style="margin: 2.5px;" />
 				<Show when={props.ap.clients.length !== 0} fallback={<span>No clients!</span>}>
 					<For each={props.ap.clients as bettercapWifiClientData[]}>
 						{(client, _) => (

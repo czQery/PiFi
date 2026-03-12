@@ -6,6 +6,7 @@
       "name": "pifi",
       "dependencies": {
         "@ark-ui/solid": "^5.34.1",
+        "@solid-primitives/timer": "^1.4.4",
         "@solidjs/router": "^0.15.4",
         "@types/node": "^25.3.5",
         "browserslist": "^4.28.1",
@@ -181,6 +182,8 @@
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.52.2", "", { "os": "win32", "cpu": "x64" }, "sha512-ARz+Bs8kY6FtitYM96PqPEVvPXqEZmPZsSkXvyX19YzDqkCaIlhCieLLMI5hxO9SRZ2XtCtm8wxhy0iJ2jxNfw=="],
 
     "@solid-primitives/keyed": ["@solid-primitives/keyed@1.5.3", "", { "peerDependencies": { "solid-js": "^1.6.12" } }, "sha512-zNadtyYBhJSOjXtogkGHmRxjGdz9KHc8sGGVAGlUABkE8BED2tbIZoxkwSqzOwde8OcUEH0bb5DLZUWIMvyBSA=="],
+
+    "@solid-primitives/timer": ["@solid-primitives/timer@1.4.4", "", { "peerDependencies": { "solid-js": "^1.6.12" } }, "sha512-Ayjyb3+v1hyU92vuLUN0tVHq2mmTCPGxSDLGJMsDydRqx9ZfJIc9xj6cxK4XvdY3pif3ps2mIv52pjgToybEpQ=="],
 
     "@solidjs/router": ["@solidjs/router@0.15.4", "", { "peerDependencies": { "solid-js": "^1.8.6" } }, "sha512-WOpgg9a9T638cR+5FGbFi/IV4l2FpmBs1GpIMSPa0Ce9vyJN7Wts+X2PqMf9IYn0zUj2MlSJtm1gp7/HI/n5TQ=="],
 
