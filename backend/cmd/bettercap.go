@@ -67,6 +67,7 @@ func InitBettercap() {
 			}()
 		}
 
+		probes := make(map[string]struct{})
 		scanner := bufio.NewScanner(stdout)
 		scannerRegex := regexp.MustCompile(`^\[(?P<time>[^]]+)]\s+\[(?P<module>[^]]+)]\s+(?:\[(?P<level>[^]]+)]\s+)?(?P<msg>.*)$`)
 		for scanner.Scan() {
@@ -108,16 +109,20 @@ func InitBettercap() {
 					"type":  capType,
 				}).Info("cmd - handshake captured")
 			case "wifi.client.probe":
-				bssid, ssid, rssi := hp.ParseProbe(data)
+				bssid, ssid, _ := hp.ParseProbe(data)
 				if bssid == "" {
 					break
 				}
 
+				if _, ok := probes[bssid+ssid]; ok {
+					break
+				}
+
+				probes[bssid+ssid] = struct{}{}
 				logrus.WithFields(logrus.Fields{
 					"bssid": bssid,
 					"ssid":  ssid,
-					"rssi":  rssi,
-				}).Debug("cmd - probe detected")
+				}).Info("cmd - probe detected")
 			case "wifi.ap.new":
 				bssid, ssid, rssi := hp.ParseAP(data)
 				if bssid == "" {
