@@ -81,7 +81,12 @@ const Dash: Component = () => {
 				</Show>
 				<h2>{stats().hotspot.ssid !== "" ? stats().hotspot.ssid : "xxxx"}</h2>
 				<h4>Status: {stats().hotspot.ssid !== "" ? stats().hotspot.portal ? "portal" : "normal" : "off"}</h4>
-				<span>Clients: ?, Passwords: ?</span>
+				<div style="display:flex;gap:5px">
+					<span>DB:</span>
+					<span class="mono">{stats().db}</span>
+					<span>Scan:</span>
+					<span class="mono">{stats().scan}</span>
+				</div>
 				<button id="dash-overview-settings" onClick={() => navigate("/settings")}>
 					<LucideSettings />
 					<span>settings</span>
