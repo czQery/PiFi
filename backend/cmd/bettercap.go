@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"bufio"
+	"cmp"
 	"context"
 	"fmt"
 	"os/exec"
 	"regexp"
+	"slices"
 	"strings"
 	"time"
 
@@ -67,6 +69,7 @@ func InitBettercap() {
 			}()
 		}
 
+		probes := make(map[string]struct{})
 		scanner := bufio.NewScanner(stdout)
 		scannerRegex := regexp.MustCompile(`^\[(?P<time>[^]]+)]\s+\[(?P<module>[^]]+)]\s+(?:\[(?P<level>[^]]+)]\s+)?(?P<msg>.*)$`)
 		for scanner.Scan() {
@@ -108,16 +111,20 @@ func InitBettercap() {
 					"type":  capType,
 				}).Info("cmd - handshake captured")
 			case "wifi.client.probe":
-				bssid, ssid, rssi := hp.ParseProbe(data)
+				bssid, ssid, _ := hp.ParseProbe(data)
 				if bssid == "" {
 					break
 				}
 
+				if _, ok := probes[bssid+ssid]; ok {
+					break
+				}
+
+				probes[bssid+ssid] = struct{}{}
 				logrus.WithFields(logrus.Fields{
 					"bssid": bssid,
 					"ssid":  ssid,
-					"rssi":  rssi,
-				}).Debug("cmd - probe detected")
+				}).Info("cmd - probe detected")
 			case "wifi.ap.new":
 				bssid, ssid, rssi := hp.ParseAP(data)
 				if bssid == "" {
@@ -212,5 +219,11 @@ func GetBettercapAPs(ctx context.Context) ([]gjson.Result, error) {
 		return []gjson.Result{}, err
 	}
 
-	return gjson.Parse(rsp.String()).Get(`aps`).Array(), nil
+	result := gjson.Parse(rsp.String()).Get(`aps`).Array()
+
+	slices.SortFunc(result, func(a, b gjson.Result) int {
+		return cmp.Compare(a.Get("channel").Int(), b.Get("channel").Int())
+	})
+
+	return result, nil
 }

@@ -2,6 +2,8 @@ export interface statsData {
 	cpu: number
 	mem_total: number
 	mem_used: number
+	db: number
+	scan: number
 	hotspot: statsHotspotData
 	gps: statsGPSData
 }

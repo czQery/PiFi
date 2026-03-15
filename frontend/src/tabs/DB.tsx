@@ -31,7 +31,7 @@ const DB: Component = () => {
 				<span class="title">Database</span>
 				<div class="db-flex">
 					<span>Access points:</span>
-					<span class="value">{db().aps.toString()}</span>
+					<span class="value mono">{db().aps.toString()}</span>
 				</div>
 			</div>
 			<Option data={option()} />

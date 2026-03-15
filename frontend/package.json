@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"@ark-ui/solid": "^5.34.1",
+		"@solid-primitives/timer": "^1.4.4",
 		"@solidjs/router": "^0.15.4",
 		"@types/node": "^25.3.5",
 		"browserslist": "^4.28.1",

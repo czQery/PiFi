@@ -100,6 +100,18 @@ div [data-scope="progress"][data-part="track"] {
 	outline: var(--outline);
 }
 
+hr {
+	height: 0;
+	width: 0;
+	border: none;
+	display: block;
+}
+
+hr.h {
+	width: 100%;
+	border-top: var(--outline);
+}
+
 #pifi {
 	margin: 0;
 	height: 30px;

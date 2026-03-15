@@ -2,12 +2,14 @@ package sse
 
 import (
 	"bufio"
+	"context"
 	"math"
 	"os"
 	"sync"
 	"time"
 
 	"github.com/czQery/PiFi/backend/cmd"
+	"github.com/czQery/PiFi/backend/db"
 	"github.com/czQery/PiFi/backend/hp"
 	"github.com/gofiber/fiber/v2"
 	"github.com/mackerelio/go-osstat/cpu"
@@ -18,6 +20,8 @@ type responseStats struct {
 	Cpu      float64              `json:"cpu"`
 	MemTotal uint64               `json:"mem_total"`
 	MemUsed  uint64               `json:"mem_used"`
+	DB       int64                `json:"db"`
+	Scan     int64                `json:"scan"`
 	Hotspot  responseStatsHotspot `json:"hotspot"`
 	GPS      cmd.GPSData          `json:"gps"`
 }
@@ -39,6 +43,8 @@ func Dash(c *fiber.Ctx) error {
 	c.Set("Connection", "keep-alive")
 
 	c.Context().SetBodyStreamWriter(func(w *bufio.Writer) {
+		ctx := context.Background()
+
 		ticker := time.NewTicker(5 * time.Second)
 		defer ticker.Stop()
 
@@ -52,7 +58,7 @@ func Dash(c *fiber.Ctx) error {
 			err     error
 		)
 
-		data, cpuLast = getStats(cpuLast)
+		data, cpuLast = getStats(ctx, cpuLast)
 		_ = sendEvent(w, "stats", data)
 		data, _ = os.ReadFile(hp.LogFileName)
 		_ = sendEvent(w, "log", responseLog{Raw: data})
@@ -62,7 +68,7 @@ func Dash(c *fiber.Ctx) error {
 			case data = <-logChan:
 				err = sendEvent(w, "log", responseLog{Raw: data})
 			case <-ticker.C:
-				data, cpuLast = getStats(cpuLast)
+				data, cpuLast = getStats(ctx, cpuLast)
 				err = sendEvent(w, "stats", data)
 			}
 
@@ -86,8 +92,11 @@ func DashLog(line []byte) {
 	})
 }
 
-func getStats(cpuLast *cpu.Stats) (responseStats, *cpu.Stats) {
+func getStats(ctx context.Context, cpuLast *cpu.Stats) (responseStats, *cpu.Stats) {
 	var data responseStats
+
+	apsScan, _ := cmd.GetBettercapAPs(ctx)
+	apsDB := db.SelectAP(ctx)
 
 	memNow, err := memory.Get()
 	if err != nil {
@@ -106,7 +115,9 @@ func getStats(cpuLast *cpu.Stats) (responseStats, *cpu.Stats) {
 			SSID:   cmd.Hotspot,
 			Portal: cmd.HotspotPortal != "",
 		},
-		GPS: cmd.GPS,
+		Scan: int64(len(apsScan)),
+		DB:   int64(len(apsDB)),
+		GPS:  cmd.GPS,
 	}
 
 	if cpuLast != nil {
