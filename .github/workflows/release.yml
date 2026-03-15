@@ -16,10 +16,14 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                arch: [amd64, arm]
+                arch: [arm]
+                arm: [6, 7]
+                include:
+                    - arch: amd64
+                    - arm: 0
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
 
             - name: Set env
               run: echo "ASSET_NAME=release-${{matrix.arch}}" >> $GITHUB_ENV
@@ -45,9 +49,9 @@ jobs:
                   mkdir -p ../${{env.ASSET_NAME}} && cp -r dist ../${{env.ASSET_NAME}}/dist
 
             - name: Set up Go
-              uses: actions/setup-go@v5
+              uses: actions/setup-go@v6
               with:
-                  go-version: "1.23"
+                  go-version: "1.26"
                   cache-dependency-path: "./backend/go.sum"
 
             - name: Go get
@@ -58,7 +62,7 @@ jobs:
               working-directory: ./backend
               env:
                   GOOS: linux
-                  GOARM: 6
+                  GOARM: ${{matrix.arm}}
                   GOARCH: ${{matrix.arch}}
                   CGO_ENABLED: 0
               run: |
@@ -71,14 +75,14 @@ jobs:
               run: cp -r portal ../${{env.ASSET_NAME}}/portal
 
             - name: Compress release
-              uses: thedoctor0/zip-release@0.7.5
+              uses: thedoctor0/zip-release@0.7.6
               with:
                   type: "tar"
                   path: ${{env.ASSET_NAME}}/
                   filename: "${{env.ASSET_NAME}}.tar.gz"
 
             - name: Upload release
-              uses: ncipollo/release-action@v1.16
+              uses: ncipollo/release-action@v1.21
               with:
                   allowUpdates: true
                   replacesArtifacts: true
