@@ -82,7 +82,7 @@ jobs:
                   filename: "${{env.ASSET_NAME}}.tar.gz"
 
             - name: Upload release
-              uses: ncipollo/release-action@v1.21
+              uses: ncipollo/release-action@v1.21.0
               with:
                   allowUpdates: true
                   replacesArtifacts: true
