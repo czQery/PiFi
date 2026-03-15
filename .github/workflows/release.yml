@@ -20,18 +20,12 @@ jobs:
                 arm: [6, 7]
                 include:
                     - arch: amd64
-                    - arm: 0
         steps:
             - name: Checkout
               uses: actions/checkout@v6
 
             - name: Set env
-              run: echo "ASSET_NAME=release-${{matrix.arch}}" >> $GITHUB_ENV
-
-            - name: Login to GitHub
-              uses: de-vri-es/setup-git-credentials@v2
-              with:
-                  credentials: ${{secrets.GIT_TOKEN}}
+              run: echo "ASSET_NAME=release-${{matrix.arch}}${{matrix.arm}}" >> $GITHUB_ENV
 
             - name: Set up Bun
               uses: oven-sh/setup-bun@v2
