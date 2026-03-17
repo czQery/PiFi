@@ -5,6 +5,7 @@ import (
 	"cmp"
 	"context"
 	"fmt"
+	"io"
 	"os/exec"
 	"regexp"
 	"slices"
@@ -43,7 +44,7 @@ func InitBettercap() {
 		errStart := cmd.Start()
 
 		if !init {
-			go func() {
+			go func(ctx context.Context) {
 				// wait few seconds so bettercap can start
 				time.Sleep(5 * time.Second)
 
@@ -66,112 +67,123 @@ func InitBettercap() {
 					}
 					return
 				}
-			}()
+			}(ctx)
 		}
 
-		probes := make(map[string]struct{})
-		scanner := bufio.NewScanner(stdout)
-		scannerRegex := regexp.MustCompile(`^\[(?P<time>[^]]+)]\s+\[(?P<module>[^]]+)]\s+(?:\[(?P<level>[^]]+)]\s+)?(?P<msg>.*)$`)
-		for scanner.Scan() {
-			line := scanner.Text()
+		go func(stdout io.ReadCloser, ctx context.Context) {
+			probes := make(map[string]struct{})
+			handshakes := make(map[string]struct{})
+			scanner := bufio.NewScanner(stdout)
+			scannerRegex := regexp.MustCompile(`^\[(?P<time>[^]]+)]\s+\[(?P<module>[^]]+)]\s+(?:\[(?P<level>[^]]+)]\s+)?(?P<msg>.*)$`)
 
-			matches := scannerRegex.FindStringSubmatch(line)
-			if matches == nil || len(matches) < 4+1 {
-				continue
-			}
+			for scanner.Scan() {
+				line := scanner.Text()
 
-			/*if strings.Contains(matches[2], "wifi") {
-				logrus.WithFields(logrus.Fields{
-					"module": strings.TrimSpace(matches[2]),
-					"msg":    matches[4],
-				}).Debug("cmd - bettercap out")
-			}*/
+				//fmt.Println("BTT", line)
 
-			event := strings.TrimSpace(matches[2])
-			data := strings.TrimSpace(matches[4])
-
-			switch event {
-			case "wifi.client.deauthentication":
-
-				// TODO: Create parser for this event
-				logrus.WithFields(logrus.Fields{
-					"data": data,
-				}).Debug("cmd - deauth detected")
-			case "wifi.client.handshake":
-				bssid, ssid, capType := hp.ParseHandshake(data)
-				if bssid == "" {
-					break
+				matches := scannerRegex.FindStringSubmatch(line)
+				if matches == nil || len(matches) < 4+1 {
+					continue
 				}
 
-				db.UpdateAPHandshake(ctx, bssid, true)
+				/*if strings.Contains(matches[2], "wifi") {
+					logrus.WithFields(logrus.Fields{
+						"module": strings.TrimSpace(matches[2]),
+						"msg":    matches[4],
+					}).Debug("cmd - bettercap out")
+				}*/
 
-				logrus.WithFields(logrus.Fields{
-					"bssid": bssid,
-					"ssid":  ssid,
-					"type":  capType,
-				}).Info("cmd - handshake captured")
-			case "wifi.client.probe":
-				bssid, ssid, _ := hp.ParseProbe(data)
-				if bssid == "" {
-					break
-				}
+				event := strings.TrimSpace(matches[2])
+				data := strings.TrimSpace(matches[4])
 
-				if _, ok := probes[bssid+ssid]; ok {
-					break
-				}
+				switch event {
+				case "wifi.client.deauthentication":
 
-				probes[bssid+ssid] = struct{}{}
-				logrus.WithFields(logrus.Fields{
-					"bssid": bssid,
-					"ssid":  ssid,
-				}).Info("cmd - probe detected")
-			case "wifi.ap.new":
-				bssid, ssid, rssi := hp.ParseAP(data)
-				if bssid == "" {
-					break
-				}
+					// TODO: Create parser for this event
+					logrus.WithFields(logrus.Fields{
+						"data": data,
+					}).Debug("cmd - deauth detected")
+				case "wifi.client.handshake":
+					bssid, ssid, capType := hp.ParseHandshake(data)
+					if bssid == "" {
+						break
+					}
 
-				details, detailsErr := GetBettercapAP(ctx, bssid)
-				if detailsErr != nil {
+					if _, ok := handshakes[bssid+ssid+capType]; ok {
+						break
+					}
+
+					handshakes[bssid+ssid+capType] = struct{}{}
+					db.UpdateAPHandshake(ctx, bssid, true)
+
 					logrus.WithFields(logrus.Fields{
 						"bssid": bssid,
-						"err":   detailsErr.Error(),
-					}).Warn("cmd - ap get details failed")
+						"ssid":  ssid,
+						"type":  capType,
+					}).Info("cmd - handshake captured")
+				case "wifi.client.probe":
+					bssid, ssid, _ := hp.ParseProbe(data)
+					if bssid == "" {
+						break
+					}
+
+					if _, ok := probes[bssid+ssid]; ok {
+						break
+					}
+
+					probes[bssid+ssid] = struct{}{}
+					logrus.WithFields(logrus.Fields{
+						"bssid": bssid,
+						"ssid":  ssid,
+					}).Info("cmd - probe detected")
+				case "wifi.ap.new":
+					bssid, ssid, rssi := hp.ParseAP(data)
+					if bssid == "" {
+						break
+					}
+
+					details, detailsErr := GetBettercapAP(ctx, bssid)
+					if detailsErr != nil {
+						logrus.WithFields(logrus.Fields{
+							"bssid": bssid,
+							"err":   detailsErr.Error(),
+						}).Warn("cmd - ap get details failed")
+					}
+
+					auth := details.Get("authentication").String()
+					if auth == "UNK" {
+						auth = "PSK"
+					}
+
+					mode := fmt.Sprintf("[%s-%s-%s]", details.Get("encryption").String(), auth, details.Get("cipher").String())
+
+					if details.Get("wps.State").Exists() {
+						mode += "[WPS]"
+					}
+
+					mode += "[ESS]"
+					mode = strings.ReplaceAll(mode, "--]", "]")
+					mode = strings.ReplaceAll(mode, "-]", "]")
+
+					var (
+						lat float64 = 0
+						lon float64 = 0
+						alt float64 = 0
+						acc float64 = 0
+					)
+
+					// use real gps data if they are less or equal 5 seconds old
+					if time.Now().Unix()-GPS.Time <= 5 {
+						lat = GPS.Lat
+						lon = GPS.Lon
+						alt = GPS.Alt
+						acc = GPS.Acc
+					}
+
+					db.InsertAP(ctx, bssid, ssid, mode, time.Now().Format(time.DateTime), details.Get("channel").Int(), details.Get("frequency").Int(), rssi, lat, lon, alt, acc, "WIFI")
 				}
-
-				auth := details.Get("authentication").String()
-				if auth == "UNK" {
-					auth = "PSK"
-				}
-
-				mode := fmt.Sprintf("[%s-%s-%s]", details.Get("encryption").String(), auth, details.Get("cipher").String())
-
-				if details.Get("wps.State").Exists() {
-					mode += "[WPS]"
-				}
-
-				mode += "[ESS]"
-				mode = strings.ReplaceAll(mode, "--]", "]")
-				mode = strings.ReplaceAll(mode, "-]", "]")
-
-				var (
-					lat float64 = 0
-					lon float64 = 0
-					alt float64 = 0
-					acc float64 = 0
-				)
-
-				// use real gps data if they are less or equal 5 seconds old
-				if time.Now().Unix()-GPS.Time <= 5 {
-					lat = GPS.Lat
-					lon = GPS.Lon
-					alt = GPS.Alt
-					acc = GPS.Acc
-				}
-
-				db.InsertAP(ctx, bssid, ssid, mode, time.Now().Format(time.DateTime), details.Get("channel").Int(), details.Get("frequency").Int(), rssi, lat, lon, alt, acc, "WIFI")
 			}
-		}
+		}(stdout, ctx)
 
 		init = false
 		errWait := cmd.Wait()
@@ -195,12 +207,10 @@ func SetBettercap(ctx context.Context, cmd string) error {
 }
 
 func SetBettercapMonitor(ctx context.Context, iface string) error {
-	_ = SetBettercap(ctx, "ticker off")
-	return SetBettercap(ctx, "set wifi.interface "+iface+";wifi.recon on;set ticker.commands 'wifi.recon on';ticker on")
+	return SetBettercap(ctx, "set wifi.interface "+iface+";wifi.recon on")
 }
 
 func DisableBettercapMonitor(ctx context.Context) error {
-	_ = SetBettercap(ctx, "ticker off")
 	return SetBettercap(ctx, "set wifi.interface null;wifi.recon off")
 }
 
