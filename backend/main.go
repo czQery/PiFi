@@ -335,6 +335,8 @@ func nmInit() {
 		}).Panic("main - settings load failed")
 	}
 
+	_ = cmd.SetRegion(ctx, settings.Main.Region)
+
 	applyErr := api.ApplySettings(ctx, settings, true)
 	if applyErr != nil {
 		if e, ok := errors.AsType[*api.Error](applyErr); !ok || e.Code == 500 {

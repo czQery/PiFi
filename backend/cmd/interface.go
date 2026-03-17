@@ -16,6 +16,10 @@ type Interface struct {
 	Description string
 }
 
+func SetRegion(ctx context.Context, region string) error {
+	return exec.CommandContext(ctx, "iw", "reg", "set", region).Run()
+}
+
 func GetInterfaceList(ctx context.Context) ([]Interface, error) {
 	var list []Interface
 	out, err := exec.CommandContext(ctx, NM, "-t", "device").Output()

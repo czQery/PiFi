@@ -15,10 +15,17 @@ import (
 )
 
 type SettingsResponse struct {
+	Main      SettingsMainResponse                 `json:"main"`
 	Hotspot   SettingsHotspotResponse              `json:"hotspot"`
 	Client    SettingsClientResponse               `json:"client"`
 	Monitor   SettingsMonitorResponse              `json:"monitor"`
 	Interface map[string]SettingsInterfaceResponse `json:"iface" mapstructure:"iface" koanf:"iface"`
+}
+
+type SettingsMainResponse struct {
+	Address string `json:"address"`
+	Gateway string `json:"gateway"`
+	Region  string `json:"region"`
 }
 
 type SettingsHotspotResponse struct {
@@ -202,6 +209,7 @@ func ApplySettings(ctx context.Context, settings SettingsResponse, force bool) e
 			logrus.WithFields(logrus.Fields{
 				"iface": ifaceName,
 			}).Info("cmd - setting up bettercap monitor")
+			_ = cmd.SetBettercap(ctx, "set wifi.region "+settingsSaved.Main.Region)
 			err = cmd.SetBettercapMonitor(ctx, ifaceName)
 			if err != nil && !force {
 				return errors.New("set monitor: " + err.Error())
