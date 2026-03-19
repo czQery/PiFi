@@ -12,7 +12,18 @@ func InitHotspot(ctx context.Context, iface string, item map[string]interface{})
 		"channel": 1,
 	}
 
-	err := exec.CommandContext(ctx, NM, "con", "add", "type", "wifi", "ifname", iface, "con-name", Con+"-hotspot", "autoconnect", "yes", "ssid", Con).Run()
+	err := SetInterfaceMode(ctx, iface, "managed")
+	if err != nil {
+		return item, hotspot, err
+	}
+
+	Hotspot = Con
+	HotspotBSSID, err = GetInterfaceBSSID(ctx, iface)
+	if err != nil {
+		return item, hotspot, err
+	}
+
+	err = exec.CommandContext(ctx, NM, "con", "add", "type", "wifi", "ifname", iface, "con-name", Con+"-hotspot", "autoconnect", "yes", "ssid", Con).Run()
 	if err != nil {
 		return item, hotspot, err
 	}
@@ -33,7 +44,18 @@ func InitHotspot(ctx context.Context, iface string, item map[string]interface{})
 }
 
 func SetHotspot(ctx context.Context, iface, ssid, channel, password string, portal bool) error {
-	err := exec.CommandContext(ctx, NM, "con", "modify", Con+"-hotspot", "connection.interface-name", iface, "802-11-wireless.ssid", ssid, "802-11-wireless.band", "bg", "802-11-wireless.channel", channel).Run()
+	err := SetInterfaceMode(ctx, iface, "managed")
+	if err != nil {
+		return errors.New("set interface mode: " + err.Error())
+	}
+
+	Hotspot = ssid
+	HotspotBSSID, err = GetInterfaceBSSID(ctx, iface)
+	if err != nil {
+		return errors.New("set bssid: " + err.Error())
+	}
+
+	err = exec.CommandContext(ctx, NM, "con", "modify", Con+"-hotspot", "connection.interface-name", iface, "802-11-wireless.ssid", ssid, "802-11-wireless.band", "bg", "802-11-wireless.channel", channel).Run()
 	if err != nil {
 		return errors.New("modify iface: " + err.Error())
 	}

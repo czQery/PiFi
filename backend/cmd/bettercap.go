@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"cmp"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os/exec"
@@ -18,6 +19,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
+
+var IsBettercapRunning bool
 
 func InitBettercap() {
 	ctx := context.Background()
@@ -43,6 +46,7 @@ func InitBettercap() {
 		stdout, _ := cmd.StdoutPipe()
 		errStart := cmd.Start()
 
+		// crash recover logic
 		if !init {
 			go func(ctx context.Context) {
 				// wait few seconds so bettercap can start
@@ -58,7 +62,7 @@ func InitBettercap() {
 						"iface": iface,
 					}).Info("cmd - recovering bettercap monitor")
 
-					err := SetBettercapMonitor(ctx, iface)
+					err := SetMonitor(ctx, iface, hp.Config.String("main.region"), MonitorAuto)
 					if err != nil {
 						logrus.WithFields(logrus.Fields{
 							"iface": iface,
@@ -85,6 +89,8 @@ func InitBettercap() {
 				if matches == nil || len(matches) < 4+1 {
 					continue
 				}
+
+				IsBettercapRunning = true
 
 				/*if strings.Contains(matches[2], "wifi") {
 					logrus.WithFields(logrus.Fields{
@@ -183,10 +189,13 @@ func InitBettercap() {
 					db.InsertAP(ctx, bssid, ssid, mode, time.Now().Format(time.DateTime), details.Get("channel").Int(), details.Get("frequency").Int(), rssi, lat, lon, alt, acc, "WIFI")
 				}
 			}
+
+			IsBettercapRunning = false
 		}(stdout, ctx)
 
 		init = false
 		errWait := cmd.Wait()
+		IsBettercapRunning = false
 		logrus.WithFields(logrus.Fields{
 			"errStart": errStart,
 			"errWait":  errWait,
@@ -197,9 +206,16 @@ func InitBettercap() {
 }
 
 func SetBettercap(ctx context.Context, cmd string) error {
+	if !IsBettercapRunning {
+		return errors.New("bettercap not running")
+	}
+
 	body := "{\"cmd\":\"" + cmd + "\"}"
-	_, err := req.NewClient().R().SetContext(ctx).SetBodyJsonString(body).Post(BC + "/api/session")
+	rsp, err := req.NewClient().R().SetContext(ctx).SetBodyJsonString(body).Post(BC + "/api/session")
 	if err != nil {
+		if rsp != nil {
+			return errors.New("post: " + rsp.GetStatus())
+		}
 		return err
 	}
 
@@ -215,6 +231,10 @@ func DisableBettercapMonitor(ctx context.Context) error {
 }
 
 func GetBettercapAP(ctx context.Context, bssid string) (gjson.Result, error) {
+	if !IsBettercapRunning {
+		return gjson.Result{}, errors.New("bettercap not running")
+	}
+
 	rsp, err := req.NewClient().R().SetContext(ctx).Get(BC + "/api/session/wifi")
 	if err != nil {
 		return gjson.Result{}, err
@@ -224,6 +244,10 @@ func GetBettercapAP(ctx context.Context, bssid string) (gjson.Result, error) {
 }
 
 func GetBettercapAPs(ctx context.Context) ([]gjson.Result, error) {
+	if !IsBettercapRunning {
+		return []gjson.Result{}, errors.New("bettercap not running")
+	}
+
 	rsp, err := req.NewClient().R().SetContext(ctx).Get(BC + "/api/session/wifi")
 	if err != nil {
 		return []gjson.Result{}, err

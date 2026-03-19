@@ -7,8 +7,13 @@ import (
 )
 
 func SetClient(ctx context.Context, iface, ssid, password string) error {
+	err := SetInterfaceMode(ctx, iface, "managed")
+	if err != nil {
+		return errors.New("set interface mode: " + err.Error())
+	}
+
 	_ = exec.CommandContext(ctx, NM, "con", "delete", Con+"-client").Run()
-	err := exec.CommandContext(ctx, NM, "device", "wifi", "list", "ifname", iface, "--rescan", "yes").Run()
+	err = exec.CommandContext(ctx, NM, "device", "wifi", "list", "ifname", iface, "--rescan", "yes").Run()
 	if err != nil {
 		return errors.New("wifi rescan: " + err.Error())
 	}

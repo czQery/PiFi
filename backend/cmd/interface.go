@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"os/exec"
 	"strings"
 
@@ -57,19 +56,16 @@ func SetInterfaceMode(ctx context.Context, iface string, mode string) error {
 		return nil
 	}
 
-	out, err = exec.CommandContext(ctx, "ip", "link", "set", iface, "down").Output()
-	if err != nil {
-		return errors.New(string(out))
+	if err = exec.CommandContext(ctx, "ip", "link", "set", iface, "down").Run(); err != nil {
+		return err
 	}
 
-	out, err = exec.CommandContext(ctx, "iw", "dev", iface, "set", "type", mode).Output()
-	if err != nil {
-		return errors.New(string(out))
+	if err = exec.CommandContext(ctx, "iw", "dev", iface, "set", "type", mode).Run(); err != nil {
+		return err
 	}
 
-	out, err = exec.CommandContext(ctx, "ip", "link", "set", iface, "up").Output()
-	if err != nil {
-		return errors.New(string(out))
+	if err = exec.CommandContext(ctx, "ip", "link", "set", iface, "up").Run(); err != nil {
+		return err
 	}
 
 	return nil

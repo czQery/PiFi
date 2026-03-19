@@ -28,6 +28,11 @@ func Timer() {
 	)
 
 	for range time.Tick(time.Second) {
+
+		if !cmd.IsBettercapRunning {
+			continue
+		}
+
 		if time.Since(refreshTime) > cmd.CapRefresh {
 			handshakes = net.DWPAGet(ctx)
 			refreshTime = time.Now()

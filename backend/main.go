@@ -11,9 +11,8 @@ import (
 
 	"github.com/czQery/PiFi/backend/db"
 	"github.com/czQery/PiFi/backend/sse"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/gofiber/fiber/v2/middleware/proxy"
-
-	"github.com/mitchellh/mapstructure"
 
 	"github.com/czQery/PiFi/backend/api"
 	"github.com/czQery/PiFi/backend/cmd"
@@ -101,8 +100,7 @@ func main() {
 		JSONDecoder:           json.Unmarshal,
 		ServerHeader:          cmd.Con,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			var e *api.Error
-			if errors.As(err, &e) {
+			if e, ok := errors.AsType[*api.Error](err); ok {
 				log := logrus.WithFields(e.Fields())
 				switch e.Code {
 				case 400, 401, 404, 503:

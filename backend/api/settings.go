@@ -119,15 +119,6 @@ func ApplySettings(ctx context.Context, settings SettingsResponse, force bool) e
 				continue
 			}
 
-			err = cmd.SetInterfaceMode(ctx, ifaceName, "managed")
-			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"iface": ifaceName,
-					"mode":  iface.Mode,
-					"err":   err.Error(),
-				}).Error("cmd - failed to set interface mode")
-			}
-
 			if settings.Hotspot.Portal {
 				cmd.HotspotPortal = settings.Hotspot.PortalSource
 			} else {
@@ -139,15 +130,6 @@ func ApplySettings(ctx context.Context, settings SettingsResponse, force bool) e
 			}
 			if settings.Hotspot.Channel == 0 {
 				settings.Hotspot.Channel = 1
-			}
-
-			cmd.Hotspot = settings.Hotspot.SSID
-			cmd.HotspotBSSID, err = cmd.GetInterfaceBSSID(ctx, ifaceName)
-			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"iface": ifaceName,
-					"err":   err.Error(),
-				}).Warn("cmd - failed to get BSSID of hotspot")
 			}
 
 			logrus.WithFields(logrus.Fields{
@@ -164,15 +146,6 @@ func ApplySettings(ctx context.Context, settings SettingsResponse, force bool) e
 		case "client":
 			if canSkip && settings.Client == settingsSaved.Client {
 				continue
-			}
-
-			err = cmd.SetInterfaceMode(ctx, ifaceName, "managed")
-			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"iface": ifaceName,
-					"mode":  iface.Mode,
-					"err":   err.Error(),
-				}).Error("cmd - failed to set interface mode")
 			}
 
 			logrus.WithFields(logrus.Fields{
@@ -195,22 +168,10 @@ func ApplySettings(ctx context.Context, settings SettingsResponse, force bool) e
 				continue
 			}
 
-			err = cmd.SetInterfaceMode(ctx, ifaceName, "monitor")
-			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"iface": ifaceName,
-					"mode":  iface.Mode,
-					"err":   err.Error(),
-				}).Error("cmd - failed to set interface mode")
-			}
-
-			cmd.MonitorAuto = settings.Monitor.Auto
-
 			logrus.WithFields(logrus.Fields{
 				"iface": ifaceName,
 			}).Info("cmd - setting up bettercap monitor")
-			_ = cmd.SetBettercap(ctx, "set wifi.region "+settingsSaved.Main.Region)
-			err = cmd.SetBettercapMonitor(ctx, ifaceName)
+			err = cmd.SetMonitor(ctx, ifaceName, settingsSaved.Main.Region, settings.Monitor.Auto)
 			if err != nil && !force {
 				return errors.New("set monitor: " + err.Error())
 			}
