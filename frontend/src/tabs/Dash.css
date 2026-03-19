@@ -105,7 +105,9 @@
 
 #dash-gps div svg {
 	width: 30px;
+	min-width: 30px;
 	height: 30px;
+	margin: auto 0;
 }
 
 #dash-stats {

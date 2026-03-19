@@ -1,15 +1,18 @@
-import type { ListCollection } from "@ark-ui/solid"
-import { Checkbox, createListCollection, Field, NumberInput, Select } from "@ark-ui/solid"
-import { type Accessor, type Component, Show } from "solid-js"
-import { Index, Portal } from "solid-js/web"
+import type {ListCollection} from "@ark-ui/solid"
+import {Checkbox, createListCollection, Select} from "@ark-ui/solid"
+import {type Accessor, type Component, Show} from "solid-js"
+import {Index, Portal} from "solid-js/web"
 
-import type { settingsData } from "../lib/api/settings.ts"
+import type {settingsData} from "../lib/api/settings.ts"
 
 import "./SettingsInterface.css"
 
-import { LucideUnplug } from "lucide-solid"
-import { produce, type SetStoreFunction } from "solid-js/store"
-import { portals, settingsModes } from "../tabs/Settings.tsx"
+import {LucideUnplug} from "lucide-solid"
+import {produce, type SetStoreFunction} from "solid-js/store"
+import {portals, settingsModes} from "../tabs/Settings.tsx"
+import InputBool from "./input/InputBool.tsx"
+import InputNumber from "./input/InputNumber.tsx"
+import InputString from "./input/InputString.tsx"
 
 interface settingsInterfaceProps {
 	name: string
@@ -84,49 +87,37 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 			</Select.Root>
 			<Show when={props.settings.iface[props.name].mode === "hotspot"}>
 				<div class="settings-iface-hotspot">
-					<Field.Root>
-						<Field.Label>SSID</Field.Label>
-						<Field.Input
-							placeholder={"PiFi"}
-							value={props.settings.hotspot.ssid}
-							onInput={e => {
-								props.setSettings(produce(state => {
-									state.hotspot.ssid = e.currentTarget.value
-								}))
-							}}
-						/>
-						<Field.ErrorText>Error Info</Field.ErrorText>
-					</Field.Root>
-					<Field.Root>
-						<Field.Label>Password</Field.Label>
-						<Field.Input
-							placeholder={"none"}
-							value={props.settings.hotspot.password}
-							onInput={e => {
-								props.setSettings(produce(state => {
-									state.hotspot.password = e.currentTarget.value
-								}))
-							}}
-						/>
-						<Field.ErrorText>Error Info</Field.ErrorText>
-					</Field.Root>
-					<NumberInput.Root
-						value={(props.settings.hotspot.channel || channelMin).toString()}
+					<InputString
+						name="SSID"
+						value={props.settings.hotspot.ssid}
+						placeholder="PiFi"
+						callback={e => {
+							props.setSettings(produce(state => {
+								state.hotspot.ssid = e.currentTarget.value
+							}))
+						}}
+					/>
+					<InputString
+						name="Password"
+						value={props.settings.hotspot.password}
+						placeholder="none"
+						callback={e => {
+							props.setSettings(produce(state => {
+								state.hotspot.password = e.currentTarget.value
+							}))
+						}}
+					/>
+					<InputNumber
+						name="Channel"
+						value={props.settings.hotspot.channel}
 						min={channelMin}
 						max={channelMax}
-						onValueChange={e => {
+						callback={e => {
 							props.setSettings(produce(state => {
 								state.hotspot.channel = e.valueAsNumber
 							}))
 						}}
-					>
-						<NumberInput.Label>Channel</NumberInput.Label>
-						<NumberInput.Input class="mono" />
-						<NumberInput.Control>
-							<NumberInput.DecrementTrigger>-</NumberInput.DecrementTrigger>
-							<NumberInput.IncrementTrigger>+</NumberInput.IncrementTrigger>
-						</NumberInput.Control>
-					</NumberInput.Root>
+					/>
 				</div>
 				<div class="settings-iface-hotspot">
 					<Checkbox.Root
@@ -186,91 +177,63 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 			</Show>
 			<Show when={props.settings.iface[props.name].mode === "client"}>
 				<div class="settings-iface-client">
-					<Field.Root>
-						<Field.Label>SSID</Field.Label>
-						<Field.Input
-							placeholder={"PiFi"}
-							value={props.settings.client.ssid}
-							onInput={e => {
-								props.setSettings(produce(state => {
-									state.client.ssid = e.currentTarget.value
-								}))
-							}}
-						/>
-						<Field.ErrorText>Error Info</Field.ErrorText>
-					</Field.Root>
-					<Field.Root>
-						<Field.Label>Password</Field.Label>
-						<Field.Input
-							placeholder={"none"}
-							value={props.settings.client.password}
-							onInput={e => {
-								props.setSettings(produce(state => {
-									state.client.password = e.currentTarget.value
-								}))
-							}}
-						/>
-						<Field.ErrorText>Error Info</Field.ErrorText>
-					</Field.Root>
+					<InputString
+						name="SSID"
+						value={props.settings.client.ssid}
+						placeholder="PiFi"
+						callback={e => {
+							props.setSettings(produce(state => {
+								state.client.ssid = e.currentTarget.value
+							}))
+						}}
+					/>
+					<InputString
+						name="Password"
+						value={props.settings.client.password}
+						placeholder="none"
+						callback={e => {
+							props.setSettings(produce(state => {
+								state.client.password = e.currentTarget.value
+							}))
+						}}
+					/>
 				</div>
 			</Show>
 
 			<Show when={props.settings.iface[props.name].mode === "monitor"}>
 				<div class="settings-iface-monitor">
-					<Checkbox.Root
-						checked={props.settings.monitor.wardrive}
-						onCheckedChange={e => {
+					<InputBool
+						name="Wardrive"
+						value={props.settings.monitor.wardrive}
+						callback={e => {
 							props.setSettings(produce(state => {
 								state.monitor.wardrive = e.checked as boolean
 							}))
 						}}
-					>
-						<Checkbox.Label>Wardrive</Checkbox.Label>
-						<Checkbox.Control>
-							<div>
-								<span></span>
-								<div></div>
-							</div>
-						</Checkbox.Control>
-						<Checkbox.HiddenInput />
-					</Checkbox.Root>
+					/>
 				</div>
 				<div class="settings-iface-monitor">
-					<Checkbox.Root
-						checked={props.settings.monitor.channel_hop}
-						onCheckedChange={e => {
+					<InputBool
+						name="Channel-hop"
+						value={props.settings.monitor.channel_hop}
+						callback={e => {
 							props.setSettings(produce(state => {
 								state.monitor.channel_hop = e.checked as boolean
 							}))
 						}}
-					>
-						<Checkbox.Label>Channel-hop</Checkbox.Label>
-						<Checkbox.Control>
-							<div>
-								<span></span>
-								<div></div>
-							</div>
-						</Checkbox.Control>
-						<Checkbox.HiddenInput />
-					</Checkbox.Root>
+					/>
 					<Show when={!props.settings.monitor.channel_hop}>
-						<NumberInput.Root
-							value={(props.settings.monitor.channel || channelMin).toString()}
+						<InputNumber
+							name="Channel"
+							value={props.settings.monitor.channel}
 							min={channelMin}
 							max={channelMax}
-							onValueChange={e => {
+							callback={e => {
 								props.setSettings(produce(state => {
 									state.monitor.channel = e.valueAsNumber
 								}))
 							}}
-						>
-							<NumberInput.Label>Channel</NumberInput.Label>
-							<NumberInput.Input class="mono" />
-							<NumberInput.Control>
-								<NumberInput.DecrementTrigger>-</NumberInput.DecrementTrigger>
-								<NumberInput.IncrementTrigger>+</NumberInput.IncrementTrigger>
-							</NumberInput.Control>
-						</NumberInput.Root>
+						/>
 					</Show>
 				</div>
 			</Show>
