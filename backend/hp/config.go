@@ -19,7 +19,7 @@ func ConfigLoad() {
 	err := Config.Load(file.Provider(ConfigName), toml.Parser())
 	if err != nil {
 		if strings.Contains(err.Error(), "no such file or directory") {
-			err = os.WriteFile(ConfigName, []byte("[main]\naddress = \":80\"\npassword = \"ligma\"\ngateway = \"10.42.0.1\"\nregion = \"CZ\""), 0644)
+			err = os.WriteFile(ConfigName, []byte("[main]\naddress = \":80\"\npassword = \"ligma\"\ngateway = \"10.42.0.1\"\nregion = \"CZ\"\n[settings.monitor]\nchannel_hop = true\n"), 0644)
 			if err == nil {
 				logrus.Info("config - created default config")
 				time.Sleep(3 * time.Second) // prevent very fast infinity loop just in case something went wrong

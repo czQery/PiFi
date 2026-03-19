@@ -18,6 +18,9 @@ interface settingsInterfaceProps {
 	settingsModes: Accessor<string[]>
 }
 
+const channelMin = 1
+const channelMax = 13
+
 const SettingsInterface: Component<settingsInterfaceProps> = props => {
 	const portalsCollection: ListCollection<string> = createListCollection({ items: portals() })
 	const modesCollection: ListCollection<string> = createListCollection({ items: ["none", "hotspot", "client", "monitor"] })
@@ -108,9 +111,9 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 						<Field.ErrorText>Error Info</Field.ErrorText>
 					</Field.Root>
 					<NumberInput.Root
-						value={props.settings.hotspot.channel.toString()}
-						min={1}
-						max={14}
+						value={(props.settings.hotspot.channel || channelMin).toString()}
+						min={channelMin}
+						max={channelMax}
 						onValueChange={e => {
 							props.setSettings(produce(state => {
 								state.hotspot.channel = e.valueAsNumber
@@ -215,14 +218,14 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 			<Show when={props.settings.iface[props.name].mode === "monitor"}>
 				<div class="settings-iface-monitor">
 					<Checkbox.Root
-						checked={props.settings.monitor.auto}
+						checked={props.settings.monitor.wardrive}
 						onCheckedChange={e => {
 							props.setSettings(produce(state => {
-								state.monitor.auto = e.checked as boolean
+								state.monitor.wardrive = e.checked as boolean
 							}))
 						}}
 					>
-						<Checkbox.Label>Auto</Checkbox.Label>
+						<Checkbox.Label>Wardrive</Checkbox.Label>
 						<Checkbox.Control>
 							<div>
 								<span></span>
@@ -231,6 +234,44 @@ const SettingsInterface: Component<settingsInterfaceProps> = props => {
 						</Checkbox.Control>
 						<Checkbox.HiddenInput />
 					</Checkbox.Root>
+				</div>
+				<div class="settings-iface-monitor">
+					<Checkbox.Root
+						checked={props.settings.monitor.channel_hop}
+						onCheckedChange={e => {
+							props.setSettings(produce(state => {
+								state.monitor.channel_hop = e.checked as boolean
+							}))
+						}}
+					>
+						<Checkbox.Label>Channel-hop</Checkbox.Label>
+						<Checkbox.Control>
+							<div>
+								<span></span>
+								<div></div>
+							</div>
+						</Checkbox.Control>
+						<Checkbox.HiddenInput />
+					</Checkbox.Root>
+					<Show when={!props.settings.monitor.channel_hop}>
+						<NumberInput.Root
+							value={(props.settings.monitor.channel || channelMin).toString()}
+							min={channelMin}
+							max={channelMax}
+							onValueChange={e => {
+								props.setSettings(produce(state => {
+									state.monitor.channel = e.valueAsNumber
+								}))
+							}}
+						>
+							<NumberInput.Label>Channel</NumberInput.Label>
+							<NumberInput.Input class="mono" />
+							<NumberInput.Control>
+								<NumberInput.DecrementTrigger>-</NumberInput.DecrementTrigger>
+								<NumberInput.IncrementTrigger>+</NumberInput.IncrementTrigger>
+							</NumberInput.Control>
+						</NumberInput.Root>
+					</Show>
 				</div>
 			</Show>
 		</div>

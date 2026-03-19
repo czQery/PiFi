@@ -33,19 +33,19 @@ func Timer() {
 			continue
 		}
 
-		if time.Since(refreshTime) > cmd.CapRefresh {
+		if cmd.MonitorWardrive && time.Since(refreshTime) > cmd.CapRefresh {
 			handshakes = net.DWPAGet(ctx)
 			refreshTime = time.Now()
 		}
 
-		if time.Since(capTime) > cmd.CapDelay {
+		if cmd.MonitorWardrive && time.Since(capTime) > cmd.CapDelay {
 			aps, _ = cmd.GetBettercapAPs(ctx)
 			channelLast = "0"
 
 			for _, ap := range aps {
 				bssid = ap.Get("mac").String()
 
-				if !cmd.MonitorAuto || bssid == cmd.HotspotBSSID || ap.Get("encryption").String() == "OPEN" {
+				if bssid == cmd.HotspotBSSID || ap.Get("encryption").String() == "OPEN" {
 					continue
 				}
 
@@ -61,18 +61,22 @@ func Timer() {
 				}
 
 				channel = strconv.FormatInt(ap.Get("channel").Int(), 10)
-				if channel != channelLast {
-					err = cmd.SetBettercap(ctx, "wifi.recon.channel "+channel)
-					if err != nil {
-						logrus.WithFields(logrus.Fields{
-							"channel": channel,
-							"err":     err.Error(),
-						}).Error("timer - recon channel failed")
-					}
+				if cmd.MonitorChannelHop {
+					if channel != channelLast {
+						err = cmd.SetBettercap(ctx, "wifi.recon.channel "+channel)
+						if err != nil {
+							logrus.WithFields(logrus.Fields{
+								"channel": channel,
+								"err":     err.Error(),
+							}).Error("timer - recon channel failed")
+						}
 
-					if channelLast != "0" {
-						time.Sleep(cmd.CapDwell)
+						if channelLast != "0" {
+							time.Sleep(cmd.CapDwell)
+						}
 					}
+				} else if channel != strconv.Itoa(cmd.MonitorChannel) {
+					continue
 				}
 
 				err = cmd.SetBettercap(ctx, "wifi.assoc "+bssid+";wifi.deauth "+bssid)
@@ -86,13 +90,16 @@ func Timer() {
 				channelLast = channel
 			}
 
-			err = cmd.SetBettercap(ctx, "wifi.recon.channel clear")
-			if err != nil {
-				logrus.WithFields(logrus.Fields{
-					"channel": "clear",
-					"err":     err.Error(),
-				}).Error("timer - recon channel failed")
+			if cmd.MonitorChannelHop {
+				err = cmd.SetBettercap(ctx, "wifi.recon.channel clear")
+				if err != nil {
+					logrus.WithFields(logrus.Fields{
+						"channel": "clear",
+						"err":     err.Error(),
+					}).Error("timer - recon channel failed")
+				}
 			}
+
 			capTime = time.Now()
 		}
 

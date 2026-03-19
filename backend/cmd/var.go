@@ -4,4 +4,6 @@ var Hotspot string
 var HotspotPortal string
 var HotspotBSSID string
 
-var MonitorAuto bool
+var MonitorWardrive bool
+var MonitorChannelHop bool
+var MonitorChannel int

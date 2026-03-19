@@ -62,7 +62,7 @@ func InitBettercap() {
 						"iface": iface,
 					}).Info("cmd - recovering bettercap monitor")
 
-					err := SetMonitor(ctx, iface, hp.Config.String("main.region"), MonitorAuto)
+					err := SetMonitor(ctx, iface, hp.Config.String("main.region"), MonitorWardrive, MonitorChannelHop, MonitorChannel)
 					if err != nil {
 						logrus.WithFields(logrus.Fields{
 							"iface": iface,
@@ -222,8 +222,8 @@ func SetBettercap(ctx context.Context, cmd string) error {
 	return nil
 }
 
-func SetBettercapMonitor(ctx context.Context, iface string) error {
-	return SetBettercap(ctx, "set wifi.interface "+iface+";wifi.recon on")
+func SetBettercapMonitor(ctx context.Context, iface, channel string) error {
+	return SetBettercap(ctx, "set wifi.interface "+iface+";wifi.recon on;wifi.recon.channel "+channel)
 }
 
 func DisableBettercapMonitor(ctx context.Context) error {

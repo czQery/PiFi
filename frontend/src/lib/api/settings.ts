@@ -31,7 +31,9 @@ export interface settingsClientData {
 }
 
 export interface settingsMonitorData {
-	auto: boolean
+	wardrive: boolean
+	channel_hop: boolean
+	channel: number
 }
 
 export const getSettings = async (): Promise<settingsData> => {

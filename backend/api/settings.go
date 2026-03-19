@@ -42,7 +42,9 @@ type SettingsClientResponse struct {
 }
 
 type SettingsMonitorResponse struct {
-	Auto bool `json:"auto"`
+	Wardrive   bool `json:"wardrive"`
+	ChannelHop bool `json:"channel_hop" mapstructure:"channel_hop" koanf:"channel_hop"`
+	Channel    int  `json:"channel"`
 }
 
 type SettingsInterfaceResponse struct {
@@ -171,7 +173,7 @@ func ApplySettings(ctx context.Context, settings SettingsResponse, force bool) e
 			logrus.WithFields(logrus.Fields{
 				"iface": ifaceName,
 			}).Info("cmd - setting up bettercap monitor")
-			err = cmd.SetMonitor(ctx, ifaceName, settingsSaved.Main.Region, settings.Monitor.Auto)
+			err = cmd.SetMonitor(ctx, ifaceName, settingsSaved.Main.Region, settings.Monitor.Wardrive, settings.Monitor.ChannelHop, settings.Monitor.Channel)
 			if err != nil && !force {
 				return errors.New("set monitor: " + err.Error())
 			}
