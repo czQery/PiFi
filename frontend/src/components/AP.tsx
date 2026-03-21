@@ -1,11 +1,16 @@
 import "./AP.css"
 import { LucideWifi } from "lucide-solid"
-import { type Component, For, Show } from "solid-js"
+import { type Accessor, type Component, For, type Setter, Show } from "solid-js"
 import type { bettercapWifiAPData, bettercapWifiClientData } from "../lib/api/bettercap.ts"
-import { addZeroDecimal } from "../lib/other.ts"
+import { addZeroDecimal, parseAgo } from "../lib/other.ts"
+import type { loadingData } from "./Loading.tsx"
+import type { optionData } from "./Option.tsx"
 
 interface APProps {
 	ap: bettercapWifiAPData
+	option: Accessor<optionData>
+	setOption: Setter<optionData>
+	setLoading: Setter<loadingData>
 }
 
 const AP: Component<APProps> = props => {
@@ -52,6 +57,12 @@ const AP: Component<APProps> = props => {
 						)}
 					</For>
 				</Show>
+			</div>
+			<div class="ap-flex ap-footer">
+				<span class="value">{parseAgo(props.ap.last_seen)}</span>
+				<button class="card" onClick={() => props.setOption({ ...props.option(), open: true, message: props.ap.hostname + " [" + props.ap.mac + "]" })}>
+					attack
+				</button>
 			</div>
 		</div>
 	)

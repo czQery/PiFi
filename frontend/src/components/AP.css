@@ -21,3 +21,19 @@
 	gap: 5px;
 	flex-direction: column;
 }
+
+.ap-footer {
+	margin-top: 5px;
+	justify-content: space-between;
+	overflow: visible;
+	height: 30px;
+}
+
+.ap-footer > span {
+	margin-block: auto;
+}
+
+.ap-footer > button {
+	width: 100px;
+	height: 30px;
+}

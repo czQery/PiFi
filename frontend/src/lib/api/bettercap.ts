@@ -13,6 +13,7 @@ export interface bettercapWifiAPData {
 	encryption: string
 	cipher: string
 	authentication: string
+	last_seen: string
 	clients: bettercapWifiClientData[]
 }
 

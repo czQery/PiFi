@@ -1,4 +1,4 @@
-export const addZero = (num: number) => {
+export const addZero = (num: number): string => {
 	const str = num.toString()
 
 	switch (str.length) {
@@ -11,7 +11,7 @@ export const addZero = (num: number) => {
 	}
 }
 
-export const addZeroDecimal = (num: number) => {
+export const addZeroDecimal = (num: number): string => {
 	let str = num.toFixed(1)
 
 	switch (str.length) {
@@ -24,12 +24,19 @@ export const addZeroDecimal = (num: number) => {
 	}
 }
 
+export const parseAgo = (str: string): string => {
+	const pastTime = new Date(str).getTime()
+	const currentTime = Date.now()
+
+	return Math.floor((currentTime - pastTime) / 1000).toString() + "s ago"
+}
+
 // source: https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
-export const atobUnicode = (str: string) => {
+export const atobUnicode = (str: string): string => {
 	return decodeURIComponent(atob(str).split("").map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)).join(""))
 }
 
 // source: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
-export const toTitle = (str: string) => {
+export const toTitle = (str: string): string => {
 	return String(str).charAt(0).toUpperCase() + String(str).slice(1)
 }
