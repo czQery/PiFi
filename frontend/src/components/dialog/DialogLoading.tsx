@@ -3,18 +3,18 @@ import type { Accessor, Component, Setter } from "solid-js"
 import { createEffect, createSignal, Show } from "solid-js"
 import { Portal } from "solid-js/web"
 
-export interface loadingData {
+export interface dialogLoadingData {
 	title: string
 	pending: boolean
 	msg: string
 }
 
-interface loadingProps {
-	data: Accessor<loadingData>
-	setData: Setter<loadingData>
+interface dialogLoadingProps {
+	data: Accessor<dialogLoadingData>
+	setData: Setter<dialogLoadingData>
 }
 
-const Loading: Component<loadingProps> = props => {
+const DialogLoading: Component<dialogLoadingProps> = props => {
 	const [progress, setProgress] = createSignal(0)
 
 	const fakeProgress = async () => {
@@ -74,4 +74,4 @@ const Loading: Component<loadingProps> = props => {
 	)
 }
 
-export default Loading
+export default DialogLoading

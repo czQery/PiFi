@@ -3,8 +3,8 @@ import { createSignal, For, onMount } from "solid-js"
 
 import "./Settings.css"
 import { createStore } from "solid-js/store"
-import type { loadingData } from "../components/Loading.tsx"
-import Loading from "../components/Loading.tsx"
+import type { dialogLoadingData } from "../components/dialog/DialogLoading.tsx"
+import DialogLoading from "../components/dialog/DialogLoading.tsx"
 import SettingsInterface from "../components/SettingsInterface.tsx"
 import { getPortals } from "../lib/api/portals.ts"
 import type { settingsData, settingsInterfaceFieldsData } from "../lib/api/settings.ts"
@@ -21,7 +21,7 @@ const Settings: Component = () => {
 		setSettings(await getSettings())
 	})
 
-	const [loading, setLoading] = createSignal<loadingData>({ title: "Loading", pending: false, msg: "" })
+	const [loading, setLoading] = createSignal<dialogLoadingData>({ title: "Loading", pending: false, msg: "" })
 
 	createEffect(() => {
 		let modes = []
@@ -68,7 +68,7 @@ const Settings: Component = () => {
 					save
 				</button>
 			</div>
-			<Loading data={loading} setData={setLoading} />
+			<DialogLoading data={loading} setData={setLoading} />
 		</div>
 	)
 }

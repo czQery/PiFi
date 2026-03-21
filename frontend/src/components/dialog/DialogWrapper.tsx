@@ -2,25 +2,26 @@ import { Dialog } from "@ark-ui/solid"
 import { type Component, createEffect, createSignal, type JSXElement, Show } from "solid-js"
 import { Portal } from "solid-js/web"
 
-export interface optionButtonData {
+export interface dialogWrapperButtonData {
 	name: string
 	action: Function
 }
 
-export interface optionData {
+export interface dialogWrapperData {
 	open: boolean
 	title: string
 	message: string
+	helper: any // used to pass something to parent
+	buttonFirst: dialogWrapperButtonData | null
+	buttonSecond: dialogWrapperButtonData | null
+}
+
+interface dialogWrapperProps {
+	data: dialogWrapperData
 	children?: JSXElement
-	buttonFirst: optionButtonData | null
-	buttonSecond: optionButtonData | null
 }
 
-interface optionProps {
-	data: optionData
-}
-
-const Option: Component<optionProps> = props => {
+const DialogWrapper: Component<dialogWrapperProps> = props => {
 	const [open, setOpen] = createSignal(false)
 
 	const close = () => {
@@ -49,10 +50,8 @@ const Option: Component<optionProps> = props => {
 							<Dialog.Description style={{ "width": "300px", "margin-bottom": "10px", "color": "var(--white-hover)" }}>
 								{props.data.message}
 							</Dialog.Description>
-							<Show when={props.data.children}>
-								<div style={{ "display": "flex", "flex-direction": "column", "gap": "5px", "margin-bottom": "10px" }}>
-									{props.data.children}
-								</div>
+							<Show when={props.children}>
+								<div style={{ "display": "flex", "flex-direction": "column", "gap": "5px", "margin-bottom": "10px" }}>{props.children}</div>
 							</Show>
 							<div style={{ "display": "flex", "gap": "10px", "width": "100%", "justify-content": "right" }}>
 								<Show when={props.data.buttonFirst}>
@@ -74,4 +73,4 @@ const Option: Component<optionProps> = props => {
 	)
 }
 
-export default Option
+export default DialogWrapper

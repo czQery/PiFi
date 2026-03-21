@@ -3,14 +3,14 @@ import { LucideWifi } from "lucide-solid"
 import { type Accessor, type Component, For, type Setter, Show } from "solid-js"
 import type { bettercapWifiAPData, bettercapWifiClientData } from "../lib/api/bettercap.ts"
 import { addZeroDecimal, parseAgo } from "../lib/other.ts"
-import type { loadingData } from "./Loading.tsx"
-import type { optionData } from "./Option.tsx"
+import type { dialogLoadingData } from "./dialog/DialogLoading.tsx"
+import type { dialogWrapperData } from "./dialog/DialogWrapper.tsx"
 
 interface APProps {
 	ap: bettercapWifiAPData
-	option: Accessor<optionData>
-	setOption: Setter<optionData>
-	setLoading: Setter<loadingData>
+	option: Accessor<dialogWrapperData>
+	setOption: Setter<dialogWrapperData>
+	setLoading: Setter<dialogLoadingData>
 }
 
 const AP: Component<APProps> = props => {
