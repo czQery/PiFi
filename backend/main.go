@@ -145,6 +145,10 @@ func main() {
 	rAPI.Post("/attack/deauth", api.DeauthPost)
 	rAPI.Delete("/attack/deauth", api.DeauthDelete)
 
+	rAPI.Get("/attack/channel-switch", api.ChannelSwitchGet)
+	rAPI.Post("/attack/channel-switch", api.ChannelSwitchPost)
+	rAPI.Delete("/attack/channel-switch", api.ChannelSwitchDelete)
+
 	rAPI.Get("/cap/:file", func(c *fiber.Ctx) error {
 		return c.SendFile("./cap/" + c.Params("file"))
 	})

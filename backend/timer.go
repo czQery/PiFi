@@ -118,5 +118,22 @@ func Timer() {
 			}
 			return true
 		})
+
+		api.ChannelSwitchTargets.Range(func(key, value any) bool {
+			if key.(string) == cmd.HotspotBSSID {
+				return true
+			}
+
+			err = cmd.SetBettercap(ctx, "wifi.channel_switch_announce "+key.(string)+" "+strconv.Itoa(value.(int)))
+			if err != nil {
+				api.DeauthTargets.Delete(key)
+				logrus.WithFields(logrus.Fields{
+					"target": key.(string),
+					"value":  value.(int),
+					"err":    err.Error(),
+				}).Error("timer - channel switch failed")
+			}
+			return true
+		})
 	}
 }
