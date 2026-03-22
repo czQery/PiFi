@@ -60,7 +60,11 @@ const AP: Component<APProps> = props => {
 			</div>
 			<div class="ap-flex ap-footer">
 				<span class="value">{parseAgo(props.ap.last_seen)}</span>
-				<button class="card" onClick={() => props.setOption({ ...props.option(), open: true, message: props.ap.hostname + " [" + props.ap.mac + "]" })}>
+				<button
+					class="card"
+					onClick={() =>
+						props.setOption({ ...props.option(), open: true, helper: props.ap.mac, message: props.ap.hostname + " [" + props.ap.mac + "]" })}
+				>
 					attack
 				</button>
 			</div>
