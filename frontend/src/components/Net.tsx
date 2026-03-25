@@ -1,9 +1,9 @@
-import {type Accessor, type Component, type JSXElement, type Setter, Show} from "solid-js"
-import type {dbNetData} from "../lib/api/db.ts"
-import {markNet, upNet} from "../lib/api/net.ts"
-import {api, type response} from "../lib/var.ts"
-import type {dialogLoadingData} from "./dialog/DialogLoading.tsx"
-import type {dialogWrapperButtonData, dialogWrapperData} from "./dialog/DialogWrapper.tsx"
+import { type Accessor, type Component, type JSXElement, type Setter, Show } from "solid-js"
+import type { dbNetData } from "../lib/api/db.ts"
+import { markNet, upNet } from "../lib/api/net.ts"
+import { api, type response } from "../lib/var.ts"
+import type { dialogLoadingData } from "./dialog/DialogLoading.tsx"
+import type { dialogWrapperButtonData, dialogWrapperData } from "./dialog/DialogWrapper.tsx"
 
 interface netProps {
 	name: string
@@ -45,7 +45,12 @@ const Net: Component<netProps> = props => {
 										props.setOption({ ...props.option(), open: false })
 										props.setLoading({ title: "Marking", pending: true, msg: "" })
 										const rsp: response = await markNet(props.name.toLowerCase(), true)
-										props.setLoading({ title: "Marking", pending: true, msg: rsp.message })
+										if (rsp.message != "") {
+											props.setLoading({ title: "Marking", pending: true, msg: rsp.message })
+											return
+										}
+
+										props.setLoading({ title: "Marking", pending: false, msg: "" })
 									},
 								},
 								buttonSecond: ((): dialogWrapperButtonData | null => {
@@ -65,7 +70,12 @@ const Net: Component<netProps> = props => {
 						onClick={async () => {
 							props.setLoading({ title: "Uploading", pending: true, msg: "" })
 							const rsp: response = await upNet(props.name.toLowerCase())
-							props.setLoading({ title: "Uploading", pending: false, msg: rsp.message })
+							if (rsp.message != "") {
+								props.setLoading({ title: "Uploading", pending: true, msg: rsp.message })
+								return
+							}
+
+							props.setLoading({ title: "Uploading", pending: false, msg: "" })
 						}}
 					>
 						upload
