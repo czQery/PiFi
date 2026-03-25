@@ -1,15 +1,15 @@
-import type {ListCollection} from "@ark-ui/solid"
-import {Checkbox, createListCollection, Select} from "@ark-ui/solid"
-import {type Accessor, type Component, Show} from "solid-js"
-import {Index, Portal} from "solid-js/web"
+import type { ListCollection } from "@ark-ui/solid"
+import { Checkbox, createListCollection, Select } from "@ark-ui/solid"
+import { type Accessor, type Component, Show } from "solid-js"
+import { Index, Portal } from "solid-js/web"
 
-import type {settingsData} from "../lib/api/settings.ts"
+import type { settingsData } from "../lib/api/settings.ts"
 
 import "./SettingsInterface.css"
 
-import {LucideUnplug} from "lucide-solid"
-import {produce, type SetStoreFunction} from "solid-js/store"
-import {portals, settingsModes} from "../tabs/Settings.tsx"
+import { LucideUnplug } from "lucide-solid"
+import { produce, type SetStoreFunction } from "solid-js/store"
+import { portals, settingsModes } from "../tabs/Settings.tsx"
 import InputBool from "./input/InputBool.tsx"
 import InputNumber from "./input/InputNumber.tsx"
 import InputString from "./input/InputString.tsx"
@@ -21,8 +21,8 @@ interface settingsInterfaceProps {
 	settingsModes: Accessor<string[]>
 }
 
-const channelMin = 1
-const channelMax = 13
+export const channelMin = 1
+export const channelMax = 13
 
 const SettingsInterface: Component<settingsInterfaceProps> = props => {
 	const portalsCollection: ListCollection<string> = createListCollection({ items: portals() })

@@ -4,3 +4,9 @@
 	flex-direction: column;
 	gap: 10px;
 }
+
+.scan-flex {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}

@@ -21,23 +21,24 @@ func DeauthGet(c *fiber.Ctx) error {
 }
 
 func DeauthPost(c *fiber.Ctx) error {
-	target := strings.ToLower(c.Query("target"))
+	target := strings.ToLower(strings.Clone(c.Query("target")))
 
 	if target == "ff:ff:ff:ff:ff:ff" || target == "" || target == "*" {
 		return c.Status(400).JSON(Response{Message: "ff:ff:ff:ff:ff:ff not allowed"})
 	}
 
-	DeauthTargets.Store(c.Query("target"), struct{}{})
+	DeauthTargets.Store(target, struct{}{})
 	return c.Status(200).JSON(Response{Message: "success"})
 }
 
 func DeauthDelete(c *fiber.Ctx) error {
-	DeauthTargets.Delete(c.Query("target"))
+	DeauthTargets.Delete(strings.ToLower(strings.Clone(c.Query("target"))))
 	return c.Status(200).JSON(Response{Message: "success"})
 }
 
 func ChannelSwitchGet(c *fiber.Ctx) error {
 	var list = make(map[string]int)
+
 	ChannelSwitchTargets.Range(func(key, value interface{}) bool {
 		list[key.(string)] = value.(int)
 		return true
@@ -46,8 +47,8 @@ func ChannelSwitchGet(c *fiber.Ctx) error {
 }
 
 func ChannelSwitchPost(c *fiber.Ctx) error {
-	target := strings.ToLower(c.Query("target"))
-	channel, _ := strconv.Atoi(c.Query("channel"))
+	target := strings.ToLower(strings.Clone(c.Query("target")))
+	channel, _ := strconv.Atoi(strings.Clone(c.Query("channel")))
 
 	if channel < 1 || channel > 13 {
 		return c.Status(400).JSON(Response{Message: "channel out of range"})
@@ -57,11 +58,11 @@ func ChannelSwitchPost(c *fiber.Ctx) error {
 		return c.Status(400).JSON(Response{Message: "ff:ff:ff:ff:ff:ff not allowed"})
 	}
 
-	ChannelSwitchTargets.Store(c.Query("target"), channel)
+	ChannelSwitchTargets.Store(target, channel)
 	return c.Status(200).JSON(Response{Message: "success"})
 }
 
 func ChannelSwitchDelete(c *fiber.Ctx) error {
-	ChannelSwitchTargets.Delete(c.Query("target"))
+	ChannelSwitchTargets.Delete(strings.ToLower(strings.Clone(c.Query("target"))))
 	return c.Status(200).JSON(Response{Message: "success"})
 }
