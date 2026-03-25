@@ -60,9 +60,8 @@ jobs:
                   GOARCH: ${{matrix.arch}}
                   CGO_ENABLED: 0
               run: |
-                  go build -o pifi -ldflags="-s -w -X github.com/czQery/pifi/hp.Build=${{github.event.release.tag_name}}"
+                  go build -o pifi -ldflags="-s -w -X github.com/czQery/PiFi/backend/hp.Build=${{github.event.release.tag_name}}"
                   cp -r pifi ../${{env.ASSET_NAME}}
-                  cp .config.toml ../${{env.ASSET_NAME}}/config.toml
 
             - name: Include portals
               working-directory: ./backend
