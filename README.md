@@ -40,7 +40,7 @@ sudo systemctl disable bettercap
 
 - Download [latest release](https://github.com/czQery/PiFi/releases)
   ```bash
-  curl -L https://github.com/czQery/PiFi/releases/latest/download/release-arm7.tar.gz | tar -xzv
+  curl -L "https://github.com/czQery/PiFi/releases/latest/download/release-$(uname -m | sed 's/x86_64/amd64/; s/armv7.*/arm7/; s/armv6.*/arm6/').tar.gz" | tar -xzv
   ```
 
 ### 5. Create service

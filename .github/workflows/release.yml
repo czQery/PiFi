@@ -79,9 +79,7 @@ jobs:
               with:
                   allowUpdates: true
                   replacesArtifacts: true
-                  makeLatest: false
                   omitName: true
-                  prerelease: true
                   omitBody: true
                   artifacts: "${{env.ASSET_NAME}}.tar.gz"
                   token: ${{ secrets.GITHUB_TOKEN }}
