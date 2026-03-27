@@ -1,4 +1,4 @@
-import { type Component } from "solid-js"
+import { type Component, onMount } from "solid-js"
 
 import "./Auth.css"
 import { setLogged } from "../App.tsx"
@@ -6,6 +6,17 @@ import { authSave } from "../lib/api/auth.ts"
 
 const Auth: Component = () => {
 	let inputRef!: HTMLInputElement
+
+	const login = async () => {
+		inputRef.disabled = true
+		setLogged(await authSave(inputRef.value))
+		inputRef.value = ""
+		inputRef.disabled = false
+	}
+
+	onMount(() => {
+		if (inputRef) inputRef.focus()
+	})
 
 	return (
 		// @ts-ignore
@@ -15,12 +26,7 @@ const Auth: Component = () => {
 				class="card"
 				ref={inputRef}
 				onKeyPress={async e => {
-					if (e.key == "Enter") {
-						inputRef.disabled = true
-						setLogged(await authSave(inputRef.value))
-						inputRef.value = ""
-						inputRef.disabled = false
-					}
+					if (e.key == "Enter") await login()
 				}}
 				type="password"
 				placeholder="password"
@@ -29,7 +35,7 @@ const Auth: Component = () => {
 				required="required"
 				value=""
 			/>
-			<button class="card pink" onClick={() => authSave(inputRef.value)}>login</button>
+			<button class="card pink" onClick={async () => await login()}>login</button>
 		</form>
 	)
 }
