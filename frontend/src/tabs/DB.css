@@ -13,13 +13,19 @@
 	grid-template-columns: 1fr 1fr;
 }
 
+#db > div > .link {
+	text-decoration: none;
+	color: var(--blue);
+	margin-bottom: 10px;
+}
+
 .db-buttons > button {
 	width: 100px;
 	height: 30px;
 }
 
 .db-buttons {
-	grid-row: 1/4;
+	grid-row: 3/5;
 	grid-column: 2/3;
 	margin: auto 0 0 auto;
 }

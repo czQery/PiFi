@@ -55,9 +55,17 @@ const DB: Component = () => {
 					</Match>
 				</Switch>
 			</DialogWrapper>
-			<Net name="Wigle" db={db().wigle} icon={<LucideGlobe />} option={option} setOption={setOption} setLoading={setLoading} />
-			<Net name="BeaconDB" db={db().beacondb} icon={<LucideRadio />} option={option} setOption={setOption} setLoading={setLoading} />
-			<Net name="DWPA" db={db().dwpa} icon={<LucideRadioTower />} option={option} setOption={setOption} setLoading={setLoading} />
+			<Net name="Wigle" link="wigle.net" db={db().wigle} icon={<LucideGlobe />} option={option} setOption={setOption} setLoading={setLoading} />
+			<Net name="BeaconDB" link="beacondb.net" db={db().beacondb} icon={<LucideRadio />} option={option} setOption={setOption} setLoading={setLoading} />
+			<Net
+				name="DWPA"
+				link="wpa-sec.stanev.org"
+				db={db().dwpa}
+				icon={<LucideRadioTower />}
+				option={option}
+				setOption={setOption}
+				setLoading={setLoading}
+			/>
 			<DialogLoading data={loading} setData={setLoading} />
 		</div>
 	)

@@ -7,6 +7,7 @@ import type { dialogWrapperButtonData, dialogWrapperData } from "./dialog/Dialog
 
 interface netProps {
 	name: string
+	link: string
 	db: dbNetData
 	icon: JSXElement
 	option: Accessor<dialogWrapperData>
@@ -16,11 +17,12 @@ interface netProps {
 
 const Net: Component<netProps> = props => {
 	return (
-		<div id="db-net-wigle" class="card">
-			<div class="db-flex">
+		<div id={"db-net-" + props.name.toLowerCase()} class="card">
+			<div class="db-flex" style="grid-column: 1 / 3;">
 				{props.icon}
 				<span class="title">{props.name}</span>
 			</div>
+			<a class="link mono" href={"https://" + props.link}>{props.link}</a>
 			<div class="db-flex">
 				<span>New:</span>
 				<span class="value mono">{props.db.new.toString()}</span>
