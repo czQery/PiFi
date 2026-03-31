@@ -10,6 +10,13 @@
 	width: 20px;
 }
 
+.file-name {
+	display: flex;
+	gap: 5px;
+	white-space: nowrap;
+	overflow-x: auto;
+}
+
 .file span {
 	margin-block: auto;
 	height: min-content;
@@ -19,4 +26,10 @@
 	margin-left: auto;
 	width: 100px;
 	height: 30px;
+}
+
+@media screen and (max-width: 719px) {
+	.file-name {
+		flex-direction: column;
+	}
 }

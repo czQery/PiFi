@@ -17,6 +17,7 @@
 	text-decoration: none;
 	color: var(--blue);
 	margin-bottom: 10px;
+	grid-column: 1/3;
 }
 
 .db-buttons > button {

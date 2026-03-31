@@ -51,7 +51,18 @@ const DialogWrapper: Component<dialogWrapperProps> = props => {
 								{props.data.message}
 							</Dialog.Description>
 							<Show when={props.children}>
-								<div style={{ "display": "flex", "flex-direction": "column", "gap": "5px", "margin-bottom": "10px" }}>{props.children}</div>
+								<div
+									style={{
+										"display": "flex",
+										"flex-direction": "column",
+										"gap": "5px",
+										"margin-bottom": "10px",
+										"max-height": "500px",
+										"overflow-y": "auto",
+									}}
+								>
+									{props.children}
+								</div>
 							</Show>
 							<div style={{ "display": "flex", "gap": "10px", "width": "100%", "justify-content": "right" }}>
 								<Show when={props.data.buttonFirst}>
