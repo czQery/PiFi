@@ -3,6 +3,7 @@ import { LucideWifi } from "lucide-solid"
 import { type Accessor, type Component, For, type Setter, Show } from "solid-js"
 import type { bettercapWifiAPData, bettercapWifiClientData } from "../lib/api/bettercap.ts"
 import { addZeroDecimal, parseAgo } from "../lib/other.ts"
+import { attackChannelSwitchList, attackDeauthList } from "../tabs/Scan.tsx"
 import type { dialogLoadingData } from "./dialog/DialogLoading.tsx"
 import type { dialogWrapperData } from "./dialog/DialogWrapper.tsx"
 
@@ -15,7 +16,10 @@ interface APProps {
 
 const AP: Component<APProps> = props => {
 	return (
-		<div class="ap card">
+		<div
+			class="ap card"
+			style={attackDeauthList()?.includes(props.ap.mac) || !!attackChannelSwitchList()[props.ap.mac] ? "outline-color: var(--pink);" : ""}
+		>
 			<div class="ap-flex" style="justify-content: space-between;">
 				<div class="ap-flex">
 					<LucideWifi />
