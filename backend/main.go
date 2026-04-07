@@ -120,6 +120,10 @@ func main() {
 		},
 	})
 
+	r.Get("/favicon.ico", func(c *fiber.Ctx) error {
+		return c.SendFile("./dist/img/favicon.ico")
+	})
+
 	// API
 	rAPI := r.Group("/api", func(c *fiber.Ctx) error {
 		if c.Path() != "/api/portal" && !api.VerifyToken(c) { // require password for all api endpoints except /api/portal
@@ -176,14 +180,15 @@ func main() {
 		return c.Next()
 	})
 
+	rUI.Static("/assets", "./dist/assets")
+	rUI.Static("/img", "./dist/img")
+	rUI.Static("/font", "./dist/font")
+	rUI.Get("/site.webmanifest", func(c *fiber.Ctx) error {
+		return c.SendFile("./dist/site.webmanifest")
+	})
 	rUI.All("/:tab", func(c *fiber.Ctx) error {
 		return c.SendFile("./dist/index.html")
 	})
-	rUI.All("/favicon.ico", func(c *fiber.Ctx) error {
-		return c.SendFile("./dist/favicon.ico")
-	})
-	rUI.Static("/assets", "./dist/assets")
-	rUI.Static("/font", "./dist/font")
 
 	// Captive portal
 	rPortal := r.Group("/", func(c *fiber.Ctx) error {
@@ -199,7 +204,7 @@ func main() {
 
 		return c.Next()
 	})
-	rPortal.All("favicon.ico", func(c *fiber.Ctx) error {
+	rPortal.Get("favicon.ico", func(c *fiber.Ctx) error {
 		return c.SendFile("./portal/" + cmd.HotspotPortal + "/favicon.ico")
 	})
 	rPortal.All(":dir/:file", func(c *fiber.Ctx) error {
