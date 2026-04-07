@@ -1,3 +1,8 @@
+# PGO
+
+- curl http://localhost:6060/debug/pprof/profile?seconds=120 -o cpu.prof
+- go tool pprof -proto a.pprof b.pprof > default.pgo
+
 # Commands
 
 device list:

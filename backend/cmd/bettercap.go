@@ -21,6 +21,7 @@ import (
 )
 
 var IsBettercapRunning bool
+var IsBettercapPaused bool
 
 func InitBettercap() {
 	ctx := context.Background()
@@ -205,8 +206,8 @@ func InitBettercap() {
 	}
 }
 
-func SetBettercap(ctx context.Context, cmd string) error {
-	if !IsBettercapRunning {
+func SetBettercap(ctx context.Context, cmd string, bypass bool) error {
+	if !IsBettercapRunning || (IsBettercapPaused && !bypass) {
 		return errors.New("bettercap not running")
 	}
 
@@ -223,11 +224,11 @@ func SetBettercap(ctx context.Context, cmd string) error {
 }
 
 func SetBettercapMonitor(ctx context.Context, iface, channel string) error {
-	return SetBettercap(ctx, "set wifi.interface "+iface+";wifi.recon on;wifi.recon.channel "+channel)
+	return SetBettercap(ctx, "set wifi.interface "+iface+";wifi.recon on;wifi.recon.channel "+channel, true)
 }
 
 func DisableBettercapMonitor(ctx context.Context) error {
-	return SetBettercap(ctx, "set wifi.interface null;wifi.recon off")
+	return SetBettercap(ctx, "set wifi.interface null;wifi.recon off", true)
 }
 
 func GetBettercapAP(ctx context.Context, bssid string) (gjson.Result, error) {

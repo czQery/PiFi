@@ -29,7 +29,7 @@ func Timer() {
 
 	for range time.Tick(time.Second) {
 
-		if !cmd.IsBettercapRunning {
+		if !cmd.IsBettercapRunning || cmd.IsBettercapPaused {
 			continue
 		}
 
@@ -63,7 +63,7 @@ func Timer() {
 				channel = strconv.FormatInt(ap.Get("channel").Int(), 10)
 				if cmd.MonitorChannelHop {
 					if channel != channelLast {
-						err = cmd.SetBettercap(ctx, "wifi.recon.channel "+channel)
+						err = cmd.SetBettercap(ctx, "wifi.recon.channel "+channel, false)
 						if err != nil {
 							logrus.WithFields(logrus.Fields{
 								"channel": channel,
@@ -79,7 +79,7 @@ func Timer() {
 					continue
 				}
 
-				err = cmd.SetBettercap(ctx, "wifi.assoc "+bssid+";wifi.deauth "+bssid)
+				err = cmd.SetBettercap(ctx, "wifi.assoc "+bssid+";wifi.deauth "+bssid, false)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"target": bssid,
@@ -91,7 +91,7 @@ func Timer() {
 			}
 
 			if cmd.MonitorChannelHop {
-				err = cmd.SetBettercap(ctx, "wifi.recon.channel clear")
+				err = cmd.SetBettercap(ctx, "wifi.recon.channel clear", false)
 				if err != nil {
 					logrus.WithFields(logrus.Fields{
 						"channel": "clear",
@@ -108,7 +108,7 @@ func Timer() {
 				return true
 			}
 
-			err = cmd.SetBettercap(ctx, "wifi.deauth "+key.(string))
+			err = cmd.SetBettercap(ctx, "wifi.deauth "+key.(string), false)
 			if err != nil {
 				api.DeauthTargets.Delete(key)
 				logrus.WithFields(logrus.Fields{
@@ -124,7 +124,7 @@ func Timer() {
 				return true
 			}
 
-			err = cmd.SetBettercap(ctx, "wifi.channel_switch_announce "+key.(string)+" "+strconv.Itoa(value.(int)))
+			err = cmd.SetBettercap(ctx, "wifi.channel_switch_announce "+key.(string)+" "+strconv.Itoa(value.(int)), false)
 			if err != nil {
 				api.DeauthTargets.Delete(key)
 				logrus.WithFields(logrus.Fields{

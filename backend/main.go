@@ -14,6 +14,8 @@ import (
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/gofiber/fiber/v2/middleware/proxy"
 
+	//_ "net/http/pprof"
+
 	"github.com/czQery/PiFi/backend/api"
 	"github.com/czQery/PiFi/backend/cmd"
 	"github.com/czQery/PiFi/backend/hp"
@@ -74,6 +76,10 @@ func init() {
 }
 
 func main() {
+
+	/*go func() {
+		fmt.Println(http.ListenAndServe("localhost:6060", nil))
+	}()*/
 
 	defer hp.LogFile.Close()
 

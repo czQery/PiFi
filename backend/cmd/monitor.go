@@ -7,12 +7,19 @@ import (
 )
 
 func SetMonitor(ctx context.Context, iface string, region string, wardrive, channelHop bool, channel int) error {
+
+	// this will cause race condition when setting multiple times at same time, but i don't care at this moment
+	IsBettercapPaused = true
+	defer func() {
+		IsBettercapPaused = false
+	}()
+
 	err := SetInterfaceMode(ctx, iface, "monitor")
 	if err != nil {
 		return errors.New("set interface mode: " + err.Error())
 	}
 
-	if err = SetBettercap(ctx, "set wifi.region "+region); err != nil {
+	if err = SetBettercap(ctx, "set wifi.region "+region, true); err != nil {
 		return errors.New("set region: " + err.Error())
 	}
 
